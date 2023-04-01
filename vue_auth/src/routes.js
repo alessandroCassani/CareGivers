@@ -6,7 +6,7 @@ import Sign_Up from './pages/Sign_up.vue';
 
 const routes = [{
     path: '/login', component: Log_in},
-    {path: '/login', component: Sign_Up
+    {path: '/signup', component: Sign_Up
 }];
 
 const router = createRouter({
