@@ -72,7 +72,7 @@
    }
 
    .box{
-    width: 300px;
+    width: 400px;
     padding: 40px;
     position: absolute;
     top:50%;
@@ -80,6 +80,8 @@
     transform: translate(-50%,-50%);
     background: #191919;
     text-align: center;
+    border-radius: 10px;
+    opacity: .5;
    }
 
    .box input[type="email"],.box input[type="password"]{
@@ -98,7 +100,7 @@
    }
 
   .box input[type="email"]:focus,.box input[type="password"]:focus{
-    width: 100px;
+    width: 280px;
     border-color: brown;
   }
 
@@ -115,13 +117,9 @@
     border-radius: 24px;
     transition: o.25s;
     cursor: pointer;
-
-
   }
 
   .box input[type="submit"]:hover{
     background: greenyellow;
-    
-
   }
 </style>
