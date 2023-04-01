@@ -4,7 +4,7 @@
             <h1>Login</h1>
             <input type="email" name="" placeholder="email">
             <input type="password" name="" placeholder="password">
-            <input type="submit" name="" value="login">
+            <input type="submit" name="" value="LOGIN">
         </form>
     </body>
 
@@ -61,7 +61,7 @@
     min-height: 100vh;
     width: 100%;
     font-family: sans-serif;
-    background: aqua;
+    background-image: linear-gradient(to bottom right,rgb(0, 115, 255), rgba(255, 255, 255, 0.86));
    }
 
    .box h1{
@@ -78,48 +78,50 @@
     top:50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    background: #191919;
+    background: black;
     text-align: center;
     border-radius: 10px;
     opacity: .5;
+    border-color: white;
    }
 
    .box input[type="email"],.box input[type="password"]{
     border:0;
-    background: none;
+    background:  rgba(255, 255, 255, 0.86);
     display: block;
     margin: 20px auto;
     text-align: center;
-    border: 2px solid #3498db;
+    font-size: 20px;
+    border: 2px solid white;
     padding: 14px 10px;
-    width: 200px;
+    width: 200px;   
     outline: none;
-    color: antiquewhite;
-    border-radius: 24px;
+    color: black;
+    border-radius: 18px;
     transition: o.25s;
    }
 
   .box input[type="email"]:focus,.box input[type="password"]:focus{
     width: 280px;
-    border-color: brown;
   }
 
   .box input[type="submit"]{
     border: 0;
-    background: none;
+    background:  rgba(255, 255, 255, 0.86);
     display: block;
     margin: 20px auto;
     text-align: center;
-    border: 2px solid #3498db;
+    border: 2px solid white;
+    font-size: 18px;
     padding: 14px 40px;
     outline: none;
-    color: antiquewhite;
+    color: black;
     border-radius: 24px;
     transition: o.25s;
     cursor: pointer;
   }
 
   .box input[type="submit"]:hover{
-    background: greenyellow;
+    background: #3498db;
   }
 </style>
