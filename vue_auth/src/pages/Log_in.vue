@@ -72,6 +72,7 @@ import { RouterLink } from 'vue-router';
    .box h1{
     color: white;
     text-transform: uppercase;
+    font-style: italic;
     font-weight: 500;
 
    }
