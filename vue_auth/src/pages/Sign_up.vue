@@ -64,14 +64,43 @@
  .body,html{
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
     font-family: sans-serif;
+    width: 100%;
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     justify-content: center;
     align-items: center;
     background-image: linear-gradient(to bottom right,rgb(0, 115, 255), rgba(255, 255, 255, 0.86));
  }
+
+ .container{
+    max-width: 650px;
+    padding: 10px;
+    margin: 0px;
+    border-radius: 42px;
+ }
+
+.container h1{
+    color: black;
+    text-transform: uppercase;
+    font-style: italic;
+    text-align: center;
+    font-weight: 500;
+}
+
+.main-user-info{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px 0;
+}
+
+.user-input-box{
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    padding-bottom: 15px;
+}
 
 
 </style>
