@@ -1,57 +1,44 @@
 <template>
-    <body>
-    <div class="container">
-       <h1 class="form title">Registrazione</h1> 
-      <form action="#">
-        <div class="main-user-info">
-            <div class="user-input-box">
-              <label for="nome">nome</label>  
-              <input type="text" id="nome" placeholder="nome">
-            </div>
-            <div class="user-input-box">
-              <label for="cognome">cognome</label>  
-              <input type="text" id="cognome" placeholder="cognome">
-            </div>
-            <div class="user-input-box">
-              <label for="email">email</label>  
-              <input type="email" id="email" placeholder="email">
-            </div> 
-            <div class="user-input-box">
-              <label for="data di nascita">data di nascita</label>  
-              <input type="date" id="data di nascita" placeholder="data di nascita">
-            </div>
-            <div class="user-input-box">
-              <label for="cf">codice fiscale</label>  
-              <input type="text" id="cf" placeholder="codice fiscale">
-            </div>
-            <div class="user-input-box">
-              <label for="telefono">telefono</label>  
-              <input type="text" id="telefono" placeholder="telefono">
-            </div>
-            <div class="user-input-box">
-              <label for="password">password</label>  
-              <input type="password" id="psw" placeholder="password">
-            </div>
-            <div class="user-input-box">
-              <label for="password2">ripeti password</label>  
-              <input type="password" id="psw2" placeholder="ripeti password">
-            </div>   
+    <form class ="box">
+        <h1> Sign Up</h1>
+        <div class="form group">
+            <label>nome:</label>
+           <input type="text" class="form-control" placeholder="nome"> 
         </div>
-       <div class="ruolo">
-       <span class="ruolo-titolo">ruolo</span> 
-    <div class="role-type">
-        <input type="radio" name="role" id="paziente">
-        <label for="paziente">paziente</label> 
-        <input type="radio" name="role" id="caregiver">
-        <label for="caregiver">caregiver</label> 
-    </div> 
-       </div> 
-       <div class="button-submit">
-           <input type="submit" value="register">  
-       </div>
-      </form> 
-    </div>
-</body>
+
+        <div class="form group">
+            <label>cognome:</label>
+           <input type="text" class="form-control" placeholder="cognome"> 
+        </div>
+
+        <div class="form group">
+            <label>Email:</label>
+           <input type="email" class="form-control" placeholder="Email"> 
+        </div>
+
+        <div class="form group">
+            <label>password:</label>
+           <input type="password" class="form-control" placeholder="password"> 
+        </div>
+
+        <div class="form group">
+            <label>conferma password:</label>
+           <input type="password" class="form-control" placeholder="conferma password"> 
+        </div>
+
+        <div class="form group">
+            <span class="ruolo-title" style="color: white;">ruolo:</span> 
+            <div class="role">
+            <input type="radio" name="ruolo" id="paziente">
+           <label>&nbsp;paziente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> 
+           <input type="radio" name="ruolo" id="caregiver">
+           <label>&nbsp;caregiver</label> 
+        </div>
+        </div>
+
+        <input type="submit" name="" value="REGISTER">
+        <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
+    </form>
  </template>
  
  <script>
@@ -62,45 +49,80 @@
  <style>
  
  .body,html{
-    padding: 0;
     margin: 0;
-    font-family: sans-serif;
-    width: 100%;
-    display: flex;
+    padding: 0;
     min-height: 100vh;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    font-family: sans-serif;
     background-image: linear-gradient(to bottom right,rgb(0, 115, 255), rgba(255, 255, 255, 0.86));
  }
 
- .container{
-    max-width: 650px;
-    padding: 10px;
-    margin: 0px;
-    border-radius: 42px;
+ .box{
+    width: 400px;
+    padding: 20px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: black;
+    text-align: center;
+    border-radius: 10px;
+    opacity: .5;
+    border-color: white;
  }
 
-.container h1{
-    color: black;
+ .box h1{
+    color: white;
     text-transform: uppercase;
     font-style: italic;
-    text-align: center;
     font-weight: 500;
-}
+   }
 
-.main-user-info{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px 0;
-}
+   .box label{
+    color: white;
+   }
 
-.user-input-box{
-    display: flex;
-    flex-wrap: wrap;
-    width: 50%;
-    padding-bottom: 15px;
-}
+   .box input[type="email"],.box input[type="password"],.box input[type="text"]{
+    border:0;
+    background:  rgba(255, 255, 255, 0.86);
+    display: block;
+    margin: 5px auto;
+    text-align: center;
+    font-size: 20px;
+    border: 2px solid white;
+    padding: 14px 10px;
+    width: 200px;   
+    outline: none;
+    color: black;
+    border-radius: 5px;
+    transition: o.25s;
+   }
 
+   .box input[type="email"]:focus,.box input[type="password"]:focus,.box input[type="text"]:focus{
+    width: 280px;
+  }
 
+  .box input[type="submit"]{
+    border: 0;
+    background:  rgba(255, 255, 255, 0.86);
+    display: block;
+    margin: 15px auto;
+    text-align: center;
+    border: 2px solid white;
+    font-size: 18px;
+    padding: 14px 40px;
+    outline: none;
+    color: black;
+    border-radius: 20px;
+    transition: o.25s;
+    cursor: pointer;
+  }
+
+  .box input[type="submit"]:hover{
+    background: #3498db;
+  }
+
+  #text{
+    color: white;
+  }
 </style>

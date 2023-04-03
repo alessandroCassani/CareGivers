@@ -74,7 +74,6 @@ import { RouterLink } from 'vue-router';
     text-transform: uppercase;
     font-style: italic;
     font-weight: 500;
-
    }
 
    .box{
@@ -99,11 +98,11 @@ import { RouterLink } from 'vue-router';
     text-align: center;
     font-size: 20px;
     border: 2px solid white;
-    padding: 14px 10px;
+    padding: 10px 10px;
     width: 200px;   
     outline: none;
     color: black;
-    border-radius: 18px;
+    border-radius: 5px;
     transition: o.25s;
    }
 
