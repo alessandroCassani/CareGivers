@@ -58,7 +58,7 @@
    methods:{
       signUp(){
             let newUser = {
-               name: this.nome,
+               nome: this.nome,
                cognome: this.cognome,
                email: this.email,
                password:this.password,
