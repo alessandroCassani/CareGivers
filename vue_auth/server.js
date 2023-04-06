@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 //routes
 app.post('/signup',(req, res, next)=> {
+    console.log(req.body.nome);
     const newUser = new user({
         email:req.body.email,
         nome: req.body.nome,

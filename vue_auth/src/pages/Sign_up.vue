@@ -57,6 +57,7 @@
    },
    methods:{
       signUp(){
+         console.log(this.nome)
             let newUser = {
                nome: this.nome,
                cognome: this.cognome,
@@ -65,7 +66,7 @@
                confermaPassword: this.ripetiPassword,
                ruolo: this.ruolo
             }
-            axios.post('http:/localhost:5000/signup', newUser)
+            axios.post('http://localhost:5000/signup', newUser)
       }
    }
  };
