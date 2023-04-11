@@ -39,7 +39,7 @@ app.post('/signup', async (req, res, next)=> {
         nome: req.body.nome,
         cognome: req.body.cognome,
         dataDiNascita: req.body.dataDiNascita,
-        codiceFiscale: req.body.codiceFiscale,
+        email: req.body.email,
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
     })
@@ -83,9 +83,6 @@ app.get('/login', async (req,res,next) =>{
         ruolo: user.ruolo,
         dataDiNascita: user.dataDiNascita
       });
-
-
-
   })
 })
 

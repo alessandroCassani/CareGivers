@@ -17,8 +17,8 @@
         </div>
 
         <div class="form group">
-            <label>codice fiscale:</label>
-           <input type="text" v-model="codiceFiscale" class="form-control" placeholder="codice fiscale"> 
+            <label>email:</label>
+           <input type="email" v-model="email" class="form-control" placeholder="email"> 
         </div>
 
         <div class="form group">
@@ -55,7 +55,7 @@
          nome:'',
          cognome:'',
          dataDiNascita: '',
-         codiceFiscale:'',
+         email:'',
          password:'',
          ripetiPassword:'',
          ruolo:''
@@ -68,7 +68,7 @@
                nome: this.nome,
                cognome: this.cognome,
                dataDiNascita: this.dataDiNascita,
-               codiceFiscale: this.codiceFiscale,
+               email: this.email,
                password:this.password,
                ripetiPassword: this.ripetiPassword,
                ruolo: this.ruolo
