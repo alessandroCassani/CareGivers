@@ -19,19 +19,20 @@ const database = async() => {
     useUnifiedTopology: true,
   }
   try {
-    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites=true&w=majority')
+    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
     console.log('DB connected')
   } catch (error) {
     console.log(error)
   }
 }
 
+app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
 //routes
-app.post('/signup',(req, res, next)=> {
+app.post('/signup', async (req, res, next)=> {
     const newUser = new user({
         email:req.body.email,
         nome: req.body.nome,
@@ -41,22 +42,14 @@ app.post('/signup',(req, res, next)=> {
         ruolo: req.body.ruolo
     })
 
-    console.log('ciao');
+    database()
     
-
-  //  newUser.save(err=> {
-    //    if(err){
-      //      return res.status(400).json({
-        //        title:'error',
-          //      error: 'email gia in uso'
-            //})       
-       // }
-        //return res.status(200).json({
-          //  title: 'registrazione avvenuta con successo'
-        //})
-
-
-   // console.log(newUser);
+    try {
+      await newUser.save();
+      console.log('ciao');
+    } catch (error) {
+      console.log(error);
+    }
 })
 
 

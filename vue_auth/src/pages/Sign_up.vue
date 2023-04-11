@@ -12,8 +12,8 @@
         </div>
 
         <div class="form group">
-            <label>Email:</label>
-           <input type="email" v-model="email" class="form-control" placeholder="Email"> 
+            <label>Data di nascita:</label>
+           <input type="date" v-model="email" class="form-control" placeholder="data di nascita"> 
         </div>
 
         <div class="form group">
@@ -109,7 +109,7 @@
     color: white;
    }
 
-   .box input[type="email"],.box input[type="password"],.box input[type="text"]{
+   .box input[type="email"],.box input[type="password"],.box input[type="text"],.box input[type="date"]{
     border:0;
     background:  rgba(255, 255, 255, 0.86);
     display: block;
