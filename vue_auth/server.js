@@ -31,6 +31,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
+
+
 //routes
 app.post('/signup', async (req, res, next)=> {
     const newUser = new user({
@@ -50,6 +52,46 @@ app.post('/signup', async (req, res, next)=> {
       console.log(error);
     }
 })
+
+
+app.get('/login', async (req,res,next) =>{
+  user.findOne({
+    email: req.body.email,
+  }).exec((err,user) => {
+      if(err){
+        return res.status(500).send({message : err});
+      }
+
+      if(!user){
+        return res.status(404).send({ message: "User Not found." });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({ message: "Invalid Password!" });
+      }
+
+      res.status(200).send({
+        id: user._id,
+        nome: user.nome,
+        cognome: user.cognome,
+        codiceFiscale: user.codiceFiscale,
+        ruolo: user.ruolo,
+        dataDiNascita: user.dataDiNascita
+      });
+
+
+
+  })
+})
+
+
+
+
 
 
 
