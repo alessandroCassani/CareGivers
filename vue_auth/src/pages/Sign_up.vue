@@ -17,6 +17,11 @@
         </div>
 
         <div class="form group">
+            <label>codice fiscale:</label>
+           <input type="text" v-model="email" class="form-control" placeholder="codice fiscale"> 
+        </div>
+
+        <div class="form group">
             <label>password:</label>
            <input type="password" v-model="password" class="form-control" placeholder="password"> 
         </div>
