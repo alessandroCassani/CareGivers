@@ -13,12 +13,12 @@
 
         <div class="form group">
             <label>Data di nascita:</label>
-           <input type="date" v-model="email" class="form-control" placeholder="data di nascita"> 
+           <input type="date" v-model="dataDiNascita" class="form-control" placeholder="data di nascita"> 
         </div>
 
         <div class="form group">
             <label>codice fiscale:</label>
-           <input type="text" v-model="email" class="form-control" placeholder="codice fiscale"> 
+           <input type="text" v-model="codiceFiscale" class="form-control" placeholder="codice fiscale"> 
         </div>
 
         <div class="form group">
@@ -53,8 +53,9 @@
    data(){
       return{
          nome:'',
-         cognome: '',
-         email:'',
+         cognome:'',
+         dataDiNascita: '',
+         codiceFiscale:'',
          password:'',
          ripetiPassword:'',
          ruolo:''
@@ -66,9 +67,10 @@
             let newUser = {
                nome: this.nome,
                cognome: this.cognome,
-               email: this.email,
+               dataDiNascita: this.dataDiNascita,
+               codiceFiscale: this.codiceFiscale,
                password:this.password,
-               confermaPassword: this.ripetiPassword,
+               ripetiPassword: this.ripetiPassword,
                ruolo: this.ruolo
             }
             axios.post('http://localhost:5000/signup', newUser)
@@ -79,7 +81,6 @@
  </script>  
  
  <style>
- 
  .body,html{
     margin: 0;
     padding: 0;

@@ -34,9 +34,9 @@ app.use(bodyParser.urlencoded({extended:false}));
 //routes
 app.post('/signup', async (req, res, next)=> {
     const newUser = new user({
-        email:req.body.email,
         nome: req.body.nome,
         cognome: req.body.cognome,
+        dataDiNascita: req.body.dataDiNascita,
         codiceFiscale: req.body.codiceFiscale,
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
@@ -46,7 +46,6 @@ app.post('/signup', async (req, res, next)=> {
     
     try {
       await newUser.save();
-      console.log('ciao');
     } catch (error) {
       console.log(error);
     }
