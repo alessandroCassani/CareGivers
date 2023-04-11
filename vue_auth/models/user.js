@@ -26,9 +26,3 @@ const userSchema = new schema({
 
 const user = mongoose.model('users',userSchema);
 module.exports = { user };
-
-
-email: {
-    unique : true,
-    type: String
-},
