@@ -39,7 +39,7 @@ app.post('/signup', async (req, res, next)=> {
         nome: req.body.nome,
         cognome: req.body.cognome,
         dataDiNascita: req.body.dataDiNascita,
-        email: req.body.email,
+        recapiti: {email:req.body.email},
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
     })
@@ -55,26 +55,29 @@ app.post('/signup', async (req, res, next)=> {
 
 
 app.get('/login', async (req,res,next) =>{
+  database();
+  console.log('dentro al login')
   user.findOne({
-    email: req.body.email,
-  }).exec((err,user) => {
-      if(err){
-        return res.status(500).send({message : err});
-      }
-
-      if(!user){
+    recapiti:{email:req.body.email}
+  }).then((res) => {
+    console.log('query eseguita');
+      if(!res){
+        console.log(res);
+        console.log('utente non trovato')
         return res.status(404).send({ message: "User Not found." });
       }
 
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
-        user.password
+        res.password
       );
 
       if (!passwordIsValid) {
+        console.log('password errata')
         return res.status(401).send({ message: "Invalid Password!" });
       }
 
+      console.log('trovato')
       res.status(200).send({
         id: user._id,
         nome: user.nome,
@@ -83,11 +86,11 @@ app.get('/login', async (req,res,next) =>{
         ruolo: user.ruolo,
         dataDiNascita: user.dataDiNascita
       });
-  })
-})
-
-
-
+  }).catch((err) => {
+    console.log(err);
+    return res.status(500).send({message : err});
+  });
+});
 
 
 
