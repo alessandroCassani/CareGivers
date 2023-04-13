@@ -63,7 +63,6 @@
    },
    methods:{
       signUp(){
-         console.log(this.nome)
             let newUser = {
                nome: this.nome,
                cognome: this.cognome,

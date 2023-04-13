@@ -10,8 +10,8 @@ const userSchema = new schema({
     password: String,
     confermaPassword: String,
     ruolo: String,
+    email: String,
     recapiti: {
-        email: String,
         telefono1: String,
         telefono2: String
     },
