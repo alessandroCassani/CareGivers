@@ -3,51 +3,83 @@
         <h1> Sign Up</h1>
         <div class="form group">
             <label>nome:</label>
-           <input type="text" class="form-control" placeholder="nome"> 
+           <input type="text" v-model="nome"  class="form-control" placeholder="nome"> 
         </div>
 
         <div class="form group">
             <label>cognome:</label>
-           <input type="text" class="form-control" placeholder="cognome"> 
+           <input type="text" v-model="cognome"  class="form-control" placeholder="cognome"> 
         </div>
 
         <div class="form group">
-            <label>Email:</label>
-           <input type="email" class="form-control" placeholder="Email"> 
+            <label>Data di nascita:</label>
+           <input type="date" v-model="dataDiNascita" class="form-control" placeholder="data di nascita"> 
+        </div>
+
+        <div class="form group">
+            <label>email:</label>
+           <input type="email" v-model="email" class="form-control" placeholder="email"> 
         </div>
 
         <div class="form group">
             <label>password:</label>
-           <input type="password" class="form-control" placeholder="password"> 
+           <input type="password" v-model="password" class="form-control" placeholder="password"> 
         </div>
 
         <div class="form group">
             <label>conferma password:</label>
-           <input type="password" class="form-control" placeholder="conferma password"> 
+           <input type="password" v-model="ripetiPassword" class="form-control" placeholder="conferma password"> 
         </div>
 
         <div class="form group">
             <span class="ruolo-title" style="color: white;">ruolo:</span> 
             <div class="role">
-            <input type="radio" name="ruolo" id="paziente">
+            <input type="radio" v-model="ruolo" name="ruolo" id="paziente">
            <label>&nbsp;paziente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> 
-           <input type="radio" name="ruolo" id="caregiver">
+           <input type="radio" v-model="ruolo" name="ruolo" id="caregiver">
            <label>&nbsp;caregiver</label> 
         </div>
         </div>
 
-        <input type="submit" name="" value="REGISTER">
+        <input type="submit" @click="signUp" name="" value="REGISTER">
         <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
     </form>
  </template>
  
  <script>
- export default{};
+  import axios from 'axios'
+  export default{
+   name:'Sign_up',
+   data(){
+      return{
+         nome:'',
+         cognome:'',
+         dataDiNascita: '',
+         email:'',
+         password:'',
+         ripetiPassword:'',
+         ruolo:''
+      }
+   },
+   methods:{
+      signUp(){
+            let newUser = {
+               nome: this.nome,
+               cognome: this.cognome,
+               dataDiNascita: this.dataDiNascita,
+               email: this.email,
+               password:this.password,
+               ripetiPassword: this.ripetiPassword,
+               ruolo: this.ruolo
+            }
+            axios.post('http://localhost:5000/signup', newUser)
+      }
+   }
+ };
  
  </script>  
  
  <style>
- 
  .body,html{
     margin: 0;
     padding: 0;
@@ -82,7 +114,7 @@
     color: white;
    }
 
-   .box input[type="email"],.box input[type="password"],.box input[type="text"]{
+   .box input[type="email"],.box input[type="password"],.box input[type="text"],.box input[type="date"]{
     border:0;
     background:  rgba(255, 255, 255, 0.86);
     display: block;
