@@ -1,6 +1,7 @@
 <script>
 import {collapsed, toggleSidebar, sidebarwidth} from './state'
 import SidebarLink from './SidebarLink.vue';
+import '@fortawesome/fontawesome-free'
 
 
 export default {
@@ -19,13 +20,14 @@ export default {
          <div>V</div>
          <div>S</div>
          </span>
-         <span v-else> NavBar</span>
+         <span v-else> careGivers</span>
         </h1>
 
         <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink to="/dashboard" icon="fas fa-columns">dashboard</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-chart-bar">analytics</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-users">friends</SidebarLink>
+        <SidebarLink to="/" icon="fas fa-columns">analytics</SidebarLink>
+        <SidebarLink to="/" icon="fas fa-chart-bar">alert</SidebarLink>
+        <SidebarLink to="/" icon="fas fa-users">promemoria</SidebarLink>
+        <SidebarLink to="/" icon="fas fa-users">info</SidebarLink>
         
         <span class="collapse-icon" :class="{'rotate-180': collapsed}" @click="toggleSidebar">
             <i class="fas fa-angle-double-left"></i>

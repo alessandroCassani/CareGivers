@@ -53,6 +53,7 @@ export default{
     font-weight: 400;
     user-select: none;
 
+    font-size: x-large;
     margin: 0.1em 0;
     padding: 0.4em;
     border-radius: 0.25em;
