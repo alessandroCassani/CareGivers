@@ -2,7 +2,6 @@
 
 export default {
   name: 'App',
-  
   setup(){
     
   }
@@ -10,6 +9,7 @@ export default {
 </script>
 
 <template>
+
    <div class="container"></div>
     <div>
       <RouterView></RouterView>
