@@ -4,7 +4,7 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { user } = require('./models/user.js')
+const { user } = require('../../models/user.js')
 const bcrypt = require('bcrypt');
 
 
