@@ -55,7 +55,7 @@ export default {
 
 <style>
 :root {
-    --sidebar-bc-color: #2f855a;
+    --sidebar-bc-color: #3D2022;
     --sidebar-item-hover: #38a169;
     --sidebar-item-active: #276749;
 }
@@ -73,7 +73,7 @@ export default {
     left: 0;
     bottom: 0;
     padding: 0.4em;
-    padding-right: 30px;
+    padding-right: 70px;
 
     transition: 0.3s ease;
     display: flex;
