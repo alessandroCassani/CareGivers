@@ -15,19 +15,35 @@ export default {
 
 <template>
     <div class="sidebar" :style="{width: sidebarwidth}">
+        <br>
         <h1>
          <span v-if="collapsed">
+         <div class="scritta">
+         <div>C</div>
+         <div>A</div>
+         <div>R</div>
+         <div>E</div>
+         <div>G</div>
+         <div>I</div>
          <div>V</div>
+         <div>E</div>
+         <div>R</div>
          <div>S</div>
+        </div>
          </span>
-         <span v-else> careGivers</span>
+         <span v-else>&nbsp;careGivers</span>
         </h1>
 
-        <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-columns">analytics</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-chart-bar">alert</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-users">promemoria</SidebarLink>
-        <SidebarLink to="/" icon="fas fa-users">info</SidebarLink>
+        <br><br><br>
+        <SidebarLink to="/" >analytics</SidebarLink>
+        <br>
+        <SidebarLink to="/" >alert</SidebarLink>
+        <br>
+        <SidebarLink to="/">promemoria</SidebarLink>
+        <br>
+        <SidebarLink to="/">referenti</SidebarLink>
+        <br>
+        <SidebarLink to="/">info</SidebarLink>
         
         <span class="collapse-icon" :class="{'rotate-180': collapsed}" @click="toggleSidebar">
             <i class="fas fa-angle-double-left"></i>
@@ -56,10 +72,12 @@ export default {
     top: 0;
     left: 0;
     bottom: 0;
-    padding: 0.5em;
+    padding: 0.4em;
+    padding-right: 30px;
 
     transition: 0.3s ease;
     display: flex;
+    text-align: center;
     flex-direction: column;
 }
 
@@ -75,4 +93,6 @@ export default {
     transform: rotate(180deg);
     transition: 0.2s linear;
 }
+
+
 </style>
