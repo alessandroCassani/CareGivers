@@ -14,26 +14,13 @@ const port = process.env.port || 5000;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-const databaseUser = async() => {
+const database = async() => {
   const connectionParams = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }
   try {
     await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
-    console.log('DB connected')
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const database_Patient_Caregivers = async() => {
-  const connectionParams = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-  try {
-    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/patient_caregivers?retryWrites=true&w=majority')
     console.log('DB connected')
   } catch (error) {
     console.log(error)
@@ -58,7 +45,7 @@ app.post('/signup', async (req, res, next)=> {
         ruolo: req.body.ruolo
     })
   
-    databaseUser()
+    database()
     
     try {
       await newUser.save();
@@ -67,7 +54,6 @@ app.post('/signup', async (req, res, next)=> {
     }
 
     if(req.body.ruolo=="paziente"){
-      database_Patient_Caregivers()
       const patient = new patient_caregivers({
         email: req.body.email
     })
