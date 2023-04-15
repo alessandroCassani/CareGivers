@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { user } = require('./models/user.js')
 const bcrypt = require('bcrypt');
+const { patient_caregivers } = require('./models/patient_associated_caregivers.js')
 
 
 const app = express();
@@ -13,13 +14,26 @@ const port = process.env.port || 5000;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-const database = async() => {
+const databaseUser = async() => {
   const connectionParams = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }
   try {
     await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
+    console.log('DB connected')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const database_Patient_Caregivers = async() => {
+  const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+  try {
+    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/patient_caregivers?retryWrites=true&w=majority')
     console.log('DB connected')
   } catch (error) {
     console.log(error)
@@ -43,14 +57,29 @@ app.post('/signup', async (req, res, next)=> {
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
     })
-
-    database()
+  
+    databaseUser()
     
     try {
       await newUser.save();
     } catch (error) {
       console.log(error);
     }
+
+    if(req.body.ruolo=="paziente"){
+      database_Patient_Caregivers()
+      const patient = new patient_caregivers({
+        email: req.body.email
+    })
+      try {
+        await patient.save();
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+
+
 })
 
 

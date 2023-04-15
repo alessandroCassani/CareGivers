@@ -34,9 +34,9 @@
         <div class="form group">
             <span class="ruolo-title" style="color: white;">ruolo:</span> 
             <div class="role">
-            <input type="radio" v-model="ruolo" name="ruolo" id="paziente">
+            <input type="radio" v-model="ruolo" name="ruolo" value="paziente" id="paziente">
            <label>&nbsp;paziente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> 
-           <input type="radio" v-model="ruolo" name="ruolo" id="caregiver">
+           <input type="radio" v-model="ruolo" name="ruolo" value="caregiver" id="caregiver">
            <label>&nbsp;caregiver</label> 
         </div>
         </div>

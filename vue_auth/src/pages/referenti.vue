@@ -2,6 +2,7 @@
 <script>
 import Side_bar from '@/components/Side_bar.vue';
 import { sidebarWidth } from '@/components/state';
+
 export default {
   name: 'referenti',
   components: {Side_bar},
@@ -13,19 +14,18 @@ export default {
 
 <template>
  <Side_bar>
-  <div :style="{ 'margin-left': sidebarWidth}"></div>
- </Side_bar>
+  
+ </Side_bar><div :style="{ 'margin-left': sidebarWidth}"></div>
   
   <body>
-  <div class="container">
-    <div class="inputfield">
-      <input type="number" maxlength="1" class="input" disabled>
-      <input type="number" maxlength="1" class="input" disabled>
-      <input type="number" maxlength="1" class="input" disabled>
-      <input type="number" maxlength="1" class="input" disabled>
-    </div>
-    <button class="hide" id="submit" onclick="validateOTP()">Submit</button>
-  </div>
+  <h1>INSERISCI OTP</h1>
+ <div class="otp-bx">
+  <input type="text" maxlength="1">  
+  <input type="text" maxlength="1"> 
+  <input type="text" maxlength="1" class="space"> 
+  <input type="text" maxlength="1"> 
+  <input type="text" maxlength="1"> 
+ </div> 
 </body>
 
 
@@ -34,69 +34,45 @@ export default {
 
 
 <style>
-* {
+*{
+  margin: 0;
   padding: 0;
-  margin: 0;
   box-sizing: border-box;
-}
-.body,html {
-  height: 100vh;
-  background: rgb(28, 134, 255)
+  font-family: sans-serif;
 }
 
-.container {
-  width: 28em;
-  background-color: #ffffff;
-  padding: 4em 2em;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  border-radius: 0.8em;
-  box-shadow: 0 45px 60px rgba(30, 22, 1, 0.3);
-}
-
-.inputfield {
-  width: 100%;
+body{
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }
-.input {
-  height: 3em;
-  width: 3em;
-  border: 2px solid #dad9df;
-  outline: none;
+
+.otp-bx{
+  display: flex;
+}
+
+.otp-bx input{
+  width: 50px;
+  font-size: 32px;
+  padding: 10px;
   text-align: center;
-  font-size: 1.5em;
-  border-radius: 0.3em;
-  background-color: #ffffff;
+  border-radius: 5px;
+  margin: 2px;
+  border: 2px solid;
+  font-weight: bold;
   outline: none;
-  /*Hide number field arrows*/
+  transition: all 0.1s;
 }
 
-.input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.otp-bx.input :focus{
+  border: 2px solid #27ffa9;
+  box-shadow: 0 0 2px 2px #27ffd76a;
 }
 
-.input:disabled {
-  color: #89888b;
-}
-.input:focus {
-  border: 3px solid #ffb800;
-}
-
-.submit {
-  background-color: #044ecf;
-  border: none;
-  outline: none;
-  font-size: 1.2em;
-  padding: 0.8em 2em;
-  color: #ffffff;
-  border-radius: 0.1em;
-  margin: 1em auto 0 auto;
-  cursor: pointer;
+.space{
+  margin-right: 1rem !important;
 }
 </style>
 
