@@ -1,20 +1,9 @@
-<template>
-    <body class="body">
-        <form class="box">
-            <h1>Login</h1> 
-            <input type="email" name="" v-model="email" placeholder="email">
-            <input type="password" name="" v-model="password" placeholder="password">
-            <input type="submit" @click="login()" name="" value="LOGIN">
-            <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
-        </form>
-    </body>
 
-    
-</template>
 
 
 <script>
 import axios from 'axios'
+
  
 
    export default {
@@ -24,6 +13,7 @@ import axios from 'axios'
           email: '',
           password: '',
         };
+  
     },
     methods: {
         login() {
@@ -34,11 +24,26 @@ import axios from 'axios'
             console.log(user);
             axios.post('http://localhost:5000/login',user);
         }
-    }
+    },
+    
 };
    
 </script>
 
+<template>
+
+  <body class="body">
+      <form class="box">
+          <h1>Login</h1> 
+          <input type="email" name="" v-model="email" placeholder="email">
+          <input type="password" name="" v-model="password" placeholder="password">
+          <input type="submit" @click="login()" name="" value="LOGIN">
+          <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
+      </form>
+  </body>
+
+  
+</template>
 <style scoped>
    .body,html{
     margin: 0;
