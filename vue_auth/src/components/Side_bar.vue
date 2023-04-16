@@ -1,14 +1,14 @@
 <script>
-import {collapsed, toggleSidebar, sidebarwidth} from './state'
+import {collapsed, toggleSidebar, sidebarWidth} from './state'
 import SidebarLink from './SidebarLink.vue';
 import '@fortawesome/fontawesome-free'
 
 
 export default {
     props:{},
-    components: { SidebarLink},
+    components: {SidebarLink},
     setup(){
-        return {collapsed, toggleSidebar, sidebarwidth}
+        return {collapsed, toggleSidebar, sidebarWidth}
     }
 }
 </script>

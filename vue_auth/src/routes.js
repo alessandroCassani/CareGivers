@@ -9,7 +9,7 @@ const routes = [{
    },
     {path: '/signup', component: Sign_Up,
     },
-    {path:'/referenti', component: referenti,}
+    {path:'/referenti:email', component: referenti,}
    
 ];
 
