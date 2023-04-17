@@ -2,19 +2,29 @@
 <script>
 import Side_bar from '@/components/Side_bar.vue';
 import { sidebarWidth } from '@/components/state';
+import { onMounted, ref } from 'vue';
 
 export default {
   name: 'referenti',
   components: {Side_bar},
   setup(){
-    return {sidebarWidth}
-  },
-  mounted(){
-      let use = localStorage.getItem('user-info');
-      if(use){
-        this.$router.push({path: '/signUp'});
-      }
-    }
+
+    const message = ref('non sei loggato')
+
+    onMounted(async () => {
+      const response = await fetch('http://localhost:6000/user', {
+        headers: {'Content-type': 'application/json'},
+        credentials: 'include'
+      });
+
+      const content = await response.json();
+      message.value = content.name;                       //per prendere dato dopo che si è stati reindirizzati in main page
+    });
+
+    return {sidebarWidth,
+    message}
+  }
+ 
 }; 
 </script>
 

@@ -21,7 +21,8 @@
     "mongoose": "^7.0.3",
     "sors": "^1.0.2",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
