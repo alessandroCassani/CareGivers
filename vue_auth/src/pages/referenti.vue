@@ -8,7 +8,13 @@ export default {
   components: {Side_bar},
   setup(){
     return {sidebarWidth}
-  }
+  },
+  mounted(){
+      let use = localStorage.getItem('user-info');
+      if(use){
+        this.$router.push({path: '/signUp'});
+      }
+    }
 }; 
 </script>
 
@@ -18,6 +24,10 @@ export default {
  </Side_bar><div :style="{ 'margin-left': sidebarWidth}"></div>
   
   <body>
+    <div class="inputReferente">
+      <h3> inserire email referente:</h3>
+      <input type="email" v-model="email" class="form-control" placeholder="email referente"> 
+    </div>
   <h1>INSERISCI OTP</h1>
  <div class="otp-bx">
   <input type="text" maxlength="1">  

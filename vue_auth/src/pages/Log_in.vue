@@ -1,43 +1,47 @@
 
-
-
 <script>
-import axios from 'axios'
 
- 
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+
 
    export default {
     name: "Log_in",
-    data() {
-        return {
+
+    setup(){
+        const data = reactive({
           email: '',
-          password: '',
-        };
-  
-    },
-    methods: {
-        login() {
-            let user = {
-              email: this.email,
-              password: this.password
-            }
-            console.log(user);
-            axios.post('http://localhost:5000/login',user);
+          password: ''
+        }); 
+
+        const router = useRouter();
+
+        const submit = async() =>{
+          await fetch('http://localhost:5000/login', {
+            method: 'POST',
+            headers:{'Content-type': 'application/json'},
+            credentials: 'include',  
+            body: JSON.stringify(data)
+         });
         }
-    },
-    
-};
+
+    return{
+      data,
+      submit
+    } 
+  }
+}
    
 </script>
 
 <template>
 
   <body class="body">
-      <form class="box">
+      <form @submit.prevent="submit" class="box">
           <h1>Login</h1> 
-          <input type="email" name="" v-model="email" placeholder="email">
-          <input type="password" name="" v-model="password" placeholder="password">
-          <input type="submit" @click="login()" name="" value="LOGIN">
+          <input type="email" name="" v-model="data.email" placeholder="email">
+          <input type="password" name="" v-model="data.password" placeholder="password">
+          <input type="submit" name="" value="LOGIN">
           <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
       </form>
   </body>

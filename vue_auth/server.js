@@ -72,16 +72,14 @@ app.post('/signup', async (req, res, next)=> {
 app.post('/login', async (req,res,next) =>{
   database();
   console.log(req.email);
-  console.log('dentro al login')
   user.findOne({
     email:req.body.email
   }).then((account) => {
     
     console.log('query eseguita');
       if(!account){
-        console.log(res);
         console.log('utente non trovato')
-        res.json({success:false, error: "utente non trovato"})
+        return res.json({success:false, error: "utente non trovato"})
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -91,11 +89,11 @@ app.post('/login', async (req,res,next) =>{
 
       if (!passwordIsValid) {
         console.log('password errata')
-        res.json({success:false, error: "password errata"})
+        return res.json({success:false, error: "password errata"})
       }
 
       console.log('trovato')
-      res.status(200).send({
+      return res.status(200).send({
         id: user._id,
         nome: user.nome,
         cognome: user.cognome,

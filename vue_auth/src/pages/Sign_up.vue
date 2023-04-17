@@ -1,66 +1,93 @@
 <template>
-    <form class ="box">
+    <form @submit.prevent="submit" class ="box">
         <h1> Sign Up</h1>
         <div class="form group">
             <label>nome:</label>
-           <input type="text" v-model="nome"  class="form-control" placeholder="nome"> 
+           <input type="text" v-model="data.nome"  class="form-control" placeholder="nome"> 
         </div>
 
         <div class="form group">
             <label>cognome:</label>
-           <input type="text" v-model="cognome"  class="form-control" placeholder="cognome"> 
+           <input type="text" v-model="data.cognome"  class="form-control" placeholder="cognome"> 
         </div>
 
         <div class="form group">
             <label>Data di nascita:</label>
-           <input type="date" v-model="dataDiNascita" class="form-control" placeholder="data di nascita"> 
+           <input type="date" v-model="data.dataDiNascita" class="form-control" placeholder="data di nascita"> 
         </div>
 
         <div class="form group">
             <label>email:</label>
-           <input type="email" v-model="email" class="form-control" placeholder="email"> 
+           <input type="email" v-model="data.email" class="form-control" placeholder="email"> 
         </div>
 
         <div class="form group">
             <label>password:</label>
-           <input type="password" v-model="password" class="form-control" placeholder="password"> 
+           <input type="password" v-model="data.password" class="form-control" placeholder="password"> 
         </div>
 
         <div class="form group">
             <label>conferma password:</label>
-           <input type="password" v-model="ripetiPassword" class="form-control" placeholder="conferma password"> 
+           <input type="password" v-model="data.ripetiPassword" class="form-control" placeholder="conferma password"> 
         </div>
 
         <div class="form group">
             <span class="ruolo-title" style="color: white;">ruolo:</span> 
             <div class="role">
-            <input type="radio" v-model="ruolo" name="ruolo" value="paziente" id="paziente">
+            <input type="radio" v-model="data.ruolo" name="ruolo" value="paziente" id="paziente">
            <label>&nbsp;paziente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> 
-           <input type="radio" v-model="ruolo" name="ruolo" value="caregiver" id="caregiver">
+           <input type="radio" v-model="data.ruolo" name="ruolo" value="caregiver" id="caregiver">
            <label>&nbsp;caregiver</label> 
         </div>
         </div>
 
-        <input type="submit" @click="signUp" name="" value="REGISTER">
+        <input type="submit"  name="" value="REGISTER">
         <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
     </form>
  </template>
  
  <script>
   import axios from 'axios'
+  import {reactive} from 'vue'
+  import { useRouter } from 'vue-router';
+  
   export default{
    name:'Sign_up',
-   data(){
-      return{
-         nome:'',
+
+   setup(){
+      const data = reactive({
+         nome : '',
          cognome:'',
          dataDiNascita: '',
          email:'',
          password:'',
          ripetiPassword:'',
          ruolo:''
+
+      });
+
+      const router = useRouter();
+
+
+      const submit = async() =>{
+         console.log(data); 
+         let response = await fetch('http://localhost:5000/signup', {
+            method: 'POST',
+            headers:{'Content-type': 'application/json'},
+            body: JSON.stringify(data)
+         });
+
+         let result = await response.json();
+         alert(result.message);
+         await router.push('/login');
+      }
+
+      return {
+         data,
+         submit
       }
    },
+
    methods:{
       signUp(){
             let newUser = {
