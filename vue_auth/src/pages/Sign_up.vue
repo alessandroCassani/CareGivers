@@ -68,30 +68,31 @@
    },
 
    methods:{
-        signUp (){
+      signUp (){
          
-        // const router = useRouter();
-         let newUser = {
-               nome: this.nome,
-               cognome: this.cognome,
-               dataDiNascita: this.dataDiNascita,
-               email: this.email,
-               password:this.password,
-               ripetiPassword: this.ripetiPassword,
-               ruolo: this.ruolo
-            }
+         // const router = useRouter();
+          let newUser = {
+                nome: this.nome,
+                cognome: this.cognome,
+                dataDiNascita: this.dataDiNascita,
+                email: this.email,
+                password:this.password,
+                ripetiPassword: this.ripetiPassword,
+                ruolo: this.ruolo
+             }
+             
+              axios.post('http://localhost:5000/signup',newUser)
+           .then(() => {
+             alert('ok')
             
-             axios.post('http://localhost:5000/signup',newUser)
-          .then(() => {
-            alert('ok')
-            this.$router.push('/login')
-          })
-          .catch((errore) => {
-            alert(errore)
-            alert('errore')
-          })
-         
-      }
+           })
+           .catch((errore) => {
+             alert(errore)
+             alert('errore')
+           })
+           this.$router.push('/login')
+          
+       }
    }
   }
  
@@ -119,7 +120,7 @@
     border-radius: 10px;
     opacity: .5;
     border-color: white;
- }
+ }       
 
  .box h1{
     color: white;

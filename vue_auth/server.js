@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-app.post('/signup',  (req, res) => {
+app.post('/signup', async (req, res) => {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -50,9 +50,9 @@ app.post('/signup',  (req, res) => {
     database()
     
     try {
-     const result =   newUser.save();
-     console.log(result)
-     res.send(result)
+      await newUser.save();
+       res.sendStatus(200)
+       console.log('registrato in user')
     } catch (error) {
       console.log(error);
     }
@@ -63,6 +63,7 @@ app.post('/signup',  (req, res) => {
     })
       try {
          patient.save();
+         console.log('registrato in associati')
       } catch (error) {
         console.log(error);
       }
@@ -70,7 +71,7 @@ app.post('/signup',  (req, res) => {
 })
 
 
-app.post('/login', async (req,res,next) =>{
+app.post('/login', async (req,res) =>{
   database();
   console.log(req.email);
   user.findOne({
