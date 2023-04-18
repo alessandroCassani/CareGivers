@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-router.post('/signup', async (req, res)=> {
+app.post('/signup', async (req, res)=> {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -66,10 +66,7 @@ router.post('/signup', async (req, res)=> {
       } catch (error) {
         console.log(error);
       }
-
     }
-
-
 })
 
 
