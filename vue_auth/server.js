@@ -10,7 +10,7 @@ const { patient_caregivers } = require('./models/patient_associated_caregivers.j
 const router = require('express').Router();
 
 
-const app = express();
+const app = express()
 const port = process.env.port || 5000;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-app.post('/signup', async (req, res)=> {
+app.post('/signup', async (req, res) => {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -50,9 +50,8 @@ app.post('/signup', async (req, res)=> {
     database()
     
     try {
-      const result = await newUser.save();
-      const {password, ...data} = result.toJSON()
-      res.send(data)
+     const result =  await newUser.save();
+     res.send(result)
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +79,7 @@ app.post('/login', async (req,res,next) =>{
     console.log('query eseguita');
       if(!account){
         console.log('utente non trovato')
-        return res.json({success:false, error: "utente non trovato"})
+         res.json({success:false, error: "utente non trovato"})
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -90,11 +89,11 @@ app.post('/login', async (req,res,next) =>{
 
       if (!passwordIsValid) {
         console.log('password errata')
-        return res.json({success:false, error: "password errata"})
+         res.json({success:false, error: "password errata"})
       }
 
       console.log('trovato')
-      return res.status(200).send({
+        res.status(200).send({
         id: user._id,
         nome: user.nome,
         cognome: user.cognome,

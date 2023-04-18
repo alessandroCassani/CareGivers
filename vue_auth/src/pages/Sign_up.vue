@@ -68,7 +68,7 @@
    },
 
    methods:{
-       signUp (){
+       async signUp (){
          
         // const router = useRouter();
          let newUser = {
@@ -80,8 +80,22 @@
                ripetiPassword: this.ripetiPassword,
                ruolo: this.ruolo
             }
-          axios.post('http://localhost:5000/signup', newUser);
-         this.$router.push('/login')
+            
+          await axios.post({
+            method:'POST',
+            url: 'http://localhost:5000/signup',
+            data: newUser,
+            validateStatus: () => {
+               return true;
+            },   
+          })
+          .then(() => {
+            alert('ok')
+            this.$router.push('/login')
+          })
+          .catch(() => {
+            alert('errore')
+          })
          
       }
    }
