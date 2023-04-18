@@ -5,12 +5,9 @@ import Sign_Up from './pages/Sign_up.vue';
 import referenti from './pages/referenti.vue';
 
 const routes = [{
-    path: '/login', component: Log_in, name:"login",
-   },
-    {path: '/signup', component: Sign_Up,name:"signUp"
-    },
-    {path:'/referenti', component: referenti,props: true, name:'referenti'}
-   
+    path: '/login', component: Log_in, name:"login",},
+    {path: '/signup', component: Sign_Up, name:"signUp"},
+    {path:'/referenti', component: referenti, name:'referenti'}
 ];
 
 const router = createRouter({

@@ -41,7 +41,7 @@
         </div>
         </div>
 
-        <input type="submit"  name="" value="REGISTER">
+        <input type="submit" @click="submit" name="" value="REGISTER">
         <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
     </form>
  </template>

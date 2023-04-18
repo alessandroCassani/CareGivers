@@ -7,6 +7,7 @@ const cors = require('cors');
 const { user } = require('./models/user.js')
 const bcrypt = require('bcrypt');
 const { patient_caregivers } = require('./models/patient_associated_caregivers.js')
+const router = require('express').Router();
 
 
 const app = express();
@@ -35,7 +36,8 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-app.post('/signup', async (req, res, next)=> {
+router.post('/signup', async (req, res)=> {
+  console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
         cognome: req.body.cognome,
@@ -48,7 +50,9 @@ app.post('/signup', async (req, res, next)=> {
     database()
     
     try {
-      await newUser.save();
+      const result = await newUser.save();
+      const {password, ...data} = result.toJSON()
+      res.send(data)
     } catch (error) {
       console.log(error);
     }

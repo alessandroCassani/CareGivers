@@ -1,3 +1,18 @@
+<template>
+
+  <body class="body">
+      <form @submit.prevent="submit" class="box">
+          <h1>Login</h1> 
+          <input type="email" name="" v-model="data.email" placeholder="email">
+          <input type="password" name="" v-model="data.password" placeholder="password">
+          <input type="submit" name="" value="LOGIN">
+          <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
+      </form>
+  </body>
+
+  
+</template>
+
 
 <script>
 
@@ -23,6 +38,8 @@ import { useRouter } from 'vue-router';
             credentials: 'include',  
             body: JSON.stringify(data)
          });
+
+         await router.push('/referenti')
         }
 
     return{
@@ -34,20 +51,6 @@ import { useRouter } from 'vue-router';
    
 </script>
 
-<template>
-
-  <body class="body">
-      <form @submit.prevent="submit" class="box">
-          <h1>Login</h1> 
-          <input type="email" name="" v-model="data.email" placeholder="email">
-          <input type="password" name="" v-model="data.password" placeholder="password">
-          <input type="submit" name="" value="LOGIN">
-          <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
-      </form>
-  </body>
-
-  
-</template>
 <style scoped>
    .body,html{
     margin: 0;
