@@ -68,7 +68,7 @@
    },
 
    methods:{
-       async signUp (){
+        signUp (){
          
         // const router = useRouter();
          let newUser = {
@@ -81,19 +81,13 @@
                ruolo: this.ruolo
             }
             
-          await axios.post({
-            method:'POST',
-            url: 'http://localhost:5000/signup',
-            data: newUser,
-            validateStatus: () => {
-               return true;
-            },   
-          })
+             axios.post('http://localhost:5000/signup',newUser)
           .then(() => {
             alert('ok')
             this.$router.push('/login')
           })
-          .catch(() => {
+          .catch((errore) => {
+            alert(errore)
             alert('errore')
           })
          

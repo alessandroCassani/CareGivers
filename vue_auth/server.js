@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-app.post('/signup', async (req, res) => {
+app.post('/signup',  (req, res) => {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -50,7 +50,8 @@ app.post('/signup', async (req, res) => {
     database()
     
     try {
-     const result =  await newUser.save();
+     const result =   newUser.save();
+     console.log(result)
      res.send(result)
     } catch (error) {
       console.log(error);
@@ -61,7 +62,7 @@ app.post('/signup', async (req, res) => {
         email: req.body.email
     })
       try {
-        await patient.save();
+         patient.save();
       } catch (error) {
         console.log(error);
       }
