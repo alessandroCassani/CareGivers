@@ -28,21 +28,20 @@ import axios from 'axios';
       }
     },
     methods:{
-      async login(){
+       login(){
 
         let loggedUser = {
           email: this.email,
           password: this.password
         }
 
-        await axios.post('http://localhost:5000/signup', loggedUser)
-        .then(() => {
+        try{
+          const response =  axios.post('http://localhost:5000/login', loggedUser)
           alert('accesso avvenuto correttamente')
           this.$router.push('/referenti')
-        })
-        .catch((errore) => {
-          alert(errore)
-        })
+        }catch(error){
+          alert(error)
+        }
       }
     }
   }
