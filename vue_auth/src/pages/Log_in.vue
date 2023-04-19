@@ -1,11 +1,11 @@
 <template>
 
   <body class="body">
-      <form @submit.prevent="submit" class="box">
+      <form class="box">
           <h1>Login</h1> 
-          <input type="email" name="" v-model="data.email" placeholder="email">
-          <input type="password" name="" v-model="data.password" placeholder="password">
-          <input type="submit" name="" value="LOGIN">
+          <input type="email" name="" v-model="email" placeholder="email">
+          <input type="password" name="" v-model="password" placeholder="password">
+          <input type="submit" @click="login()" name="" value="LOGIN">
           <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
       </form>
   </body>
@@ -15,39 +15,37 @@
 
 
 <script>
-
-import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 
    export default {
     name: "Log_in",
 
-    setup(){
-        const data = reactive({
-          email: '',
-          password: ''
-        }); 
+    data(){
+      return {
+        email: '',
+        password: ''
+      }
+    },
+    methods:{
+      async login(){
 
-        const router = useRouter();
-
-        const submit = async() =>{
-          await fetch('http://localhost:5000/login', {
-            method: 'POST',
-            headers:{'Content-type': 'application/json'},
-            credentials: 'include',  
-            body: JSON.stringify(data)
-         });
-
-         await router.push('/referenti')
+        let loggedUser = {
+          email: this.email,
+          password: this.password
         }
 
-    return{
-      data,
-      submit
-    } 
+        await axios.post('http://localhost:5000/signup', loggedUser)
+        .then(() => {
+          alert('accesso avvenuto correttamente')
+          this.$router.push('/referenti')
+        })
+        .catch((errore) => {
+          alert(errore)
+        })
+      }
+    }
   }
-}
    
 </script>
 

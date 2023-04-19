@@ -48,9 +48,6 @@
  
  <script>
   import axios from 'axios';
-
-
- // import { useRouter } from 'vue-router';
   
   export default{
    name:'Sign_up',
@@ -70,7 +67,7 @@
    methods:{
       async signUp (){
          
-         // const router = useRouter();
+        
           let newUser = {
                 nome: this.nome,
                 cognome: this.cognome,
@@ -91,11 +88,9 @@
              alert(errore)
              alert('errore')
            })
-           
-          
        }
    }
-  }
+}
  
  </script>  
  
