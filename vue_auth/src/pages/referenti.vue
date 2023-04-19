@@ -12,6 +12,7 @@ export default {
     const message = ref('non sei loggato')
 
     onMounted(async () => {
+      alert(localStorage.getItem('email'))
       const response = await fetch('http://localhost:6000/user', {
         headers: {'Content-type': 'application/json'},
         credentials: 'include'

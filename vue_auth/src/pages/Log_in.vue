@@ -36,8 +36,9 @@ import axios from 'axios';
         }
 
         try{
-          const response =  axios.post('http://localhost:5000/login', loggedUser)
+          axios.post('http://localhost:5000/login', loggedUser)
           alert('accesso avvenuto correttamente')
+          localStorage.setItem('email', this.email)
           this.$router.push('/referenti')
         }catch(error){
           alert(error)
