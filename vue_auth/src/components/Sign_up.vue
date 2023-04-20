@@ -70,7 +70,6 @@
    methods:{
        signUp (){
          
-        
           let newUser = {
                 nome: this.nome,
                 cognome: this.cognome,

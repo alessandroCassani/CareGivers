@@ -2,6 +2,7 @@
 <script>
 import Side_bar from '@/components/Side_bar.vue';
 import sidebarWidth from '@/components/state';
+import axios from 'axios';
 //import axios from 'axios';
 
 
@@ -21,7 +22,15 @@ export default {
   if(localStorage.getItem('token') === null){
     this.$router.push('/login')
   }
+ },
 
+ mounted(){
+  axios.get('http://localhost:5000/user', {headers: {token: localStorage.getItem('token')}
+  .then((result) => {
+    console.log(result)
+  })
+
+})
  }
  
 }; 
