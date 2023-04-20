@@ -4,10 +4,11 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { user } = require('./models/user.js')
+const { user } = require('./src/models/user.js')
 const bcrypt = require('bcrypt');
-const { patient_caregivers } = require('./models/patient_associated_caregivers.js')
-const router = require('express').Router();
+const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js')
+mongoose.set('strictQuery', false);
+const jwt = require('jsonwebtoken')
 
 
 const app = express()
@@ -15,7 +16,7 @@ const port = process.env.port || 5000;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-const database = async() => {
+const database = async () => {
   const connectionParams = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -36,7 +37,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 //routes
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -46,68 +47,55 @@ app.post('/signup', async (req, res) => {
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
     })
-  
     database()
-    
-    try {
-      await newUser.save();
-       res.sendStatus(200)
-       console.log('registrato in user')
-    } catch (error) {
-      console.log(error);
-    }
 
-    if(req.body.ruolo=="paziente"){
-      const patient = new patient_caregivers({
-        email: req.body.email
-    })
-      try {
-         patient.save();
-         console.log('registrato in associati')
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    newUser.save(err => {
+      if(err){
+        console.log('email già in uso')
+        return res.status(400).json({
+          title: 'email in use',
+        })}
+      console.log('registrato')
+
+      return res.status(200).json({title: 'registarzione avvenuta'})
+    }) 
 })
 
 
-app.post('/login', async (req,res) =>{
-  console.log('dentro login server')
+app.post('/login',   (req,res) =>{
   database();
-  console.log(req.email);
-  await user.findOne({
-    email:req.body.email
-  }).then((account) => {
-    
-    console.log('query eseguita');
-      if(!account){
-        console.log('utente non trovato')
-         res.sendStatus(404)
-      }
+  var jwt = require('jsonwebtoken')
+  console.log('dentro login server')
+   
+   user.findOne({email:req.body.email}, (err,User) => {
+    if(err) return res.status(500).json({
+      title: 'server error', 
+      error: err
+    })
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        account.password
-      );
 
-      if (!passwordIsValid) {
-        console.log('password errata')
-        res.sendStatus(404)
-      }
+  if(!User){
+    return res.status(400).json({
+      title: 'user not found',
+      error: 'invalid credentials'
+    })
+  }
 
-      console.log('trovato')
-        res.status(200).send({
-        id: user._id,
-        nome: user.nome,
-        cognome: user.cognome,
-        codiceFiscale: user.codiceFiscale,
-        ruolo: user.ruolo,
-        dataDiNascita: user.dataDiNascita
-      });
-  }).catch((err) => {
-    console.log(err);
-    return res.status(500).send({message : err});
-  });
+  if(!bcrypt.compareSync(req.body.password,User.password)) {
+    return res.status(401).json({
+      title: 'login failed',
+      error: 'invalid credentials'
+    })
+  }
+
+  
+  console.log('trovato')
+  let token = jwt.sign({userID: User._id},'secretKey');
+  res.status(200).json({
+    title: 'login avvenuto correttamente',
+    token: token
+  })
+});
 });
 
 
