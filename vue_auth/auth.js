@@ -14,15 +14,18 @@ const jwt = require('jsonwebtoken')
 const app = express()
 const port = process.env.port || 5000;
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 })
 
-const database = async () => {
+
+
+
+const database =  () => {
   const connectionParams = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }
   try {
-    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
+     mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
     console.log('DB connected')
   } catch (error) {
     console.log(error)
@@ -30,14 +33,14 @@ const database = async () => {
 }
 
 app.use(express.json());
-app.use(cors());
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
 
 
 //routes
-app.post('/signup', (req, res) => {
+app.post('/signup', express.json(), async (req, res) => {
   console.log('dentro signup server')
     const newUser = new user({
         nome: req.body.nome,
@@ -48,41 +51,47 @@ app.post('/signup', (req, res) => {
         ruolo: req.body.ruolo
     })
     database()
-
-    newUser.save(err => {
-      if(err){
-        console.log('email già in uso')
-        return res.status(400).json({
-          title: 'email in use',
-        })}
-      console.log('registrato')
-
-      return res.status(200).json({title: 'registarzione avvenuta'})
-    }) 
-})
-
-
-app.get('/user', (req,res,next) => {
-  let token = req.headers.token
-  jwt.verify(token, 'secretKey', (err, decoded) => {
-  if(err) return res.status(401).json({
-    title: "non autorizzato"
-  })
-  console.log(decoded)
-  //token valido
-  user.findOne({_id: decoded.userId}, (err,User) => {
-    if(err) return console.log(err)
-    console.log(User)
+    try{
+    const utente = await newUser.save()
+    console.log(utente)
     return res.status(200).json({
-      title: 'info trovate',
-      User: {
-        email:User.email,
-        ruolo: User.ruolo
-      }
-    })
-  })
-  })
-})
+        message: "User created"
+    });
+    }catch(err){
+      console.log("error => " + err)
+      res.status(409).json({
+      message: "ERROR"
+      })
+    }
+
+   
+   
+      
+}) ;
+
+
+
+//app.get('/user', (req,res,next) => {
+//  let token = req.headers.token
+//  jwt.verify(token, 'secretKey', (err, decoded) => {
+//  if(err) return res.status(401).json({
+//    title: "non autorizzato"
+//  })
+//  console.log(decoded)
+//  //token valido
+//  user.findOne({_id: decoded.userId}, (err,User) => {
+//    if(err) return console.log(err)
+//    console.log(User)
+//    return res.status(200).json({
+//      title: 'info trovate',
+//      User: {
+//        email:User.email,
+//        ruolo: User.ruolo
+//      }
+//    })
+//  })
+//  })
+//})
 
 
 app.post('/login',   (req,res) =>{

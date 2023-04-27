@@ -39,13 +39,15 @@ import axios from 'axios';
       }
       axios.post('http://localhost:5000/login', loggedUser)
       .then(res => {
+        console.log(res.data)
       if(res.status === 200){
         console.log(res.data.token)
+        
         localStorage.setItem('token', res.data.token);
         this.$router.push('referenti')
       }
       }
-      , err => {
+      ,err => {
         console.log(err.response);
         this.error = err.response.data.error
       }
