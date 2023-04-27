@@ -99,36 +99,36 @@ app.post('/login',   (req,res) =>{
   var jwt = require('jsonwebtoken')
   console.log('dentro login server')
    
-   user.findOne({email:req.body.email}, (err,User) => {
-    if(err) return res.status(500).json({
-      title: 'server error', 
-      error: err
-    })
+   //user.findOne({email:req.body.email}, (err,User) => {
+  //  if(err) return res.status(500).json({
+   //   title: 'server error', 
+    //  error: err
+   // })
 
 
-  if(!User){
-    return res.status(400).json({
-      title: 'user not found',
-      error: 'invalid credentials'
-    })
-  }
+  //if(!User){
+  //  return res.status(400).json({
+   //   title: 'user not found',
+   //   error: 'invalid credentials'
+   // })
+ // }
 
-  if(!bcrypt.compareSync(req.body.password,User.password)) {
-    return res.status(401).json({
-      title: 'login failed',
-      error: 'invalid credentials'
-    })
-  }
+  //if(!bcrypt.compareSync(req.body.password,User.password)) {
+   // return res.status(401).json({
+   //   title: 'login failed',
+   //   error: 'invalid credentials'
+    //})
+  //}
 
   
   console.log('trovato')
-  let token = jwt.sign({userID: User._id},'secretKey');
-  res.status(200).json({
-    title: 'login avvenuto correttamente',
-    token: token
+  //let token = jwt.sign({userID: User._id},'secretKey');
+  return res.status(200).json({
+    message: 'login avvenuto correttamente',
+    //token: token
   })
 });
-});
+//});
 
 
 
