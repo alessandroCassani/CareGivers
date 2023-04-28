@@ -31,27 +31,26 @@ import axios from 'axios';
       }
     },
     methods:{
-       login(){
+        login(){
 
       let loggedUser = {
          email: this.email,
          password: this.password
       }
-      axios.post('http://localhost:5000/login', loggedUser)
-      .then(res => {
-        console.log(res.data)
-      if(res.status === 200){
-        console.log(res.data.token)
-        
-        localStorage.setItem('token', res.data.token);
-        this.$router.push('referenti')
-      }
-      }
-      ,err => {
-        console.log(err.response);
-        this.error = err.response.data.error
-      }
-      )
+         axios.post('http://localhost:5000/login', loggedUser)
+         .then(res => {
+         console.log(res.data)
+         if(res.status === 200){
+          console.log(res.data.token)
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('email', res.data.email);
+          localStorage.setItem('ruolo', res.data.ruolo);
+        }
+         }, err =>{
+          console.log(err.response)
+         })
+         
+         this.$router.push('/referenti')
   } 
 }
 }
