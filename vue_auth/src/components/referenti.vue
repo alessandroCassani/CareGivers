@@ -2,11 +2,11 @@
 <script>
 import Side_bar from '@/components/Side_bar.vue';
 import sidebarWidth from '@/components/state';
-import axios from 'axios';
 //import axios from 'axios';
 
 
-export default {
+
+export default{
   name: 'referenti',
   components: {Side_bar},
 
@@ -14,24 +14,39 @@ export default {
     return{
       otp: '',
       email: localStorage.getItem('email'),
-      ruolo:'',
+      ruolo: localStorage.getItem('ruolo'),
       sidebarWidth
     }
   },
+  computed:{
+    isPatient(){
+      return this.ruolo ==='paziente'
+    }
+  },
+
  created(){
+  console.log('CREATED REFERENTI')
   if(localStorage.getItem('token') === null){
     this.$router.push('/login')
   }
  },
 
  mounted(){
-  axios.get('http://localhost:5000/user', {headers: {token: localStorage.getItem('token')}
-  .then((result) => {
-    console.log(result)
-  })
+  console.log('MOUNTED' + localStorage.getItem('ruolo'))
+  this.getInfo
+ 
+ },
 
-})
- }
+ methods:{
+      getInfo(){
+     //   let info = {email}
+     //   axios.post('http://localhost:5000/user', info)
+    //   .then((result) => {
+    ////     console.log('THEN MOUNTED')
+   //      console.log(result.data)
+  //     })
+      }
+}
  
 }; 
 </script>
@@ -47,7 +62,7 @@ export default {
   <body>
     <div class="inputReferente">
       <h3> inserire email referente:</h3>
-      <input type="email" v-model="email" class="form-control" placeholder="email referente"> 
+      <input type="email" v-if="!isPatient" v-model="email" class="form-control" placeholder="email referente"> 
     </div>
   <h1>INSERISCI OTP</h1>
  <div class="otp-bx">
