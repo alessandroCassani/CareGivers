@@ -86,8 +86,6 @@
            return console.log(err.response)
           })
           this.$router.push('/login')
-
-         
       }
   } 
 }
