@@ -7,7 +7,8 @@ const cors = require('cors');
 const { user } = require('./src/models/user.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
-const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js')
+const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
+const { otp } = require('@/models/otp.js');
 const router = require('express').Router();
 
 
@@ -45,15 +46,13 @@ const database = () => {
     try{
       console.log(req.body.otp)
       console.log(req.body.email)
-     
+      const Otp = new otp({
+        email: req.body.email,
+        otp: req.body.otp
+      })
 
-      const response = await patient_caregivers.updateOne(
-        {email: req.body.email},
-        {$set : {otp: req.body.otp} }
-      ) 
-
+      const response = await Otp.save()
       console.log(response)
-
 
       res.status(200).json({message: 'otp generato correttamente'})
       }catch(error){
