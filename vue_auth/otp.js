@@ -8,7 +8,7 @@ const { user } = require('./src/models/user.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
-const { otp } = require('@/models/otp.js');
+const { otp } = require('./src/models/otp.js');
 const router = require('express').Router();
 
 
