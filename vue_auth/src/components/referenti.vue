@@ -61,17 +61,20 @@ export default{
   
   <body>
     <div class="inputReferente">
-      <h3> inserire email referente:</h3>
-      <input type="email" v-if="!isPatient" v-model="email" class="form-control" placeholder="email referente"> 
+      <h3 v-if="!isPatient"> inserire email paziente:</h3>
+      <h1 v-if="isPatient"> genera OTP:</h1>
+      <input type="email" v-if="!isPatient" v-model="email" class="form-control" placeholder="email paziente"> 
     </div>
-  <h1>INSERISCI OTP</h1>
- <div class="otp-bx">
+  <h1 v-if="!isPatient">INSERISCI OTP</h1>
+ <div v-if="!isPatient" class="otp-bx">
   <input type="text" maxlength="1">  
   <input type="text" maxlength="1"> 
   <input type="text" maxlength="1" class="space"> 
   <input type="text" maxlength="1"> 
   <input type="text" maxlength="1"> 
  </div> 
+
+ <input type="submit" value="GENERA" v-if="isPatient">
 </body>
 
 
