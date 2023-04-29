@@ -2,7 +2,8 @@
 <script>
 import Side_bar from '@/components/Side_bar.vue';
 import sidebarWidth from '@/components/state';
-//import axios from 'axios';
+import axios from 'axios';
+
 
 
 
@@ -33,7 +34,6 @@ export default{
 
  mounted(){
   console.log('MOUNTED' + localStorage.getItem('ruolo'))
-  this.getInfo
  
  },
 
@@ -45,7 +45,27 @@ export default{
     ////     console.log('THEN MOUNTED')
    //      console.log(result.data)
   //     })
+      },
+
+    createOtp(){
+      const length = 6;
+      let otp = '';
+
+      for(let i = 0; i < length; i++) {
+        otp += Math.floor(Math.random() * 10)
       }
+      console.log(otp)
+
+      const data = {
+        otp: otp,
+        email: localStorage.getItem('email')
+      }
+      axios.post('http://localhost:5001/otp', data)
+      .then(res =>{
+        console.log(res.data)
+      })
+
+    } 
 }
  
 }; 
@@ -74,7 +94,7 @@ export default{
   <input type="text" maxlength="1"> 
  </div> 
 
- <input type="submit" value="GENERA" v-if="isPatient">
+ <input type="submit" @click="createOtp()" value="GENERA" v-if="isPatient">
 </body>
 
 

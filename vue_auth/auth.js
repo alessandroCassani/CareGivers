@@ -54,6 +54,14 @@ app.post('/signup', express.json(), async (req, res) => {
     try{
     const utente = await newUser.save()
     console.log(utente)
+    
+    if(req.body.ruolo === 'paziente'){
+      const associato = new patient_caregivers({
+            email: req.body.email,
+      })
+      await associato.save()
+    }
+    
     return res.status(200).json({
         message: "User created"
     });

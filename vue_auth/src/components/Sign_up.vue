@@ -85,6 +85,7 @@
             this.error = err.response.data.error
            return console.log(err.response)
           })
+
           this.$router.push('/login')
       }
   } 

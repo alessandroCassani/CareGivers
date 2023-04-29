@@ -7,7 +7,6 @@
           <input type="password" name="" v-model="password" placeholder="password" autocomplete="on">
           <input type="submit" @click="login()" name="" value="LOGIN">
           <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
-          {{ error }}
       </form>
   </body>
 
@@ -31,7 +30,7 @@ import axios from 'axios';
       }
     },
     methods:{
-        login(){
+      login(){
 
       let loggedUser = {
          email: this.email,

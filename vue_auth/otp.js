@@ -6,8 +6,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { user } = require('./src/models/user.js')
 const bcrypt = require('bcrypt');
+mongoose.set('strictQuery', false);
 const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js')
 const router = require('express').Router();
+
 
 
 const app = express()
@@ -20,13 +22,13 @@ app.use(bodyParser.urlencoded({extended:false}));
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
-const database = async() => {
+const database = () => {
     const connectionParams = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }
     try {
-      await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/associazioni?retryWrites=true&w=majority')
+       mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/associazioni?retryWrites=true&w=majority')
       console.log('DB connected')
     } catch (error) {
       console.log(error)
@@ -36,16 +38,27 @@ const database = async() => {
 
 
 
-  app.get('/info', async (req,res) =>{
+  app.post('/otp', async (req,res) =>{
+    console.log('DENTRO OTP SERVER')
     database();
-
+  
     try{
-        console.log(req.email)
-    const response  = await user.find({email: req.body.email})
-    res.status(200).json(user)
-    console.log(response)
-    }catch(error){
-        res.status(404).json("Users not found");
+      console.log(req.body.otp)
+      console.log(req.body.email)
+     
+
+      const response = await patient_caregivers.updateOne(
+        {email: req.body.email},
+        {$set : {otp: req.body.otp} }
+      ) 
+
+      console.log(response)
+
+
+      res.status(200).json({message: 'otp generato correttamente'})
+      }catch(error){
+        console.log(error)
+        res.status(404).json("User not found");
     }
   })
 
