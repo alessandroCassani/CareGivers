@@ -1,5 +1,5 @@
 <template>
-   <form class ="box">
+   <form class ="box" @submit.prevent="signUp()">
        <h1> Sign Up</h1>
        <div class="form group">
            <label>nome:</label>
@@ -38,9 +38,8 @@
 
       
 
-       <input type="submit" @click="signUp()" name="" value="REGISTER">
+       <input type="submit" name="" value="REGISTER">
        <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
-       {{ error }}
    </form>
 </template>
 
@@ -59,8 +58,6 @@
         password:'',
         ripetiPassword:'',
         ruolo:'',
-
-        error: ''
      }
   },
 
@@ -79,14 +76,12 @@
             
            axios.post('http://localhost:5000/signup',newUser)
           .then(res => {
-            console.log('THEN')
             console.log(res.data)
+            this.$router.push('/login')
           }, err => {
             this.error = err.response.data.error
            return console.log(err.response)
           })
-
-          this.$router.push('/login')
       }
   } 
 }
