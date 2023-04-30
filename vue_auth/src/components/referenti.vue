@@ -15,7 +15,7 @@ export default{
     return{
       otp: '',
       e_mail: '',
-      ruolo: localStorage.getItem('ruolo'),
+      ruolo: sessionStorage.getItem('ruolo'),
       firstOtp: '',
       secondOtp: '',
       thirdOtp: '',
@@ -26,6 +26,7 @@ export default{
   },
   computed:{
     isPatient(){
+      console.log(sessionStorage.getItem('ruolo') + 'COMPUTED')
       return this.ruolo ==='paziente'
     }
   },
@@ -38,7 +39,7 @@ export default{
  },
 
  mounted(){
-  console.log('MOUNTED ' + localStorage.getItem('ruolo'))
+  console.log('MOUNTED ' + sessionStorage.getItem('ruolo'))
  
  },
 
@@ -60,7 +61,10 @@ export default{
       axios.post('http://localhost:5001/insertOtp', data)
       .then(res =>{
         console.log(res.data)
-      },err =>{alert(err)})
+        if(res.status === 200){
+          alert('OTP inserito con successo')
+        }
+      },err =>{alert(err + ' errore generazione otp')})
     },
 
     sendOtp(){
@@ -72,7 +76,10 @@ export default{
      axios.post('http://localhost:5001/checkOtp', data)
       .then(res =>{
         console.log(res.data)
-      },err =>{alert(err)})
+        if(res.status === 200){
+          alert('associazione confermata')
+        }
+      },err =>{alert(err + ' errore! prego riprovare')})
     }
 }
  

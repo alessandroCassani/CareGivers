@@ -42,8 +42,8 @@ import axios from 'axios';
          if(res.status === 200){
           console.log(res.data.token)
           localStorage.setItem('token', res.data.token);
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('ruolo', res.data.ruolo);
+          sessionStorage.setItem('email', res.data.email);
+          sessionStorage.setItem('ruolo', res.data.ruolo);
         }
          }, err =>{
           console.log(err.response)

@@ -4,7 +4,7 @@ const schema = mongoose.Schema;
 const userSchema = new schema({
     email: String,
     otp: String,
-    createdAt: {type: Date, default: Date.now, expires: 60}
+    createdAt: {type: Date, default: Date.now, expires: 120}
 });
 
 const otp = mongoose.model('otp',userSchema);

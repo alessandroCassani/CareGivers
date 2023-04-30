@@ -40,7 +40,7 @@ const database = () => {
 
 
   app.post('/insertOtp', async (req,res) =>{
-    console.log('DENTRO OTP SERVER')
+    console.log('DENTRO INSERT OTP SERVER')
     database();
   
     try{
@@ -58,6 +58,31 @@ const database = () => {
       }catch(error){
         console.log(error)
         res.status(404).json("User not found");
+    }
+  })
+
+
+  app.post('/checkOtp', async (req,res) => {
+    console.log('DENTRO CHECK OTP SERVER')
+    database();
+
+    try {
+      console.log(req.body.otp)
+      console.log(req.body.email_paziente)
+
+      const match = await otp.findOne({email:req.body.email_paziente, otp: req.body.otp})
+      console.log(match)
+      if(match!=null)
+        return res.status(200).json({
+          message: 'otp confermato'
+        })
+      else
+        return res.status(400).json({
+          message: 'errore'
+        })
+
+    } catch (error) {
+      
     }
   })
 
