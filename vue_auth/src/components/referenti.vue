@@ -33,22 +33,14 @@ export default{
  },
 
  mounted(){
-  console.log('MOUNTED' + localStorage.getItem('ruolo'))
+  console.log('MOUNTED ' + localStorage.getItem('ruolo'))
  
  },
 
  methods:{
-      getInfo(){
-     //   let info = {email}
-     //   axios.post('http://localhost:5000/user', info)
-    //   .then((result) => {
-    ////     console.log('THEN MOUNTED')
-   //      console.log(result.data)
-  //     })
-      },
-
+    
     createOtp(){
-      const length = 6;
+      const length = 5;
       let otp = '';
 
       for(let i = 0; i < length; i++) {
@@ -95,6 +87,7 @@ export default{
  </div> 
 
  <input type="submit" @click="createOtp()" value="GENERA" v-if="isPatient">
+ <input type="submit" value="CONFERMA" v-if="!isPatient">
 </body>
 
 
