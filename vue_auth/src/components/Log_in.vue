@@ -24,26 +24,24 @@ import axios from 'axios';
     data(){
       return {
         email: '',
-        password: '',
-
-        error: ''
+        password: ''
       }
     },
     methods:{
-      login(){
+       login(){
 
       let loggedUser = {
          email: this.email,
          password: this.password
       }
-         axios.post('http://localhost:5000/login', loggedUser)
+          axios.post('http://localhost:5000/login', loggedUser)
          .then(res => {
          console.log(res.data)
          if(res.status === 200){
           console.log(res.data.token)
           localStorage.setItem('token', res.data.token);
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('ruolo', res.data.ruolo);
+          sessionStorage.setItem('email', res.data.email);
+          sessionStorage.setItem('ruolo', res.data.ruolo);
         }
          }, err =>{
           console.log(err.response)
