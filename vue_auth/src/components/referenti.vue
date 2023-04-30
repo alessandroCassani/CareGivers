@@ -62,7 +62,7 @@ export default{
       .then(res =>{
         console.log(res.data)
         if(res.status === 200){
-          alert('OTP inserito con successo')
+          alert('OTP inserito con successo ' + otp)
         }
       },err =>{alert(err + ' errore generazione otp')})
     },
