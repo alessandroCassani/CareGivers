@@ -14,8 +14,13 @@ export default{
   data(){
     return{
       otp: '',
-      email: localStorage.getItem('email'),
+      e_mail: '',
       ruolo: localStorage.getItem('ruolo'),
+      firstOtp: '',
+      secondOtp: '',
+      thirdOtp: '',
+      fourthOtp: '',
+      fifthOtp: '',
       sidebarWidth
     }
   },
@@ -52,12 +57,23 @@ export default{
         otp: otp,
         email: localStorage.getItem('email')
       }
-      axios.post('http://localhost:5001/otp', data)
+      axios.post('http://localhost:5001/insertOtp', data)
       .then(res =>{
         console.log(res.data)
-      })
+      },err =>{alert(err)})
+    },
 
-    } 
+    sendOtp(){
+     const data = {
+      otp: this.firstOtp + this.secondOtp + this.thirdOtp + this.fourthOtp + this.fifthOtp,
+      email_paziente: this.e_mail
+     }
+
+     axios.post('http://localhost:5001/checkOtp', data)
+      .then(res =>{
+        console.log(res.data)
+      },err =>{alert(err)})
+    }
 }
  
 }; 
@@ -75,22 +91,22 @@ export default{
     <div class="inputReferente">
       <h3 v-if="!isPatient"> inserire email paziente:</h3>
       <h1 v-if="isPatient"> genera OTP:</h1>
-      <input type="email" v-if="!isPatient" v-model="email" class="form-control" placeholder="email paziente"> 
+      <input type="email" v-model="e_mail" v-if="!isPatient" class="form-control"  placeholder="email paziente"> 
     </div>
+    <br>  
   <h1 v-if="!isPatient">INSERISCI OTP</h1>
  <div v-if="!isPatient" class="otp-bx">
-  <input type="text" maxlength="1">  
-  <input type="text" maxlength="1"> 
-  <input type="text" maxlength="1" class="space"> 
-  <input type="text" maxlength="1"> 
-  <input type="text" maxlength="1"> 
+  <input type="text" v-model="firstOtp" maxlength="1">  
+  <input type="text" v-model="secondOtp" maxlength="1"> 
+  <input type="text" v-model="thirdOtp" maxlength="1" class="space"> 
+  <input type="text" v-model="fourthOtp" maxlength="1"> 
+  <input type="text" v-model="fifthOtp" maxlength="1"> 
  </div> 
 
  <input type="submit" @click="createOtp()" value="GENERA" v-if="isPatient">
- <input type="submit" value="CONFERMA" v-if="!isPatient">
+<br>   
+ <input type="submit" @click="sendOtp()" value="CONFERMA" v-if="!isPatient">
 </body>
-
-
 </template>
 
 

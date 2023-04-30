@@ -39,7 +39,7 @@ const database = () => {
 
 
 
-  app.post('/otp', async (req,res) =>{
+  app.post('/insertOtp', async (req,res) =>{
     console.log('DENTRO OTP SERVER')
     database();
   
