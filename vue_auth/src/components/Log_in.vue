@@ -1,11 +1,11 @@
 <template>
 
   <body class="body">
-      <form class="box">
+      <form class="box" @submit.prevent="login()">
           <h1>Login</h1> 
           <input type="email" name="" v-model="email" placeholder="email">
           <input type="password" name="" v-model="password" placeholder="password" autocomplete="on">
-          <input type="submit" @click="login()" name="" value="LOGIN">
+          <input type="submit" name="" value="LOGIN">
           <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
       </form>
   </body>
@@ -28,13 +28,13 @@ import axios from 'axios';
       }
     },
     methods:{
-       login(){
+      async  login(){
 
       let loggedUser = {
          email: this.email,
          password: this.password
       }
-          axios.post('http://localhost:5000/login', loggedUser)
+         await axios.post('http://localhost:5000/login', loggedUser)
          .then(res => {
          console.log(res.data)
          if(res.status === 200){
@@ -42,12 +42,13 @@ import axios from 'axios';
           localStorage.setItem('token', res.data.token);
           sessionStorage.setItem('email', res.data.email);
           sessionStorage.setItem('ruolo', res.data.ruolo);
+          this.$router.push('/referenti')
         }
          }, err =>{
           console.log(err.response)
          })
          
-         this.$router.push('/referenti')
+         
   } 
 }
 }
