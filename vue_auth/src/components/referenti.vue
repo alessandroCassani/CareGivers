@@ -15,7 +15,7 @@ export default{
     return{
       otp: '',
       e_mail: '',
-      ruolo: sessionStorage.getItem('ruolo'),
+      ruolo: localStorage.getItem('ruolo'),
       firstOtp: '',
       secondOtp: '',
       thirdOtp: '',
@@ -26,7 +26,7 @@ export default{
   },
   computed:{
     isPatient(){
-      console.log(sessionStorage.getItem('ruolo') + 'COMPUTED')
+      console.log(localStorage.getItem('ruolo') + ' COMPUTED')
       return this.ruolo ==='paziente'
     }
   },
@@ -39,7 +39,7 @@ export default{
  },
 
  mounted(){
-  console.log('MOUNTED ' + sessionStorage.getItem('ruolo'))
+  console.log('MOUNTED ' + localStorage.getItem('ruolo'))
  
  },
 
