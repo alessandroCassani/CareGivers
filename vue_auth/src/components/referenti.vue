@@ -94,26 +94,29 @@ export default{
   <div :style="{ 'margin-left': sidebarWidth}"></div>
 
  
-  
   <body>
-    <div class="inputReferente">
-      <h3 v-if="!isPatient"> inserire email paziente:</h3>
-      <h1 v-if="isPatient"> genera OTP:</h1>
-      <input type="email" v-model="e_mail" v-if="!isPatient" class="form-control"  placeholder="email paziente"> 
+    <div class="inputReferente" v-if="!isPatient">
+      <h3 > Inserire email paziente:</h3>
+      <input type="email" v-model="e_mail" class="form-control"  placeholder="email paziente"> 
+      <br> 
+      <h2>INSERISCI OTP</h2>
+      <div class="otp-bx">
+        <input type="text" v-model="firstOtp" maxlength="1">  
+        <input type="text" v-model="secondOtp" maxlength="1"> 
+        <input type="text" v-model="thirdOtp" maxlength="1" class="space"> 
+        <input type="text" v-model="fourthOtp" maxlength="1"> 
+        <input type="text" v-model="fifthOtp" maxlength="1"> 
+       </div> 
+       <br> 
+       <input type="submit" @click="sendOtp()" value="CONFERMA">
     </div>
-    <br>  
-  <h1 v-if="!isPatient">INSERISCI OTP</h1>
- <div v-if="!isPatient" class="otp-bx">
-  <input type="text" v-model="firstOtp" maxlength="1">  
-  <input type="text" v-model="secondOtp" maxlength="1"> 
-  <input type="text" v-model="thirdOtp" maxlength="1" class="space"> 
-  <input type="text" v-model="fourthOtp" maxlength="1"> 
-  <input type="text" v-model="fifthOtp" maxlength="1"> 
- </div> 
+    
+   <div class="inputPaziente" v-if="isPatient">
+    <h1> Genera OTP:</h1>   
+    <br> 
+    <input type="submit" @click="createOtp()" value="GENERA">
+   </div> 
 
- <input type="submit" @click="createOtp()" value="GENERA" v-if="isPatient">
-<br>   
- <input type="submit" @click="sendOtp()" value="CONFERMA" v-if="!isPatient">
 </body>
 </template>
 
@@ -137,6 +140,7 @@ body{
 
 .otp-bx{
   display: flex;
+  padding: 10px;
 }
 
 .otp-bx input{
@@ -160,5 +164,55 @@ body{
 .space{
   margin-right: 1rem !important;
 }
+
+.inputReferente{
+  text-align: center;
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 40px;
+  width: 400px;
+}
+
+.inputReferente input[type = "submit"]{
+    border: 0;
+    background:  rgba(255, 255, 255, 0.86);
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid white;
+    font-size: 18px;
+    padding: 8px 40px;
+    border-radius: 5px;
+    transition: o.25s;
+    cursor: pointer;
+}
+
+.inputReferente input[type="submit"]:hover{
+    background: #c79598;
+  }
+
+.inputPaziente{
+  text-align: center;
+  background-color: lightgrey;
+  border-radius: 10px;
+  padding: 40px;
+}
+
+.inputPaziente input[type = "submit"]{
+  border: 0;
+    background:  rgba(255, 255, 255, 0.86);
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid white;
+    font-size: 18px;
+    padding: 8px 40px;
+    border-radius: 5px;
+    transition: o.25s;
+    cursor: pointer;
+}
+
+.inputPaziente input[type="submit"]:hover{
+    background: #c79598;
+  }
+
 </style>
 
