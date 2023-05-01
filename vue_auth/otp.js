@@ -46,6 +46,7 @@ const database = () => {
     try{
       console.log(req.body.otp)
       console.log(req.body.email)
+      
       const Otp = new otp({
         email: req.body.email,
         otp: req.body.otp
