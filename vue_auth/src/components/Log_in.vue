@@ -28,7 +28,7 @@ import axios from 'axios';
       }
     },
     methods:{
-      async login(){
+      async  login(){
 
       let loggedUser = {
          email: this.email,
@@ -94,7 +94,7 @@ import axios from 'axios';
     text-align: center;
     font-size: 20px;
     border: 2px solid white;
-    padding: 10px 10px;
+    padding: 8px 10px;
     width: 200px;   
     outline: none;
     color: black;
@@ -114,10 +114,10 @@ import axios from 'axios';
     text-align: center;
     border: 2px solid white;
     font-size: 18px;
-    padding: 14px 40px;
+    padding: 8px 40px;
     outline: none;
     color: black;
-    border-radius: 24px;
+    border-radius: 5px;
     transition: o.25s;
     cursor: pointer;
   }

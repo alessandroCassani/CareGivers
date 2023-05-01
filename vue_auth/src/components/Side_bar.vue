@@ -56,7 +56,7 @@ export default {
 <style>
 :root {
     --sidebar-bc-color: #3D2022;
-    --sidebar-item-hover: #38a169;
+    --sidebar-item-hover: #c79598;
     --sidebar-item-active: #276749;
 }
 </style>

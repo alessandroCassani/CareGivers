@@ -34,10 +34,10 @@
        <div class="form group">
            <label>ruolo:</label>
           <input type="text" v-model="ruolo" class="form-control" placeholder="ruolo" autocomplete="on"> 
+          <br>
        </div>
 
       
-
        <input type="submit" name="" value="REGISTER">
        <p id="text">hai un account?  <RouterLink to="/login">login</RouterLink></p>
    </form>
@@ -151,7 +151,7 @@
    text-align: center;
    border: 2px solid white;
    font-size: 18px;
-   padding: 14px 40px;
+   padding: 8px 40px;
    outline: none;
    color: black;
    border-radius: 20px;
