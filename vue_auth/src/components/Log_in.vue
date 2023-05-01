@@ -1,49 +1,60 @@
-
-
-
-<script>
-import axios from 'axios'
-
- 
-
-   export default {
-    name: "Log_in",
-    data() {
-        return {
-          email: '',
-          password: '',
-        };
-  
-    },
-    methods: {
-        login() {
-            let user = {
-              email: this.email,
-              password: this.password
-            }
-            console.log(user);
-            axios.post('http://localhost:5000/login',user);
-        }
-    },
-    
-};
-   
-</script>
-
 <template>
 
   <body class="body">
-      <form class="box">
+      <form class="box" @submit.prevent="login()">
           <h1>Login</h1> 
           <input type="email" name="" v-model="email" placeholder="email">
-          <input type="password" name="" v-model="password" placeholder="password">
-          <input type="submit" @click="login()" name="" value="LOGIN">
+          <input type="password" name="" v-model="password" placeholder="password" autocomplete="on">
+          <input type="submit" name="" value="LOGIN">
           <p id="text">Non hai un account?  <RouterLink to="/signup">Registrati</RouterLink></p>
       </form>
   </body>
 
   
 </template>
+
+
+<script>
+import axios from 'axios';
+
+
+   export default {
+    name: "Log_in",
+
+    data(){
+      return {
+        email: '',
+        password: ''
+      }
+    },
+    methods:{
+      async  login(){
+
+      let loggedUser = {
+         email: this.email,
+         password: this.password
+      }
+         await axios.post('http://localhost:5000/login', loggedUser)
+         .then(res => {
+         console.log(res.data)
+         if(res.status === 200){
+          console.log(res.data.token)
+          localStorage.setItem('token', res.data.token);
+          sessionStorage.setItem('email', res.data.email);
+          sessionStorage.setItem('ruolo', res.data.ruolo);
+          this.$router.push('/referenti')
+        }
+         }, err =>{
+          console.log(err.response)
+         })
+         
+         
+  } 
+}
+}
+   
+</script>
+
 <style scoped>
    .body,html{
     margin: 0;
@@ -83,7 +94,7 @@ import axios from 'axios'
     text-align: center;
     font-size: 20px;
     border: 2px solid white;
-    padding: 10px 10px;
+    padding: 8px 10px;
     width: 200px;   
     outline: none;
     color: black;
@@ -103,10 +114,10 @@ import axios from 'axios'
     text-align: center;
     border: 2px solid white;
     font-size: 18px;
-    padding: 14px 40px;
+    padding: 8px 40px;
     outline: none;
     color: black;
-    border-radius: 24px;
+    border-radius: 5px;
     transition: o.25s;
     cursor: pointer;
   }

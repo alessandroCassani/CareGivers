@@ -1,14 +1,14 @@
 <script>
-import {collapsed, toggleSidebar, sidebarwidth} from './state'
+import {collapsed, toggleSidebar, sidebarWidth} from './state'
 import SidebarLink from './SidebarLink.vue';
 import '@fortawesome/fontawesome-free'
 
 
 export default {
     props:{},
-    components: { SidebarLink},
+    components: {SidebarLink},
     setup(){
-        return {collapsed, toggleSidebar, sidebarwidth}
+        return {collapsed, toggleSidebar, sidebarWidth}
     }
 }
 </script>
@@ -56,7 +56,7 @@ export default {
 <style>
 :root {
     --sidebar-bc-color: #3D2022;
-    --sidebar-item-hover: #38a169;
+    --sidebar-item-hover: #c79598;
     --sidebar-item-active: #276749;
 }
 </style>
