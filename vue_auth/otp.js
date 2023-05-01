@@ -9,8 +9,8 @@ const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
 const { otp } = require('./src/models/otp.js');
+const { caregivers_patient } = require('./src/models/caregivers_associated_patients.js');
 const router = require('express').Router();
-
 
 
 const app = express()
@@ -75,11 +75,18 @@ const database = () => {
       const match = await otp.findOne({email:req.body.email_paziente, otp: req.body.otp})
       console.log(match)
       if(match!=null){
-        const associazione = new patient_caregivers({
+        const associazione_paziente= new patient_caregivers({
           email: req.body.email_paziente,
           caregivers:{caregiver1: req.body.email_caregiver}
         })
-        await associazione.save()
+        await associazione_paziente.save()
+
+        const associazione_caregiver = new caregivers_patient({
+          caregiver: req.body.email_caregiver,
+          patient: req.body.email_paziente
+        })
+        await associazione_caregiver.save()
+
         return res.status(200).json({
           message: 'otp confermato'
         })}
