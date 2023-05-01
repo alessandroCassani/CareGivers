@@ -56,7 +56,7 @@ export default{
 
       const data = {
         otp: otp,
-        email: localStorage.getItem('email')
+        email: sessionStorage.getItem('email')
       }
       axios.post('http://localhost:5001/insertOtp', data)
       .then(res =>{
@@ -70,7 +70,8 @@ export default{
     sendOtp(){
      const data = {
       otp: this.firstOtp + this.secondOtp + this.thirdOtp + this.fourthOtp + this.fifthOtp,
-      email_paziente: this.e_mail
+      email_paziente: this.e_mail,
+      email_caregiver: sessionStorage.getItem('email')
      }
 
      axios.post('http://localhost:5001/checkOtp', data)

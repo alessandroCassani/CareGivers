@@ -69,20 +69,25 @@ const database = () => {
     try {
       console.log(req.body.otp)
       console.log(req.body.email_paziente)
+      console.log(req.body.email_caregiver)
 
       const match = await otp.findOne({email:req.body.email_paziente, otp: req.body.otp})
       console.log(match)
-      if(match!=null)
+      if(match!=null){
+        const associazione = new patient_caregivers({
+          email: req.body.email_paziente,
+          caregivers:{caregiver1: req.body.email_caregiver}
+        })
+        await associazione.save()
         return res.status(200).json({
           message: 'otp confermato'
-        })
+        })}
       else
         return res.status(400).json({
           message: 'errore'
         })
-
     } catch (error) {
-      
+      console.log(error)
     }
   })
 

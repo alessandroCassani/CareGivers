@@ -62,7 +62,7 @@
   },
 
   methods:{
-      signUp (){
+      async signUp (){
         
          let newUser = {
                nome: this.nome,
@@ -74,7 +74,7 @@
                ruolo: this.ruolo
             }
             
-           axios.post('http://localhost:5000/signup',newUser)
+           await axios.post('http://localhost:5000/signup',newUser)
           .then(res => {
             console.log(res.data)
             this.$router.push('/login')
