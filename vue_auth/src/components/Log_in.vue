@@ -28,7 +28,7 @@ import axios from 'axios';
       }
     },
     methods:{
-      async  login(){54331
+      async  login(){
 
       let loggedUser = {
          email: this.email,
