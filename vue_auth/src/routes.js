@@ -3,13 +3,13 @@ import {createRouter,createWebHistory} from 'vue-router';
 import Log_in from './components/Log_in.vue';
 import Sign_Up from './components/Sign_up.vue';
 import referenti from './components/referenti.vue';
-import memo from './components/Memo.vue'
+import memos from './components/memos.vue'
 
 const routes = [{
     path: '/login', component: Log_in, name:"login",},
     {path: '/signup', component: Sign_Up, name:"signUp"},
     {path:'/referenti', component: referenti, name:'referenti'},
-    {path: '/memo', component: memo, name: '/memo'}
+    {path: '/memos', component: memos, name: 'memos'}
 ];
 
 const router = createRouter({
