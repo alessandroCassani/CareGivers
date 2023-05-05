@@ -100,11 +100,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-top: -220px;
     }
     
     .container {
-      width: 800px;
-      margin: auto;
+      width: 1300px;
+      margin-left: 250px;
       text-align: center;
     }
     
