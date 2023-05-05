@@ -1,43 +1,45 @@
 <template>
-    <Side_bar></Side_bar>
-    <div class="caintaner">
+    <div class="wrapper">
+      <Side_bar></Side_bar>
+      <div class="container">
         <!-- INSERIRE HEADING -->
         <!-- input -->
         <div>
-            <input type="text" v-model="task" placeholder="Enter here.." />
-            <input type="datetime-local" v-model="reminderTime" />
-            <button class="add-btn" @click="SubmitTask">ADD</button>
+          <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />
+          <input type="date" v-model="reminderDate" />
+          <input type="time" v-model="reminderTime" />
+          <button class="add-btn" @click="SubmitTask">ADD</button>
         </div>
         <!-- table -->
-        <table border={3}>
+        <div class="table-container">
+          <table border={3}>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Task</th>
-                    <th>Delete</th>
-                    <th>Edit</th>
-    
-                </tr>
+              <tr>
+                <th>Evento</th>
+                <th>Data</th>
+                <th>Orario</th>
+                <th>Elimina</th>
+                <th>Modifica</th>
+              </tr>
             </thead>
             <tbody>
-                <tr v-for="(task,index) in tasks" :key="index">
-                    <td>{{task.id}}</td>
-                    <td>{{task.name}}</td>
-                    <td> {{task.reminderTime}}</td>
-    
-                    <td>
-                        <button class="del-btn" @click="deleteTask(index)">Delete</button>
-                    </td>
-                    <td>
-                        <button class="edit-btn" @click="EditTask(index)">Edit</button>
-                    </td>
-                </tr>
-    
+              <tr v-for="(task,index) in tasks" :key="index" :class="{ 'blue-bg': task.reminderDate === today }">
+                <td>{{task.name}}</td>
+                <td> {{task.reminderDate}}</td>
+                <td> {{task.reminderTime}}</td>
+                <td>
+                  <button class="del-btn" @click="deleteTask(index)">Delete</button>
+                </td>
+                <td>
+                  <button class="edit-btn" @click="EditTask(index)">Edit</button>
+                </td>
+              </tr>
             </tbody>
-        </table>
-    
+          </table>
+        </div>
+      </div>
     </div>
-    </template>
+  </template>
     
     <script>
     import Side_bar from './Side_bar.vue';
@@ -48,18 +50,15 @@
     },
     data() {
         return {
+            today: new Date().toISOString().slice(0, 10),
             task: "",
             reminderTime: this.memo ? this.memo.reminderTime : '',
+            reminderDate: this.memo ? this.memo.reminderDate: '',
             editTask: null,
             tasks: [{
-                    name: "React js",
-                    id: Date.now() + 1,
-                }, {
-                    name: "Vue js",
-                    id: Date.now() + 2,
-                }, {
-                    name: "Node js",
-                    id: Date.now() + 3,
+                    name: "visita GM",
+                    reminderTime: Date.now(),
+                    reminderDate: Date.now()
                 }
             ]
         };
@@ -86,7 +85,7 @@
             else {
                 this.tasks.push({
                     name: this.task,
-                    id: Date.now() + 4,
+                    reminderDate: this.reminderDate,
                     reminderTime: this.reminderTime,
                 });
             }
@@ -97,49 +96,64 @@
     </script>
     
     <style scoped>
-    .caintaner {
-        width: 600px;
-        margin: auto;
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     
+    .container {
+      width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+    
+    .table-container {
+      max-height: 600px;
+      overflow-y: scroll;
     }
     
     table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 20px;
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
     }
     
     td,
     th {
-        border: 1px solid #dddddd;
-        text-align: center;
-        padding: 8px;
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 8px;
     }
     
     tr:nth-child(even) {
-        background-color: #dddddd;
+      background-color: #dddddd;
+    }
+
+    .blue-bg {
+      background-color: blue;
     }
     
     .add-btn {
-        border: none;
-        width: 100px;
-        height: 30px;
-        padding: 2px;
-        background-color: teal;
-        color: white;
+      border: none;
+      width: 100px;
+      height: 30px;
+      padding: 2px;
+      background-color: #3d2022;
+      color: white;
+      margin-bottom: 20px;
     }
     
     .del-btn {
-        border: none;
-        background-color: red;
-        color: white;
+      border: none;
+      background-color: red;
+      color: white;
     }
     
     .edit-btn {
-        border: none;
-        background-color: #77b631;
-        color: white;
-    
+      border: none;
+      background-color: #77b631;
+      color: white;
     }
     </style>
