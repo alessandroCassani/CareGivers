@@ -23,6 +23,7 @@
                 <tr v-for="(task,index) in tasks" :key="index">
                     <td>{{task.id}}</td>
                     <td>{{task.name}}</td>
+                    <td> {{task.reminderTime}}</td>
     
                     <td>
                         <button class="del-btn" @click="deleteTask(index)">Delete</button>
@@ -39,10 +40,9 @@
     </template>
     
     <script>
-import Side_bar from './Side_bar.vue';
+    import Side_bar from './Side_bar.vue';
 
     export default {
-    name: "TodoApp",
     props: {
         msg: String,
     },
@@ -87,6 +87,7 @@ import Side_bar from './Side_bar.vue';
                 this.tasks.push({
                     name: this.task,
                     id: Date.now() + 4,
+                    reminderTime: this.reminderTime,
                 });
             }
         }
