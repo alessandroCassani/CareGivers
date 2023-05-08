@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const memoSchema = new mongoose.Schema({
   evento: String,
-  data: String,
+  data: Date,
   expirationTime: { type: Number, required: true },
   expireAt: { type: Date, default: Date.now, index: { expires: 0 } }
 });
@@ -16,3 +16,4 @@ memoSchema.pre('save', function() {
 });
 
 const Memo = mongoose.model('schedule', memoSchema);
+module.exports = { Memo };

@@ -4,12 +4,9 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { schedule } = require('./src/models/schedule.js')
+const { Memo } = require('./src/models/schedule.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
-const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
-const { otp } = require('./src/models/otp.js');
-const { caregivers_patient } = require('./src/models/caregivers_associated_patients.js');
 const router = require('express').Router();
 
 
@@ -42,16 +39,30 @@ const database = () => {
     database();
 
     try {
-        console.log(req.body.evento)
-        console.log(req.body.data)
-        console.log(req.body.ora)
+        console.log(req.body.name)
+        console.log(req.body.reminderDate)
+        console.log(req.body.reminderTime)
 
+        const dataMemo = new Date(req.body.reminderDate)
         
+        const [hoursString, minutesString] = req.body.reminderTime.split(":");
+        const selectedTime = {
+          hours: parseInt(hoursString, 10),
+          minutes: parseInt(minutesString, 10),
+        };
+        const selectedDate = new Date(dataMemo.getFullYear(), dataMemo.getMonth(), dataMemo.getDate(), selectedTime.hours, selectedTime.minutes);
+        console.log(selectedDate)
 
-        const scheduling = new schedule({
-            evento: req.body.evento,
-            data: req.body.data,
+        const timeDiffInSeconds = Math.floor((selectedDate.getTime() - new Date()) / 1000);
 
+        console.log(timeDiffInSeconds + ' DIFFERENZA SECONDI')
+
+
+
+
+        const scheduling = new Memo({
+            evento: req.body.name,
+            data: req.body.reminderDate,
         })
 
         
