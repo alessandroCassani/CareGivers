@@ -90,14 +90,18 @@
                     name: this.task,
                     reminderDate: this.reminderDate,
                     reminderTime: this.reminderTime,
+                    email_paziente: sessionStorage.getItem('email_paziente')
                 }
 
               await axios.post('http://localhost:5002/insertMemo', memo)
               .then(res => {
                 console.log(res.data)
+                if(res.status === 200){
+                  alert('promemoria inserito correttamente')
+                }
               }, err => {
                 console.log(err)
-                alert('ERRORE')
+                alert('Errore in fase di inserimento del promemoria')
               })
 
 

@@ -51,23 +51,28 @@ const database = () => {
           minutes: parseInt(minutesString, 10),
         };
         const selectedDate = new Date(dataMemo.getFullYear(), dataMemo.getMonth(), dataMemo.getDate(), selectedTime.hours, selectedTime.minutes);
-        console.log(selectedDate)
 
         const timeDiffInSeconds = Math.floor((selectedDate.getTime() - new Date()) / 1000);
-
         console.log(timeDiffInSeconds + ' DIFFERENZA SECONDI')
 
-
-
-
-        const scheduling = new Memo({
-            evento: req.body.name,
-            data: req.body.reminderDate,
+        const schedule = new Memo({
+          paziente: req.body.email_paziente,
+          evento: req.body.name,
+          data: req.body.reminderDate,
+          orario: req.body.reminderTime,
+          expirationTime: timeDiffInSeconds,
         })
 
-        
+        await schedule.save();
+        return res.status(200).json({
+          message: 'inserimento memo confermato'
+        })
+
     } catch (error) {
         console.log(error)
+        return res.status(400).json({
+          message: 'errore'
+        })
     }
 
   })
