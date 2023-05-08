@@ -15,4 +15,4 @@ memoSchema.pre('save', function() {
   this.index({ expireAt: 1 }, { expireAfterSeconds: expirationTimeInSeconds });
 });
 
-const Memo = mongoose.model('Memo', memoSchema);
+const Memo = mongoose.model('schedule', memoSchema);
