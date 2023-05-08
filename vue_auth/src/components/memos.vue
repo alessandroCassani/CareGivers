@@ -4,7 +4,7 @@
       <div class="container">
         <!-- INSERIRE HEADING -->
         <!-- input -->
-        <div>
+        <div class="insert">
           <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />
           <input type="date" v-model="reminderDate" />
           <input type="time" v-model="reminderTime" />
@@ -124,6 +124,7 @@
       align-items: center;
       margin-top: -220px;
     }
+
     
     .container {
       width: 1300px;
@@ -163,9 +164,13 @@
       width: 100px;
       height: 30px;
       padding: 2px;
-      background-color: #3d2022;
+      background-color: grey;
       color: white;
+      margin-left: 50px;
       margin-bottom: 20px;
+      border-radius: 5px;
+      transition: o.25s;
+      cursor: pointer;
     }
     
     .del-btn {
