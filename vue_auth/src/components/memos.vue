@@ -42,6 +42,7 @@
   </template>
     
     <script>
+    import axios from 'axios';
     import Side_bar from './Side_bar.vue';
 
     export default {
@@ -73,8 +74,10 @@
             this.task = this.tasks[index].name,
                 this.editTask = index;
         },
+        
+        
         // Add Task
-        SubmitTask() {
+        async SubmitTask() {
             if (this.task.length === 0) {
                 return;
             }
@@ -83,11 +86,26 @@
                 this.editTask = null;
             }
             else {
-                this.tasks.push({
+              const memo = {
                     name: this.task,
                     reminderDate: this.reminderDate,
                     reminderTime: this.reminderTime,
-                });
+                }
+
+              await axios.post('http://localhost:5002/insertMemo', memo)
+              .then(res => {
+                console.log(res.data)
+              }, err => {
+                console.log(err)
+                alert('ERRORE')
+              })
+
+
+
+                this.tasks.push(memo);
+
+                
+                
             }
         }
     },
