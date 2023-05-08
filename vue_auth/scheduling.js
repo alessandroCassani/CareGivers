@@ -42,6 +42,7 @@ const database = () => {
         console.log(req.body.name)
         console.log(req.body.reminderDate)
         console.log(req.body.reminderTime)
+        console.log('email ' + req.body.email_paziente)
 
         const dataMemo = new Date(req.body.reminderDate)
         

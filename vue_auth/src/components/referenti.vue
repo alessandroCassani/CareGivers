@@ -79,7 +79,7 @@ export default{
         console.log(res.data)
         if(res.status === 200){
           alert('associazione confermata')
-          sessionStorage.setItem('email_paziente', this.e_mail)
+          localStorage.setItem('email_paziente', this.e_mail)
         }
       },err =>{alert(err + ' errore! prego riprovare')})
     }

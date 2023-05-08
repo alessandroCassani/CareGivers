@@ -90,7 +90,7 @@
                     name: this.task,
                     reminderDate: this.reminderDate,
                     reminderTime: this.reminderTime,
-                    email_paziente: sessionStorage.getItem('email_paziente')
+                    email_paziente: localStorage.getItem('email_paziente')
                 }
 
               await axios.post('http://localhost:5002/insertMemo', memo)
