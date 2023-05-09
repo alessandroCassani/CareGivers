@@ -57,7 +57,7 @@ const database = () => {
         console.log(timeDiffInSeconds + ' DIFFERENZA SECONDI')
 
         const schedule = new Memo({
-          paziente: req.body.email_paziente,
+          paziente: 'cassa@gmail.com',                      //MODIFICARE
           evento: req.body.name,
           data: req.body.reminderDate,
           orario: req.body.reminderTime,
@@ -74,6 +74,30 @@ const database = () => {
         return res.status(400).json({
           message: 'errore'
         })
+    }
+
+  })
+
+
+
+  app.get('/getMemos', async (req,res) => {
+    console.log('DENTRO GET-MEMO SERVER')
+    database();
+
+    try {
+
+      await Memo.find({email: req.body.email}, (err, documents) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+        }
+        res.json(documents);
+      })
+      
+
+    } catch (error) {
+      console.log(error)
     }
 
   })

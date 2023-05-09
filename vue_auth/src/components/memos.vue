@@ -64,6 +64,15 @@
             ]
         };
     },
+     mounted() {
+      const email = {email: 'cassa@gmail.com'}
+       axios.get('http://localhost:5002/getMemos',email)
+      .then(response => {
+        this.tasks = response.data
+        console.log(response.data)
+      })
+
+    },
     methods: {
         // delete task
         deleteTask(index) {
