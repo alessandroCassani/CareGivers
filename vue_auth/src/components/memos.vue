@@ -231,9 +231,7 @@
       margin-top: -220px;
     }
 
-   
 
-    
     .container {
       width: 1300px;
       margin-left: 250px;
@@ -251,6 +249,7 @@
       border-collapse: collapse;
       width: 100%;
       margin-top: 20px;
+      background-color: palegoldenrod;
     }
     
     td,
