@@ -1,6 +1,44 @@
 <template>
+  <body>
     <div class="wrapper">
       <Side_bar></Side_bar>
+      <div class="container">
+        <!-- INSERIRE HEADING -->
+        <!-- input -->
+        <div class="insert">
+          <input type="text" v-model="farmaco" placeholder="Aggiungi farmaco..." />
+          <input type="number" v-model="dosaggio" />
+          <input type="time" v-model="farmacOrario" />
+          <button @click="SubmitDrug" class="add-btn">ADD</button>
+        </div>
+        <!-- table -->
+        <div class="table-container">
+          <table border={3}>
+            <thead>
+              <tr>
+                <th>Farmaco</th>
+                <th>Dosaggio</th>
+                <th>Orario</th>
+                <th>Elimina</th>
+                <th>Modifica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(task,index) in tasks" :key="index" :class="{ 'blue-bg': task.reminderDate === today }">
+                <td>{{task.evento}}</td>
+                <td> {{task.data}}</td>
+                <td> {{task.orario}}</td>
+                <td>
+                  <button class="del-btn" @click="deleteTask(index)">Delete</button>
+                </td>
+                <td>
+                  <button class="edit-btn" @click="EditTask(index)">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div class="container">
         <!-- INSERIRE HEADING -->
         <!-- input -->
@@ -39,6 +77,7 @@
         </div>
       </div>
     </div>
+  </body>
   </template>
     
     <script>
@@ -46,25 +85,26 @@
     import Side_bar from './Side_bar.vue';
 
     export default {
-    props: {
-        msg: String,
-    },
     data() {
         return {
             today: new Date().toISOString().slice(0, 10),
             task: "",
+            farmaco: "",
+            farmacOrario: '',
+            dosaggio: '',
             reminderTime: this.memo ? this.memo.reminderTime : '',
             reminderDate: this.memo ? this.memo.reminderDate: '',
             editTask: null,
-            tasks: []
+            tasks: [],
+            terapia: []
         };
     },
+
       async mounted() {
       const email = {email: 'cassa@gmail.com'}
-        await axios.get('http://localhost:5002/getMemos',email)
-        .then(response => {
-        //this.tasks = response.data
-        const documents = response.data;
+      await axios.get('http://localhost:5002/getMemos',email)
+      .then(response => {
+      const documents = response.data;
 
       for(let i = 0; i < documents.length; i++) {
         const promemoria = {
@@ -72,15 +112,11 @@
           orario: documents[i].orario,
           data: documents[i].data
         }
-
       this.tasks.push(promemoria)
-      }
-
-      console.log(this.tasks)
-        
-      })
-
+      } 
+    })
     },
+
     methods: {
         // delete task
         deleteTask(index) {
@@ -114,21 +150,48 @@
               .then(res => {
                 console.log(res.data)
                 if(res.status === 200){
+                  this.tasks.push(memo);
                   alert('promemoria inserito correttamente')
                 }
               }, err => {
                 console.log(err)
                 alert('Errore in fase di inserimento del promemoria')
               })
+            }
+        },
 
 
+        async SubmitDrug() {
+            if (this.farmaco.length === 0) {
+                return;
+            }
+            if (this.editTask != null) {                                          //modificare in farmaci tabella
+                this.tasks[this.editTask].name = this.task;
+                this.editTask = null;
+            }
+            else {
+              const terapia = {
+                    farmaco: this.farmaco,
+                    orario: this.farmacOrario,
+                    dosaggio: this.dosaggio,
+                    email_paziente: 'cassa@gmail.com'                         //modificare email
+                }
 
-                this.tasks.push(memo);
-
-                
-                
+              await axios.post('http://localhost:5002/insertTherapy', terapia)
+              .then(res => {
+                console.log(res.data)
+                if(res.status === 200){
+                  this.tasks.push(terapia);
+                  alert('terapia inserito correttamente')
+                }
+              }, err => {
+                console.log(err)
+                alert('Errore in fase di inserimento della terapia')
+              })
             }
         }
+
+
     },
     components: { Side_bar }
 }
@@ -142,15 +205,18 @@
       margin-top: -220px;
     }
 
+   
+
     
     .container {
       width: 1300px;
       margin-left: 250px;
       text-align: center;
+      margin-top: 150px;
     }
     
     .table-container {
-      max-height: 600px;
+      max-height: 200px;
       overflow-y: scroll;
     }
     

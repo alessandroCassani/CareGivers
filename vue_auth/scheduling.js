@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { Memo } = require('./src/models/schedule.js')
+const { terapia } = require('./src/models/therapy.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const router = require('express').Router();
@@ -89,15 +90,42 @@ const database = () => {
       const documents = await Memo.find({email: req.body.email});
       console.log(documents)
       res.json(documents)
-      
-
     } catch (error) {
       console.log(err);
           res.status(500).json({ message: 'Internal server error' });
           return;
     }
-
   })
+
+
+
+  app.post('/insertTherapy', async(req,res) => {
+
+    console.log('DENTRO INSERT TERAPIA SERVER')
+    database();
+
+    try {
+      const farmaci = new terapia({
+        farmaco: req.body.farmaco,
+        orario: req.body.orario,
+        dosaggio: req.body.dosaggio,
+        paziente: req.body.email_paziente
+      })
+
+      await farmaci.save()
+
+      return res.status(200).json({
+        message: 'farmaco inserito correttamente'
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({message: 'errore'})
+    }
+  })
+
+
+
+
 
 
 
