@@ -4,11 +4,11 @@
       <div class="container">
         <!-- INSERIRE HEADING -->
         <!-- input -->
-        <div  @submit.prevent="submitTask()" class="insert">
+        <div class="insert">
           <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />
           <input type="date" v-model="reminderDate" />
           <input type="time" v-model="reminderTime" />
-          <button class="add-btn">ADD</button>
+          <button @click="SubmitTask" class="add-btn">ADD</button>
         </div>
         <!-- table -->
         <div class="table-container">
@@ -24,9 +24,9 @@
             </thead>
             <tbody>
               <tr v-for="(task,index) in tasks" :key="index" :class="{ 'blue-bg': task.reminderDate === today }">
-                <td>{{task.name}}</td>
-                <td> {{task.reminderDate}}</td>
-                <td> {{task.reminderTime}}</td>
+                <td>{{task.evento}}</td>
+                <td> {{task.data}}</td>
+                <td> {{task.orario}}</td>
                 <td>
                   <button class="del-btn" @click="deleteTask(index)">Delete</button>
                 </td>
@@ -56,16 +56,28 @@
             reminderTime: this.memo ? this.memo.reminderTime : '',
             reminderDate: this.memo ? this.memo.reminderDate: '',
             editTask: null,
-            tasks: [
-            ]
+            tasks: []
         };
     },
-     mounted() {
+      async mounted() {
       const email = {email: 'cassa@gmail.com'}
-       axios.get('http://localhost:5002/getMemos',email)
-      .then(response => {
-        this.tasks = response.data
-        console.log(response.data)
+        await axios.get('http://localhost:5002/getMemos',email)
+        .then(response => {
+        //this.tasks = response.data
+        const documents = response.data;
+
+      for(let i = 0; i < documents.length; i++) {
+        const promemoria = {
+          evento: documents[i].evento,
+          orario: documents[i].orario,
+          data: documents[i].data
+        }
+
+      this.tasks.push(promemoria)
+      }
+
+      console.log(this.tasks)
+        
       })
 
     },

@@ -86,19 +86,15 @@ const database = () => {
     database();
 
     try {
-
-      await Memo.find({email: req.body.email}, (err, documents) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json({ message: 'Internal server error' });
-          return;
-        }
-        res.json(documents);
-      })
+      const documents = await Memo.find({email: req.body.email});
+      console.log(documents)
+      res.json(documents)
       
 
     } catch (error) {
-      console.log(error)
+      console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
     }
 
   })
