@@ -104,9 +104,9 @@
             }
             else {
               const memo = {
-                    name: this.task,
-                    reminderDate: this.reminderDate,
-                    reminderTime: this.reminderTime,
+                    evento: this.task,
+                    data: this.reminderDate,
+                    orario: this.reminderTime,
                     email_paziente: localStorage.getItem('email_paziente')
                 }
 
