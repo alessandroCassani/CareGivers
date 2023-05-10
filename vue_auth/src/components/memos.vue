@@ -4,11 +4,11 @@
       <div class="container">
         <!-- INSERIRE HEADING -->
         <!-- input -->
-        <div class="insert">
+        <div  @submit.prevent="submitTask()" class="insert">
           <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />
           <input type="date" v-model="reminderDate" />
           <input type="time" v-model="reminderTime" />
-          <button class="add-btn" @click="SubmitTask">ADD</button>
+          <button class="add-btn">ADD</button>
         </div>
         <!-- table -->
         <div class="table-container">
@@ -56,11 +56,7 @@
             reminderTime: this.memo ? this.memo.reminderTime : '',
             reminderDate: this.memo ? this.memo.reminderDate: '',
             editTask: null,
-            tasks: [{
-                    name: "visita GM",
-                    reminderTime: Date.now(),
-                    reminderDate: Date.now()
-                }
+            tasks: [
             ]
         };
     },

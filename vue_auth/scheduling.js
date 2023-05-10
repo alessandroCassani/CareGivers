@@ -61,7 +61,8 @@ const database = () => {
           evento: req.body.name,
           data: req.body.reminderDate,
           orario: req.body.reminderTime,
-          expirationTime: timeDiffInSeconds,
+          createdAt: new Date(),
+          expires: timeDiffInSeconds
         })
 
         await schedule.save();
