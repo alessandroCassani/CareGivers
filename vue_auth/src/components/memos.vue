@@ -100,21 +100,9 @@
         };
     },
 
-      async mounted() {
-      const email = {email: 'cassa@gmail.com'}
-      await axios.get('http://localhost:5002/getMemos',email)
-      .then(response => {
-      const documents = response.data;
-
-      for(let i = 0; i < documents.length; i++) {
-        const promemoria = {
-          evento: documents[i].evento,
-          orario: documents[i].orario,
-          data: documents[i].data
-        }
-      this.tasks.push(promemoria)
-      } 
-    })
+       mounted() {
+      this.getMemos()
+      this.getFarmaci()
     },
 
     methods: {
@@ -189,7 +177,45 @@
                 alert('Errore in fase di inserimento della terapia')
               })
             }
+        },
+
+    async getMemos(){
+      const email = {email: 'cassa@gmail.com'}
+      await axios.get('http://localhost:5002/getMemos',email)
+      .then(response => {
+      const documents = response.data;
+
+      for(let i = 0; i < documents.length; i++) {
+        const promemoria = {
+          evento: documents[i].evento,
+          orario: documents[i].orario,
+          data: documents[i].data
         }
+      this.tasks.push(promemoria)
+      } 
+     })
+    },
+
+
+    async getFarmaci(){
+      const email = {email: 'cassa@gmail.com'}                                    //modificare email
+
+      await axios.get('http://localhost:5002/getTherapy',email)
+      .then(response => {
+      const documents = response.data;
+
+      for(let i = 0; i < documents.length; i++) {
+        const farmaco = {
+          farmaco: documents[i].farmaco,
+          orario: documents[i].orario,
+          dosaggio: documents[i].dosaggio
+        }
+      this.terapia.push(farmaco)
+      } 
+     })
+    }
+
+
 
 
     },

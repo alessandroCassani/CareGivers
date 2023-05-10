@@ -125,9 +125,20 @@ const database = () => {
 
 
 
+  app.get('/getTherapy', async (req,res) => {
+    console.log('DENTRO GET-Therapy SERVER')
+    database();
 
-
-
+    try {
+      const documents = await terapia.find({email: req.body.email});
+      console.log(documents)
+      res.json(documents)
+    } catch (error) {
+      console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+    }
+  })
 
 
 
