@@ -24,9 +24,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(task,index) in tasks" :key="index" :class="{ 'blue-bg': task.reminderDate === today }">
-                <td>{{task.evento}}</td>
-                <td> {{task.data}}</td>
+              <tr v-for="(task,index) in terapia" :key="index" :class="{ 'blue-bg': task.reminderDate === today }">
+                <td>{{task.farmaco}}</td>
+                <td> {{task.dosaggio}}</td>
                 <td> {{task.orario}}</td>
                 <td>
                   <button class="del-btn" @click="deleteTask(index)">Delete</button>
@@ -170,18 +170,18 @@
                 this.editTask = null;
             }
             else {
-              const terapia = {
+              const medicinale = {
                     farmaco: this.farmaco,
                     orario: this.farmacOrario,
                     dosaggio: this.dosaggio,
                     email_paziente: 'cassa@gmail.com'                         //modificare email
                 }
 
-              await axios.post('http://localhost:5002/insertTherapy', terapia)
+              await axios.post('http://localhost:5002/insertTherapy', medicinale)
               .then(res => {
                 console.log(res.data)
                 if(res.status === 200){
-                  this.tasks.push(terapia);
+                  this.terapia.push(medicinale);
                   alert('terapia inserito correttamente')
                 }
               }, err => {
