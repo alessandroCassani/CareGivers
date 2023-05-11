@@ -6,8 +6,8 @@
         <!-- INSERIRE HEADING -->
         <!-- input -->
         <div class="insert">
-          <input type="text" v-model="farmaco" placeholder="Aggiungi farmaco..." />
-          <input type="number" v-model="dosaggio" />
+          <input type="text" v-model="farmaco" placeholder="Aggiungi farmaco..." />&nbsp;
+          <input type="number" v-model="dosaggio" />&nbsp;
           <input type="time" v-model="farmacOrario" />
           <button @click="SubmitDrug" class="add-btn">ADD</button>
         </div>
@@ -17,7 +17,7 @@
             <thead>
               <tr>
                 <th>Farmaco</th>
-                <th>Dosaggio</th>
+                <th>Dosaggio (mg)</th>
                 <th>Orario</th>
                 <th>Elimina</th>
                 <th>Modifica</th>
@@ -43,8 +43,8 @@
         <!-- INSERIRE HEADING -->
         <!-- input -->
         <div class="insert">
-          <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />
-          <input type="date" v-model="reminderDate" />
+          <input type="text" v-model="task" placeholder="Aggiungi promemoria..." />&nbsp;
+          <input type="date" v-model="reminderDate" />&nbsp;
           <input type="time" v-model="reminderTime" />
           <button @click="SubmitTask" class="add-btn">ADD</button>
         </div>
@@ -189,7 +189,7 @@
         const promemoria = {
           evento: documents[i].evento,
           orario: documents[i].orario,
-          data: documents[i].data
+          data: documents[i].data.substr(0,10)
         }
       this.tasks.push(promemoria)
       } 
