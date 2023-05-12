@@ -112,38 +112,43 @@
     async mounted() {
       await this.getMemos()
       await this.getFarmaci()
+     this.setAlertsFarmaci()
 
-      if(sessionStorage.getItem('flagAlert') === null){
-        console.log('DENTRO INSERIMENTO ALERT')
-           sessionStorage.setItem('flagAlert', true)
-           for(let i=0; i<this.terapia.length; i++){
-              const nomeFarmaco = this.terapia[i].farmaco
-              console.log('nome farmaco: ' + nomeFarmaco)
-              console.log(this.terapia[i].orario + ' orario terapia')
-              const [hours, minutes] = this.terapia[i].orario.split(':');
-              const dateObj = new Date();
-              dateObj.setHours(hours);
-              dateObj.setMinutes(minutes);
 
-              console.log('DATA OGGETTO FARMACO ' + dateObj.getTime())
-
-              let currentTime = new Date();
-              console.log(currentTime.getTime() + ' CURRENTIME')
-              let timeDiff = dateObj.getTime() - currentTime.getTime();
-              console.log(timeDiff)
-
-              
-
-              if(timeDiff>0){
-                setTimeout(function() {
-                  console.log('ALERT INVIATO ' + nomeFarmaco)
-                   alert( nomeFarmaco );
-                }, timeDiff);}
-            }
-      }
+      
   },
 
     methods: {
+        setAlertsFarmaci(){
+          if(sessionStorage.getItem('flagAlertFarmaci') === null){
+              console.log('DENTRO INSERIMENTO ALERT')
+              sessionStorage.setItem('flagAlertFarmaci', true)
+              for(let i=0; i<this.terapia.length; i++){
+                 const nomeFarmaco = this.terapia[i].farmaco
+                 console.log('nome farmaco: ' + nomeFarmaco)
+                 console.log(this.terapia[i].orario + ' orario terapia')
+                 const [hours, minutes] = this.terapia[i].orario.split(':');
+                 const dateObj = new Date();
+                 dateObj.setHours(hours);
+                 dateObj.setMinutes(minutes);
+
+                 console.log('DATA OGGETTO FARMACO ' + dateObj.getTime())
+
+                 let currentTime = new Date();
+                 console.log(currentTime.getTime() + ' CURRENTIME')
+                 let timeDiff = dateObj.getTime() - currentTime.getTime();
+                 const timeDiffInMinutes = timeDiff / (1000 * 60);
+                 console.log(timeDiff)
+
+                 if(timeDiffInMinutes>5){
+                      setTimeout(function() {
+                        console.log('ALERT INVIATO ' + nomeFarmaco)
+                        alert( nomeFarmaco );
+                      }, timeDiff);
+                    }
+                }
+        }
+      },
 
 
         // delete task
