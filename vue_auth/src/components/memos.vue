@@ -84,9 +84,11 @@
     import axios from 'axios';
     import Side_bar from './Side_bar.vue';
 
+
     export default {
     data() {
         return {
+            ruolo: sessionStorage.getItem('ruolo'),
             today: new Date().toISOString().slice(0, 10),
             task: "",
             farmaco: "",
@@ -100,12 +102,50 @@
         };
     },
 
-       mounted() {
-      this.getMemos()
-      this.getFarmaci()
+    computed:{
+      isPatient(){
+       //console.log(sessionStorage.getItem('ruolo'))
+       return this.ruolo ==='paziente'
+      }
     },
 
+    async mounted() {
+      await this.getMemos()
+      await this.getFarmaci()
+
+      if(sessionStorage.getItem('flagAlert') === null){
+        console.log('DENTRO INSERIMENTO ALERT')
+           sessionStorage.setItem('flagAlert', true)
+           for(let i=0; i<this.terapia.length; i++){
+              const nomeFarmaco = this.terapia[i].farmaco
+              console.log('nome farmaco: ' + nomeFarmaco)
+              console.log(this.terapia[i].orario + ' orario terapia')
+              const [hours, minutes] = this.terapia[i].orario.split(':');
+              const dateObj = new Date();
+              dateObj.setHours(hours);
+              dateObj.setMinutes(minutes);
+
+              console.log('DATA OGGETTO FARMACO ' + dateObj.getTime())
+
+              let currentTime = new Date();
+              console.log(currentTime.getTime() + ' CURRENTIME')
+              let timeDiff = dateObj.getTime() - currentTime.getTime();
+              console.log(timeDiff)
+
+              
+
+              if(timeDiff>0){
+                setTimeout(function() {
+                  console.log('ALERT INVIATO ' + nomeFarmaco)
+                   alert( nomeFarmaco );
+                }, timeDiff);}
+            }
+      }
+  },
+
     methods: {
+
+
         // delete task
         deleteTask(index) {
             this.tasks.splice(index, 1);
@@ -189,7 +229,7 @@
         const promemoria = {
           evento: documents[i].evento,
           orario: documents[i].orario,
-          data: documents[i].data.substr(0,10)
+          data: documents[i].data.substr(0,10)                                //substr aggiusta data
         }
       this.tasks.push(promemoria)
       } 
@@ -212,6 +252,7 @@
         }
       this.terapia.push(farmaco)
       } 
+      console.log('getfarmaci')
      })
     }
 
