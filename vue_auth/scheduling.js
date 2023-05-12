@@ -129,7 +129,7 @@ const database = () => {
     console.log('DENTRO GET-Therapy SERVER')
     database();
 
-    try {
+    try { 
       const documents = await terapia.find({email: req.body.email});
       console.log(documents)
       res.json(documents)
