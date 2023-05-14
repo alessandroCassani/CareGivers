@@ -3,8 +3,8 @@
     <div class="wrapper">
       <Side_bar></Side_bar>
 
-      <div class="container">
-        <div class="heading">
+      <div class="container-farmaci">
+        <div class="heading-farmaci">
           <h3>FARMACI</h3>
           <hr style="width: 100%" color="black" />
         </div>
@@ -16,11 +16,11 @@
             placeholder="Aggiungi farmaco..."
           />&nbsp; <input type="number" v-model="dosaggio" />&nbsp;
           <input type="time" v-model="farmacOrario" />
-          <button @click="SubmitDrug" class="add-btn">ADD</button>
+          <button @click="SubmitDrug" class="add-btn-farmaci">AGGIUNGI</button>
         </div>
         <!-- table -->
-        <div class="table-container">
-          <table border="{3}">
+        <div class="table-container-farmaci">
+          <table border="{3}" class="table-farmaci">
             <thead>
               <tr>
                 <th>Farmaco</th>
@@ -39,17 +39,22 @@
                 <td>{{ task.dosaggio }}</td>
                 <td>{{ task.orario }}</td>
                 <td>
-                  <button class="del-btn" @click="deleteDrug(index)">
-                    Delete
-                  </button>
+                  <href
+                    class="del-btn"
+                    style="border-radius: 4px"
+                    @click="deleteDrug(index)"
+                    s
+                  >
+                    Elimina
+                  </href>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div class="container">
-        <div class="heading">
+      <div class="container-task">
+        <div class="heading-task">
           <h3>PROMEMORIA</h3>
           <hr style="width: 100%" color="black" />
         </div>
@@ -61,11 +66,11 @@
             placeholder="Aggiungi promemoria..."
           />&nbsp; <input type="date" v-model="reminderDate" />&nbsp;
           <input type="time" v-model="reminderTime" />
-          <button @click="SubmitTask" class="add-btn">ADD</button>
+          <button @click="SubmitTask" class="add-btn-task">AGGIUNGI</button>
         </div>
         <!-- table -->
-        <div class="table-container">
-          <table border="{3}">
+        <div class="table-container-task">
+          <table border="{3}" class="table-task">
             <thead>
               <tr>
                 <th>Evento</th>
@@ -84,9 +89,13 @@
                 <td>{{ task.data }}</td>
                 <td>{{ task.orario }}</td>
                 <td>
-                  <button class="del-btn" @click="deleteTask(index)">
-                    Delete
-                  </button>
+                  <href
+                    class="del-btn"
+                    style="border-radius: 4px"
+                    @click="deleteTask(index)"
+                  >
+                    Elimina
+                  </href>
                 </td>
               </tr>
             </tbody>
@@ -364,25 +373,56 @@ export default {
   margin-top: -220px;
 }
 
-.heading {
+.heading-farmaci {
   font-weight: bold;
   margin-bottom: 30px;
-  color: #3d2022;
+  color: #c79598;
 }
 
-.container {
+.heading-task {
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: darkgoldenrod;
+}
+
+.del-btn {
+  background-color: #88474c;
+  color: white;
+}
+
+.container-farmaci {
   width: 1300px;
   margin-left: 250px;
   text-align: center;
   margin-top: 150px;
 }
 
-.table-container {
+.container-task {
+  width: 1300px;
+  margin-left: 250px;
+  text-align: center;
+  margin-top: 150px;
+}
+
+.table-container-farmaci {
   max-height: 200px;
   overflow-y: scroll;
 }
 
-table {
+.table-container-task {
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.table-farmaci {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  background-color: #c79598;
+}
+
+.table-task {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -401,11 +441,15 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+button:hover {
+  background-color: green;
+}
+
 .blue-bg {
   background-color: blue;
 }
 
-.add-btn {
+.add-btn-farmaci {
   border: none;
   width: 100px;
   height: 30px;
@@ -419,10 +463,18 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 
-.del-btn {
+.add-btn-task {
   border: none;
-  background-color: red;
+  width: 100px;
+  height: 30px;
+  padding: 2px;
+  background-color: grey;
   color: white;
+  margin-left: 50px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  transition: o.25s;
+  cursor: pointer;
 }
 
 .edit-btn {
