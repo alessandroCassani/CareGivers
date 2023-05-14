@@ -9,7 +9,7 @@
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert">
+        <div class="insert" v-if="!isPatient">
           <input
             type="text"
             v-model="farmaco"
@@ -26,7 +26,7 @@
                 <th>Farmaco</th>
                 <th>Dosaggio (mg)</th>
                 <th>Orario</th>
-                <th>Elimina</th>
+                <th v-if="!isPatient">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
                 <td>{{ task.farmaco }}</td>
                 <td>{{ task.dosaggio }}</td>
                 <td>{{ task.orario }}</td>
-                <td>
+                <td v-if="!isPatient">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"
@@ -59,7 +59,7 @@
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert">
+        <div class="insert" v-if="!isPatient">
           <input
             type="text"
             v-model="task"
@@ -76,7 +76,7 @@
                 <th>Evento</th>
                 <th>Data</th>
                 <th>Orario</th>
-                <th>Elimina</th>
+                <th v-if="!isPatient">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +88,7 @@
                 <td>{{ task.evento }}</td>
                 <td>{{ task.data }}</td>
                 <td>{{ task.orario }}</td>
-                <td>
+                <td v-if="!isPatient">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"

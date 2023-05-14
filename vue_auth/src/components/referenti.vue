@@ -1,3 +1,37 @@
+<template>
+  <Side_bar> </Side_bar>
+  <div :style="{ 'margin-left': sidebarWidth }"></div>
+
+  <body>
+    <div class="inputReferente" v-if="!isPatient">
+      <h3>Inserire email paziente:</h3>
+      <input
+        type="email"
+        v-model="e_mail"
+        class="form-control"
+        placeholder="email paziente"
+      />
+      <br />
+      <h2>INSERISCI OTP</h2>
+      <div class="otp-bx">
+        <input type="text" v-model="firstOtp" maxlength="1" />
+        <input type="text" v-model="secondOtp" maxlength="1" />
+        <input type="text" v-model="thirdOtp" maxlength="1" class="space" />
+        <input type="text" v-model="fourthOtp" maxlength="1" />
+        <input type="text" v-model="fifthOtp" maxlength="1" />
+      </div>
+      <br />
+      <input type="submit" @click="sendOtp()" value="CONFERMA" />
+    </div>
+
+    <div class="inputPaziente" v-if="isPatient">
+      <h1>Genera OTP:</h1>
+      <br />
+      <input type="submit" @click="createOtp()" value="GENERA" />
+    </div>
+  </body>
+</template>
+
 <script>
 import Side_bar from "@/components/Side_bar.vue";
 import sidebarWidth from "@/components/state";
@@ -93,40 +127,6 @@ export default {
   },
 };
 </script>
-
-<template>
-  <Side_bar> </Side_bar>
-  <div :style="{ 'margin-left': sidebarWidth }"></div>
-
-  <body>
-    <div class="inputReferente" v-if="!isPatient">
-      <h3>Inserire email paziente:</h3>
-      <input
-        type="email"
-        v-model="e_mail"
-        class="form-control"
-        placeholder="email paziente"
-      />
-      <br />
-      <h2>INSERISCI OTP</h2>
-      <div class="otp-bx">
-        <input type="text" v-model="firstOtp" maxlength="1" />
-        <input type="text" v-model="secondOtp" maxlength="1" />
-        <input type="text" v-model="thirdOtp" maxlength="1" class="space" />
-        <input type="text" v-model="fourthOtp" maxlength="1" />
-        <input type="text" v-model="fifthOtp" maxlength="1" />
-      </div>
-      <br />
-      <input type="submit" @click="sendOtp()" value="CONFERMA" />
-    </div>
-
-    <div class="inputPaziente" v-if="isPatient">
-      <h1>Genera OTP:</h1>
-      <br />
-      <input type="submit" @click="createOtp()" value="GENERA" />
-    </div>
-  </body>
-</template>
 
 <style>
 * {
