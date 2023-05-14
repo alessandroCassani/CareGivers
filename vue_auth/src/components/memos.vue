@@ -134,13 +134,15 @@ export default {
     await this.getMemos();
     await this.getFarmaci();
     this.setAlertsFarmaci();
+    this.setAlertsTasks();
   },
 
   methods: {
     setAlertsFarmaci() {
       if (sessionStorage.getItem("flagAlertFarmaci") === null) {
         console.log("DENTRO INSERIMENTO ALERT");
-        sessionStorage.setItem("flagAlertFarmaci", true);
+        sessionStorage.setItem("flagAlertFarmaci", false);
+
         for (let i = 0; i < this.terapia.length; i++) {
           const nomeFarmaco = this.terapia[i].farmaco;
           //console.log("nome farmaco: " + nomeFarmaco);
@@ -157,22 +159,26 @@ export default {
           let timeDiff = dateObj.getTime() - currentTime.getTime();
           //console.log(timeDiff);
 
-          setTimeout(function () {
-            console.log("ALERT INVIATO " + nomeFarmaco);
-            alert(nomeFarmaco);
-          }, timeDiff);
+          if (timeDiff > 0) {
+            setTimeout(function () {
+              console.log("ALERT INVIATO " + nomeFarmaco);
+              alert(nomeFarmaco);
+            }, timeDiff);
+          }
         }
       }
     },
 
     setAlertsTasks() {
       if (sessionStorage.getItem("flagAlertEventi") === null) {
-        sessionStorage.setItem("flagAlerteventi", true);
+        sessionStorage.setItem("flagAlertEventi", false);
+
+        console.log("dentor inserisci tasl");
 
         const currentDate = new Date();
         for (let i = 0; i < this.tasks.length; i++) {
           const evento = this.tasks[i].evento;
-          const data = this.tasks[i].data;
+          const data = new Date(this.tasks[i].data);
           const orario = this.tasks[i].orario;
 
           if (
@@ -188,10 +194,12 @@ export default {
             let currentTime = new Date();
             let timeDiff = dateObj.getTime() - currentTime.getTime();
 
-            setTimeout(function () {
-              console.log("ALERT INVIATO  PER EVENTO " + evento);
-              alert(evento + " alle ore " + orario.getTime());
-            }, timeDiff);
+            if (timeDiff > 0) {
+              setTimeout(function () {
+                console.log("ALERT INVIATO  PER EVENTO " + evento);
+                alert(evento + " alle ore " + orario);
+              }, timeDiff);
+            }
           }
         }
       }
@@ -274,7 +282,7 @@ export default {
     },
 
     async getMemos() {
-      const email = { email: "cassa@gmail.com" };
+      const email = { email: "cassa@gmail.com" }; //modificare
       await axios
         .get("http://localhost:5002/getMemos", email)
         .then((response) => {
