@@ -36,7 +36,7 @@
                 <td>{{ task.dosaggio }}</td>
                 <td>{{ task.orario }}</td>
                 <td>
-                  <button class="del-btn" @click="deleteTask(index)">
+                  <button class="del-btn" @click="deleteDrug(index)">
                     Delete
                   </button>
                 </td>
@@ -300,6 +300,28 @@ export default {
             }
           );
       }
+    },
+
+    async deleteDrug(index) {
+      await axios
+        .post("http://localhost:5002/deleteDrug", {
+          email: "cassa@gmail.com", //modificare
+          farmaco: this.terapia[index].farmaco,
+        })
+        .then(
+          //modificare
+          (res) => {
+            console.log(res.data);
+            if (res.status === 200) {
+              this.terapia.splice(index, 1);
+              alert("farmaco eliminato correttamente");
+            }
+          },
+          (err) => {
+            console.log(err);
+            alert("Errore in fase di cancellazione del farmaco");
+          }
+        );
     },
 
     async getMemos() {

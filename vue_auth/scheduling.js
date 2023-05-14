@@ -155,6 +155,23 @@ const database = () => {
   })
 
 
+  app.post('/deleteDrug', async (req,res) => {
+    console.log('DENTRO CANCELLA farmaco SERVER')
+    database();
+    console.log(req.body.email)
+
+    try {
+      const result = await terapia.deleteOne({paziente: req.body.email, farmaco: req.body.farmaco})
+      console.log(result)
+      return res.status(200).json({message: 'farmaco cancellato correttamente'})
+    } catch (error) {
+      console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+    }
+  })
+
+
   app.listen(port,(err) => {
     if(err)
         console.log(err);
