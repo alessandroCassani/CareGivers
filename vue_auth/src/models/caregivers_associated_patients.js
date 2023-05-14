@@ -7,4 +7,4 @@ const userSchema = new schema({
      patient: String
 })
 const caregivers_patient = mongoose.model('caregivers_patient',userSchema);
-module.exports = { caregivers_patient };
+module.exports = { caregivers_patient }; 
