@@ -200,15 +200,36 @@ export default {
                 alert(evento + " alle ore " + orario);
               }, timeDiff);
             }
+          } else {
+            console.log("non ci sono eventi programmati per oggi");
           }
         }
       }
     },
 
     // delete task
-    deleteTask(index) {
-      this.tasks.splice(index, 1);
+    async deleteTask(index) {
+      await axios
+        .post("http://localhost:5002/deleteTask", {
+          email: "cassa@gmail.com",
+          evento: this.tasks[index].evento,
+        })
+        .then(
+          //modificare
+          (res) => {
+            console.log(res.data);
+            if (res.status === 200) {
+              this.tasks.splice(index, 1);
+              alert("promemoria eliminato correttamente");
+            }
+          },
+          (err) => {
+            console.log(err);
+            alert("Errore in fase di cancellazione del promemoria");
+          }
+        );
     },
+
     // edit task
     EditTask(index) {
       (this.task = this.tasks[index].name), (this.editTask = index);

@@ -85,7 +85,7 @@ const database = () => {
 
     try {
       const documents = await Memo.find({email: req.body.email});
-      console.log(documents)
+      //console.log(documents)
       res.json(documents)
     } catch (error) {
       console.log(err);
@@ -128,7 +128,7 @@ const database = () => {
 
     try { 
       const documents = await terapia.find({email: req.body.email});
-      console.log(documents)
+      //console.log(documents)
       res.json(documents)
     } catch (error) {
       console.log(err);
@@ -137,6 +137,22 @@ const database = () => {
     }
   })
 
+
+  app.post('/deleteTask', async (req,res) => {
+    console.log('DENTRO CANCELLA TASK SERVER')
+    database();
+    console.log(req.body.email)
+
+    try {
+      const result = await Memo.deleteOne({paziente: req.body.email, evento: req.body.evento})
+      console.log(result)
+      return res.status(200).json({message: 'elemento cancellato correttamente'})
+    } catch (error) {
+      console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+    }
+  })
 
 
   app.listen(port,(err) => {
