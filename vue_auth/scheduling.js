@@ -172,6 +172,23 @@ const database = () => {
   })
 
 
+  app.post('/editTask', async (req,res) => {
+    console.log('DENTRO modifica task SERVER')
+    database();
+    console.log(req.body.email)
+
+    try {
+      const result = await Memo.updateOne({paziente: req.body.email, evento: req.body.evento})
+      console.log(result)
+      return res.status(200).json({message: 'memo modificato correttamente'})
+    } catch (error) {
+      console.log(err);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+    }
+  })
+
+
   app.listen(port,(err) => {
     if(err)
         console.log(err);

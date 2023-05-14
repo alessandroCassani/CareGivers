@@ -23,7 +23,6 @@
                 <th>Dosaggio (mg)</th>
                 <th>Orario</th>
                 <th>Elimina</th>
-                <th>Modifica</th>
               </tr>
             </thead>
             <tbody>
@@ -38,11 +37,6 @@
                 <td>
                   <button class="del-btn" @click="deleteDrug(index)">
                     Delete
-                  </button>
-                </td>
-                <td>
-                  <button class="edit-btn" @click="EditTask(index)">
-                    Edit
                   </button>
                 </td>
               </tr>
@@ -71,7 +65,6 @@
                 <th>Data</th>
                 <th>Orario</th>
                 <th>Elimina</th>
-                <th>Modifica</th>
               </tr>
             </thead>
             <tbody>
@@ -86,11 +79,6 @@
                 <td>
                   <button class="del-btn" @click="deleteTask(index)">
                     Delete
-                  </button>
-                </td>
-                <td>
-                  <button class="edit-btn" @click="EditTask(index)">
-                    Edit
                   </button>
                 </td>
               </tr>
@@ -228,11 +216,6 @@ export default {
             alert("Errore in fase di cancellazione del promemoria");
           }
         );
-    },
-
-    // edit task
-    EditTask(index) {
-      (this.task = this.tasks[index].name), (this.editTask = index);
     },
 
     // Add Task
