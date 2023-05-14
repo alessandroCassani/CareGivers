@@ -124,6 +124,7 @@ export default {
       editTask: null,
       tasks: [],
       terapia: [],
+      email_paziente: localStorage.getItem("email_paziente"),
     };
   },
 
@@ -177,8 +178,6 @@ export default {
       if (sessionStorage.getItem("flagAlertEventi") === null) {
         sessionStorage.setItem("flagAlertEventi", false);
 
-        console.log("dentor inserisci tasl");
-
         const currentDate = new Date();
         for (let i = 0; i < this.tasks.length; i++) {
           const evento = this.tasks[i].evento;
@@ -215,7 +214,7 @@ export default {
     async deleteTask(index) {
       await axios
         .post("http://localhost:5002/deleteTask", {
-          email: "cassa@gmail.com",
+          email: this.email_paziente,
           evento: this.tasks[index].evento,
         })
         .then(
@@ -247,7 +246,7 @@ export default {
           evento: this.task,
           data: this.reminderDate,
           orario: this.reminderTime,
-          email_paziente: localStorage.getItem("email_paziente"),
+          email_paziente: this.email_paziente,
         };
         console.log(memo);
 
@@ -272,7 +271,6 @@ export default {
         return;
       }
       if (this.editTask != null) {
-        //modificare in farmaci tabella
         this.tasks[this.editTask].name = this.task;
         this.editTask = null;
       } else {
@@ -280,7 +278,7 @@ export default {
           farmaco: this.farmaco,
           orario: this.farmacOrario,
           dosaggio: this.dosaggio,
-          email_paziente: "cassa@gmail.com", //modificare email
+          email_paziente: this.email_paziente,
         };
 
         await axios
@@ -304,11 +302,10 @@ export default {
     async deleteDrug(index) {
       await axios
         .post("http://localhost:5002/deleteDrug", {
-          email: "cassa@gmail.com", //modificare
+          email: this.email_paziente,
           farmaco: this.terapia[index].farmaco,
         })
         .then(
-          //modificare
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
@@ -324,7 +321,7 @@ export default {
     },
 
     async getMemos() {
-      const email = { email: "cassa@gmail.com" }; //modificare
+      const email = { email: this.email_paziente };
       await axios
         .get("http://localhost:5002/getMemos", email)
         .then((response) => {
@@ -342,7 +339,7 @@ export default {
     },
 
     async getFarmaci() {
-      const email = { email: "cassa@gmail.com" }; //modificare email
+      const email = { email: this.email_paziente };
 
       await axios
         .get("http://localhost:5002/getTherapy", email)

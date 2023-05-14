@@ -55,7 +55,7 @@ const database = () => {
         console.log(timeDiffInSeconds + ' DIFFERENZA SECONDI')
 
         const schedule = new Memo({
-          paziente: 'cassa@gmail.com',                      //MODIFICARE
+          paziente: req.body.email_paziente,                      
           evento: req.body.evento,
           data: req.body.data,
           orario: req.body.orario,
@@ -65,7 +65,7 @@ const database = () => {
 
         await schedule.save();
         return res.status(200).json({
-          message: 'inserimento memo confermato'
+          message: 'inserimento promemoria avvenuto con successo'
         })
 
     } catch (error) {
@@ -80,7 +80,7 @@ const database = () => {
 
 
   app.get('/getMemos', async (req,res) => {
-    console.log('DENTRO GET-MEMO SERVER')
+    //console.log('DENTRO GET-MEMO SERVER')
     database();
 
     try {
@@ -139,14 +139,14 @@ const database = () => {
 
 
   app.post('/deleteTask', async (req,res) => {
-    console.log('DENTRO CANCELLA TASK SERVER')
+   // console.log('DENTRO CANCELLA TASK SERVER')
     database();
     console.log(req.body.email)
 
     try {
       const result = await Memo.deleteOne({paziente: req.body.email, evento: req.body.evento})
       console.log(result)
-      return res.status(200).json({message: 'elemento cancellato correttamente'})
+      return res.status(200).json({message: 'evento cancellato correttamente'})
     } catch (error) {
       console.log(err);
           res.status(500).json({ message: 'Internal server error' });
@@ -156,7 +156,7 @@ const database = () => {
 
 
   app.post('/deleteDrug', async (req,res) => {
-    console.log('DENTRO CANCELLA farmaco SERVER')
+   // console.log('DENTRO CANCELLA farmaco SERVER')
     database();
     console.log(req.body.email)
 
