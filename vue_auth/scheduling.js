@@ -40,14 +40,11 @@ const database = () => {
     database();
 
     try {
-        console.log(req.body.name)
-        console.log(req.body.reminderDate)
-        console.log(req.body.reminderTime)
-        console.log('email ' + req.body.email_paziente)
+        //console.log('email ' + req.body.email_paziente)
 
-        const dataMemo = new Date(req.body.reminderDate)
+        const dataMemo = new Date(req.body.data)
         
-        const [hoursString, minutesString] = req.body.reminderTime.split(":");
+        const [hoursString, minutesString] = req.body.orario.split(":");
         const selectedTime = {
           hours: parseInt(hoursString, 10),
           minutes: parseInt(minutesString, 10),
@@ -59,9 +56,9 @@ const database = () => {
 
         const schedule = new Memo({
           paziente: 'cassa@gmail.com',                      //MODIFICARE
-          evento: req.body.name,
-          data: req.body.reminderDate,
-          orario: req.body.reminderTime,
+          evento: req.body.evento,
+          data: req.body.data,
+          orario: req.body.orario,
           createdAt: new Date(),
           expires: timeDiffInSeconds
         })

@@ -143,8 +143,8 @@ export default {
         sessionStorage.setItem("flagAlertFarmaci", true);
         for (let i = 0; i < this.terapia.length; i++) {
           const nomeFarmaco = this.terapia[i].farmaco;
-          console.log("nome farmaco: " + nomeFarmaco);
-          console.log(this.terapia[i].orario + " orario terapia");
+          //console.log("nome farmaco: " + nomeFarmaco);
+          //console.log(this.terapia[i].orario + " orario terapia");
           const [hours, minutes] = this.terapia[i].orario.split(":");
           const dateObj = new Date();
           dateObj.setHours(hours);
@@ -153,15 +153,44 @@ export default {
           console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
 
           let currentTime = new Date();
-          console.log(currentTime.getTime() + " CURRENTIME");
+          //console.log(currentTime.getTime() + " CURRENTIME");
           let timeDiff = dateObj.getTime() - currentTime.getTime();
-          const timeDiffInMinutes = timeDiff / (1000 * 60);
-          console.log(timeDiff);
+          //console.log(timeDiff);
 
-          if (timeDiffInMinutes > 5) {
+          setTimeout(function () {
+            console.log("ALERT INVIATO " + nomeFarmaco);
+            alert(nomeFarmaco);
+          }, timeDiff);
+        }
+      }
+    },
+
+    setAlertsTasks() {
+      if (sessionStorage.getItem("flagAlertEventi") === null) {
+        sessionStorage.setItem("flagAlerteventi", true);
+
+        const currentDate = new Date();
+        for (let i = 0; i < this.tasks.length; i++) {
+          const evento = this.tasks[i].evento;
+          const data = this.tasks[i].data;
+          const orario = this.tasks[i].orario;
+
+          if (
+            data.getDate() === currentDate.getDate() &&
+            data.getMonth() === currentDate.getMonth() &&
+            data.getFullYear() === currentDate.getFullYear()
+          ) {
+            const [hours, minutes] = orario.split(":");
+            const dateObj = new Date();
+            dateObj.setHours(hours);
+            dateObj.setMinutes(minutes);
+
+            let currentTime = new Date();
+            let timeDiff = dateObj.getTime() - currentTime.getTime();
+
             setTimeout(function () {
-              console.log("ALERT INVIATO " + nomeFarmaco);
-              alert(nomeFarmaco);
+              console.log("ALERT INVIATO  PER EVENTO " + evento);
+              alert(evento + " alle ore " + orario.getTime());
             }, timeDiff);
           }
         }
@@ -192,6 +221,7 @@ export default {
           orario: this.reminderTime,
           email_paziente: localStorage.getItem("email_paziente"),
         };
+        console.log(memo);
 
         await axios.post("http://localhost:5002/insertMemo", memo).then(
           (res) => {
