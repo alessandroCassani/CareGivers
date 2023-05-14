@@ -2,8 +2,12 @@
   <body>
     <div class="wrapper">
       <Side_bar></Side_bar>
+
       <div class="container">
-        <!-- INSERIRE HEADING -->
+        <div class="heading">
+          <h3>FARMACI</h3>
+          <hr style="width: 100%" color="black" />
+        </div>
         <!-- input -->
         <div class="insert">
           <input
@@ -45,7 +49,10 @@
         </div>
       </div>
       <div class="container">
-        <!-- INSERIRE HEADING -->
+        <div class="heading">
+          <h3>PROMEMORIA</h3>
+          <hr style="width: 100%" color="black" />
+        </div>
         <!-- input -->
         <div class="insert">
           <input
@@ -355,6 +362,12 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: -220px;
+}
+
+.heading {
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #3d2022;
 }
 
 .container {
