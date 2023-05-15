@@ -166,8 +166,11 @@ export default {
 
           if (timeDiff > 0) {
             setTimeout(function () {
-              console.log("ALERT INVIATO " + nomeFarmaco);
-              alert(nomeFarmaco);
+              if (this.terapia[i].farmaco === nomeFarmaco) {
+                //controlla se il farmaco è stato eliminato prima di mandare alert
+                console.log("ALERT INVIATO " + nomeFarmaco);
+                alert(nomeFarmaco);
+              }
             }, timeDiff);
           }
         }
@@ -199,8 +202,11 @@ export default {
 
             if (timeDiff > 0) {
               setTimeout(function () {
-                console.log("ALERT INVIATO  PER EVENTO " + evento);
-                alert(evento + " alle ore " + orario);
+                if (this.tasks[i].evento === evento) {
+                  //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
+                  console.log("ALERT INVIATO PER EVENTO " + evento);
+                  alert(evento + " alle ore " + orario);
+                }
               }, timeDiff);
             }
           } else {
