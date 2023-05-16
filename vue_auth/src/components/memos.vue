@@ -111,6 +111,8 @@ import axios from "axios";
 import Side_bar from "./Side_bar.vue";
 
 export default {
+  name: "memos",
+  components: { Side_bar },
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -176,195 +178,192 @@ export default {
         }
       }
     },
+  },
 
-    setAlertsTasks() {
-      if (sessionStorage.getItem("flagAlertEventi") === null) {
-        sessionStorage.setItem("flagAlertEventi", false);
+  setAlertsTasks() {
+    if (sessionStorage.getItem("flagAlertEventi") === null) {
+      sessionStorage.setItem("flagAlertEventi", false);
 
-        const currentDate = new Date();
-        for (let i = 0; i < this.tasks.length; i++) {
-          const evento = this.tasks[i].evento;
-          const data = new Date(this.tasks[i].data);
-          const orario = this.tasks[i].orario;
+      const currentDate = new Date();
+      for (let i = 0; i < this.tasks.length; i++) {
+        const evento = this.tasks[i].evento;
+        const data = new Date(this.tasks[i].data);
+        const orario = this.tasks[i].orario;
 
-          if (
-            data.getDate() === currentDate.getDate() &&
-            data.getMonth() === currentDate.getMonth() &&
-            data.getFullYear() === currentDate.getFullYear()
-          ) {
-            const [hours, minutes] = orario.split(":");
-            const dateObj = new Date();
-            dateObj.setHours(hours);
-            dateObj.setMinutes(minutes);
+        if (
+          data.getDate() === currentDate.getDate() &&
+          data.getMonth() === currentDate.getMonth() &&
+          data.getFullYear() === currentDate.getFullYear()
+        ) {
+          const [hours, minutes] = orario.split(":");
+          const dateObj = new Date();
+          dateObj.setHours(hours);
+          dateObj.setMinutes(minutes);
 
-            let currentTime = new Date();
-            let timeDiff = dateObj.getTime() - currentTime.getTime();
+          let currentTime = new Date();
+          let timeDiff = dateObj.getTime() - currentTime.getTime();
 
-            if (timeDiff > 0) {
-              setTimeout(function () {
-                if (this.tasks[i].evento === evento) {
-                  //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
-                  console.log("ALERT INVIATO PER EVENTO " + evento);
-                  alert(evento + " alle ore " + orario);
-                }
-              }, timeDiff);
-            }
-          } else {
-            console.log("non ci sono eventi programmati per oggi");
+          if (timeDiff > 0) {
+            setTimeout(function () {
+              if (this.tasks[i].evento === evento) {
+                //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
+                console.log("ALERT INVIATO PER EVENTO " + evento);
+                alert(evento + " alle ore " + orario);
+              }
+            }, timeDiff);
           }
+        } else {
+          console.log("non ci sono eventi programmati per oggi");
         }
       }
-    },
-
-    // delete task
-    async deleteTask(index) {
-      await axios
-        .post("http://localhost:5002/deleteTask", {
-          email: this.email_paziente,
-          evento: this.tasks[index].evento,
-        })
-        .then(
-          //modificare
-          (res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              this.tasks.splice(index, 1);
-              alert("promemoria eliminato correttamente");
-            }
-          },
-          (err) => {
-            console.log(err);
-            alert("Errore in fase di cancellazione del promemoria");
-          }
-        );
-    },
-
-    // Add Task
-    async SubmitTask() {
-      if (this.task.length === 0) {
-        return;
-      }
-      if (this.editTask != null) {
-        this.tasks[this.editTask].name = this.task;
-        this.editTask = null;
-      } else {
-        const memo = {
-          evento: this.task,
-          data: this.reminderDate,
-          orario: this.reminderTime,
-          email_paziente: this.email_paziente,
-        };
-        console.log(memo);
-
-        await axios.post("http://localhost:5002/insertMemo", memo).then(
-          (res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              this.tasks.push(memo);
-              alert("promemoria inserito correttamente");
-            }
-          },
-          (err) => {
-            console.log(err);
-            alert("Errore in fase di inserimento del promemoria");
-          }
-        );
-      }
-    },
-
-    async SubmitDrug() {
-      if (this.farmaco.length === 0) {
-        return;
-      }
-      if (this.editTask != null) {
-        this.tasks[this.editTask].name = this.task;
-        this.editTask = null;
-      } else {
-        const medicinale = {
-          farmaco: this.farmaco,
-          orario: this.farmacOrario,
-          dosaggio: this.dosaggio,
-          email_paziente: this.email_paziente,
-        };
-
-        await axios
-          .post("http://localhost:5002/insertTherapy", medicinale)
-          .then(
-            (res) => {
-              console.log(res.data);
-              if (res.status === 200) {
-                this.terapia.push(medicinale);
-                alert("terapia inserito correttamente");
-              }
-            },
-            (err) => {
-              console.log(err);
-              alert("Errore in fase di inserimento della terapia");
-            }
-          );
-      }
-    },
-
-    async deleteDrug(index) {
-      await axios
-        .post("http://localhost:5002/deleteDrug", {
-          email: this.email_paziente,
-          farmaco: this.terapia[index].farmaco,
-        })
-        .then(
-          (res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              this.terapia.splice(index, 1);
-              alert("farmaco eliminato correttamente");
-            }
-          },
-          (err) => {
-            console.log(err);
-            alert("Errore in fase di cancellazione del farmaco");
-          }
-        );
-    },
-
-    async getMemos() {
-      const email = { email: this.email_paziente };
-      await axios
-        .get("http://localhost:5002/getMemos", email)
-        .then((response) => {
-          const documents = response.data;
-
-          for (let i = 0; i < documents.length; i++) {
-            const promemoria = {
-              evento: documents[i].evento,
-              orario: documents[i].orario,
-              data: documents[i].data.substr(0, 10), //substr aggiusta data
-            };
-            this.tasks.push(promemoria);
-          }
-        });
-    },
-
-    async getFarmaci() {
-      const email = { email: this.email_paziente };
-
-      await axios
-        .get("http://localhost:5002/getTherapy", email)
-        .then((response) => {
-          const documents = response.data;
-
-          for (let i = 0; i < documents.length; i++) {
-            const farmaco = {
-              farmaco: documents[i].farmaco,
-              orario: documents[i].orario,
-              dosaggio: documents[i].dosaggio,
-            };
-            this.terapia.push(farmaco);
-          }
-          console.log("getfarmaci");
-        });
-    },
+    }
   },
-  components: { Side_bar },
+
+  // delete task
+  async deleteTask(index) {
+    await axios
+      .post("http://localhost:5002/deleteTask", {
+        email: this.email_paziente,
+        evento: this.tasks[index].evento,
+      })
+      .then(
+        //modificare
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.tasks.splice(index, 1);
+            alert("promemoria eliminato correttamente");
+          }
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di cancellazione del promemoria");
+        }
+      );
+  },
+
+  // Add Task
+  async SubmitTask() {
+    if (this.task.length === 0) {
+      return;
+    }
+    if (this.editTask != null) {
+      this.tasks[this.editTask].name = this.task;
+      this.editTask = null;
+    } else {
+      const memo = {
+        evento: this.task,
+        data: this.reminderDate,
+        orario: this.reminderTime,
+        email_paziente: this.email_paziente,
+      };
+      console.log(memo);
+
+      await axios.post("http://localhost:5002/insertMemo", memo).then(
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.tasks.push(memo);
+            alert("promemoria inserito correttamente");
+          }
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di inserimento del promemoria");
+        }
+      );
+    }
+  },
+
+  async SubmitDrug() {
+    if (this.farmaco.length === 0) {
+      return;
+    }
+    if (this.editTask != null) {
+      this.tasks[this.editTask].name = this.task;
+      this.editTask = null;
+    } else {
+      const medicinale = {
+        farmaco: this.farmaco,
+        orario: this.farmacOrario,
+        dosaggio: this.dosaggio,
+        email_paziente: this.email_paziente,
+      };
+
+      await axios.post("http://localhost:5002/insertTherapy", medicinale).then(
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.terapia.push(medicinale);
+            alert("terapia inserito correttamente");
+          }
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di inserimento della terapia");
+        }
+      );
+    }
+  },
+
+  async deleteDrug(index) {
+    await axios
+      .post("http://localhost:5002/deleteDrug", {
+        email: this.email_paziente,
+        farmaco: this.terapia[index].farmaco,
+      })
+      .then(
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.terapia.splice(index, 1);
+            alert("farmaco eliminato correttamente");
+          }
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di cancellazione del farmaco");
+        }
+      );
+  },
+
+  async getMemos() {
+    const email = { email: this.email_paziente };
+    await axios
+      .get("http://localhost:5002/getMemos", email)
+      .then((response) => {
+        const documents = response.data;
+
+        for (let i = 0; i < documents.length; i++) {
+          const promemoria = {
+            evento: documents[i].evento,
+            orario: documents[i].orario,
+            data: documents[i].data.substr(0, 10), //substr aggiusta data
+          };
+          this.tasks.push(promemoria);
+        }
+      });
+  },
+
+  async getFarmaci() {
+    const email = { email: this.email_paziente };
+
+    await axios
+      .get("http://localhost:5002/getTherapy", email)
+      .then((response) => {
+        const documents = response.data;
+
+        for (let i = 0; i < documents.length; i++) {
+          const farmaco = {
+            farmaco: documents[i].farmaco,
+            orario: documents[i].orario,
+            dosaggio: documents[i].dosaggio,
+          };
+          this.terapia.push(farmaco);
+        }
+        console.log("getfarmaci");
+      });
+  },
 };
 </script>
 

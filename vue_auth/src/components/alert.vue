@@ -16,6 +16,13 @@ export default {
       sidebarWidth,
     };
   },
+
+  computed: {
+    isPatient() {
+      console.log(sessionStorage.getItem("ruolo") + " COMPUTED");
+      return this.ruolo === "paziente";
+    },
+  },
 };
 </script>
 
