@@ -4,6 +4,5 @@ var broker =  new mosca.Server(settings)
 
 broker.on('ready', ()=>{
   console.log('broker is running')
-
 })
 

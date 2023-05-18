@@ -109,7 +109,13 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
+var mqtt = require("mqtt");
+var client = mqtt.connect("mqtt://localhost:1234");
 
+client.on("message", (topic, message) => {
+  message = message.toString();
+  console.log(message);
+});
 export default {
   name: "memos",
   components: { Side_bar },

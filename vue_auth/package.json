@@ -24,6 +24,7 @@
     "mongoose": "^6.10.0",
     "mosca": "^2.8.3",
     "mqtt": "^4.3.7",
+    "node-polyfill-webpack-plugin": "^2.0.1",
     "sors": "^1.0.2",
     "vue": "^3.2.13",
     "vue-ctk-date-time-picker": "^3.0.0-alpha.0",
