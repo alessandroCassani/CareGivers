@@ -109,13 +109,8 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-var mqtt = require("mqtt");
-var client = mqtt.connect("mqtt://localhost:1234");
+import mqtt from "mqtt";
 
-client.on("message", (topic, message) => {
-  message = message.toString();
-  console.log(message);
-});
 export default {
   name: "memos",
   components: { Side_bar },
@@ -148,6 +143,16 @@ export default {
     this.getFarmaci();
     this.setAlertsFarmaci();
     this.setAlertsTasks();
+
+    //const topic = sessionStorage.getItem("email") + "/memo";
+    console.log(sessionStorage.getItem("email"));
+
+    let mqttConnection = await mqtt.connect("wss://test.mosquitto.org:8081");
+
+    mqttConnection.on("connect", function () {
+      console.log("connected");
+      console.log(mqttConnection.connected);
+    });
   },
 
   methods: {
@@ -300,6 +305,7 @@ export default {
           .then(
             (res) => {
               console.log(res.data);
+
               if (res.status === 200) {
                 this.terapia.push(medicinale);
                 alert("terapia inserito correttamente");
