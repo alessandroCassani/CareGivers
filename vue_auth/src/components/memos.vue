@@ -133,48 +133,7 @@ export default {
   },
 
   mounted() {
-    console.log(sessionStorage.getItem("flag"));
-    //const topic = sessionStorage.getItem("email") + "/memo";
-    //console.log(this.isPatient());
-    console.log(this.checkFlag());
-    this.getMemos();
-    this.getFarmaci();
-
-    if (this.isPatient() && this.checkFlag()) {
-      this.setAlertsFarmaci();
-      this.setAlertsTasks();
-      const topicMemo = "cassa@gmail.com/memo"; //modificare
-
-      this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-      console.log(this.mqttConnection);
-
-      this.mqttConnection.on("connect", () => {
-        console.log("connessione: " + this.mqttConnection.connected);
-        console.log("connesso");
-        this.mqttConnection.subscribe(topicMemo);
-        console.log("iscritto a " + topicMemo);
-      });
-
-      this.mqttConnection.on("message", (topicMemo, message) => {
-        console.log(topicMemo + " " + message);
-        alert("nuovo task");
-      });
-
-      this.setFlag();
-    } else {
-      if (!this.isPatient() && this.checkFlag()) {
-        this.setAlertsFarmaci();
-        this.setAlertsTasks();
-        this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-        console.log(this.mqttConnection);
-
-        this.mqttConnection.on("connect", () => {
-          //console.log("connessione: " + this.mqttConnection.connected);
-          console.log("connesso");
-        });
-        this.setFlag();
-      }
-    }
+    this.setup();
   },
 
   methods: {
@@ -311,6 +270,93 @@ export default {
           }
         );
       }
+    },
+
+    setup() {
+      console.log(sessionStorage.getItem("flag"));
+      //const topic = sessionStorage.getItem("email") + "/memo";
+      //console.log(this.isPatient());
+      console.log(this.checkFlag());
+      this.getMemos();
+      this.getFarmaci();
+      this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+
+      if (this.isPatient()) {
+        if (this.checkFlag()) {
+          this.setAlertsFarmaci();
+          this.setAlertsTasks();
+        }
+        const topicMemo = "cassa@gmail.com/memo"; //modificare
+
+        this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+        console.log(this.mqttConnection);
+
+        this.mqttConnection.on("connect", () => {
+          console.log("connessione: " + this.mqttConnection.connected);
+          console.log("connesso");
+          this.mqttConnection.subscribe(topicMemo);
+          console.log("iscritto a " + topicMemo);
+        });
+
+        this.mqttConnection.on("message", (topicMemo, message) => {
+          this.setAlertDrugMqtt();
+        });
+
+        this.setFlag();
+      } else {
+        if (!this.isPatient()) {
+          if (this.checkFlag()) {
+            this.setAlertsFarmaci();
+            this.setAlertsTasks();
+          }
+          this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+          console.log(this.mqttConnection);
+
+          this.mqttConnection.on("connect", () => {
+            //console.log("connessione: " + this.mqttConnection.connected);
+            console.log("connesso");
+          });
+          this.setFlag();
+        }
+      }
+    },
+
+    setAlertDrugMqtt() {
+      console.log(topicMemo + " " + message);
+      const payload = message.toString(); // Convert payload to string
+      const data = JSON.parse(payload);
+      console.log(data); // Parse JSON message into an object
+
+      const nome = data.farmaco;
+      const orario = data.orario;
+      const dosaggio = data.dosaggio;
+      console.log(data.orario);
+
+      const medicinale = {
+        farmaco: nome,
+        orario: orario,
+        dosaggio: dosaggio,
+      };
+      console.log(medicinale + "OOOOOOOO");
+
+      const [hours, minutes] = data.orario.split(":");
+      const dateObj = new Date();
+      dateObj.setHours(hours);
+      dateObj.setMinutes(minutes);
+      let currentTime = new Date();
+      //console.log(currentTime.getTime() + " CURRENTIME");
+      let timeDiff = dateObj.getTime() - currentTime.getTime();
+      //console.log(timeDiff);
+
+      if (timeDiff > 0) {
+        setTimeout(function () {
+          //controlla se il farmaco è stato eliminato prima di mandare alert
+          console.log("ALERT INVIATO " + nome);
+          alert(nome + " " + dosaggio);
+        }, timeDiff);
+      }
+      this.terapia.push(medicinale);
+      alert("terapia aggiornata!");
     },
 
     async SubmitDrug() {
