@@ -9,7 +9,7 @@
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert" v-if="!isPatient">
+        <div class="insert" v-if="!isPatient()">
           <input
             type="text"
             v-model="farmaco"
@@ -59,7 +59,7 @@
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert" v-if="!isPatient">
+        <div class="insert" v-if="!isPatient()">
           <input
             type="text"
             v-model="task"
@@ -165,7 +165,6 @@ export default {
       if (!this.isPatient() && this.checkFlag()) {
         this.setAlertsFarmaci();
         this.setAlertsTasks();
-        console.log("ciao");
         this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
         console.log(this.mqttConnection);
 
@@ -301,7 +300,9 @@ export default {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
               const topic = "cassa@gmail.com/memo"; //modificare
+              console.log(this.mqttConnection);
               this.mqttConnection.publish(topic, JSON.stringify(memo));
+              console.log("spedito");
             }
           },
           (err) => {
@@ -332,7 +333,6 @@ export default {
           .then(
             (res) => {
               console.log(res.data);
-
               if (res.status === 200) {
                 this.terapia.push(medicinale);
                 alert("terapia inserito correttamente");
@@ -343,6 +343,10 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
+        const topic = "cassa@gmail.com/memo"; //modificare
+        console.log(this.mqttConnection);
+        this.mqttConnection.publish(topic, JSON.stringify(medicinale));
+        console.log("spedito");
       }
     },
 
