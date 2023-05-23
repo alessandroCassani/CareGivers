@@ -109,7 +109,9 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-import mqttClient from "./mqttConnection.js";
+//import mqttClientPatient from "./mqttConnectionPatient.js";
+//import mqttClientCaregiver from "./mqttConnectionCaregiver.js";
+import { createMqttConnection, closeMqttConnection } from "./mqttManager";
 
 export default {
   name: "memos",
@@ -132,11 +134,18 @@ export default {
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
       topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
+      mqttConnection: null,
+      connectionId: "",
     };
   },
 
   mounted() {
     this.setup();
+  },
+
+  beforeUnMount() {
+    const connectionId = this.connectionId;
+    closeMqttConnection(connectionId);
   },
 
   methods: {
@@ -261,8 +270,8 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              console.log(mqttClient);
-              mqttClient.publish(this.topicTask, JSON.stringify(memo));
+              console.log(this.mqttConnection);
+              this.mqttConnection.publish(this.topicTask, JSON.stringify(memo));
               console.log("spedito");
             }
           },
@@ -288,23 +297,25 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
 
-          //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-          //console.log(this.mqttConnection);
+          this.connectionId = "memoPatient";
+          this.mqttConnection = createMqttConnection(this.connectionId);
 
-          mqttClient.on("connect", () => {
-            console.log("connessione: " + mqttClient.connected);
+          this.mqttConnection.on("connect", () => {
+            console.log("connessione: " + this.mqttConnection.connected);
             console.log("connesso paziente");
-            mqttClient.subscribe(this.topicDrug);
+            this.mqttConnection.subscribe(this.topicDrug);
             console.log("iscritto a " + this.topicDrug);
-            mqttClient.subscribe(this.topicDeleteTask);
+            this.mqttConnection.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            mqttClient.subscribe(this.topicDeleteDrug);
+            this.mqttConnection.subscribe(this.topicDeleteDrug);
             console.log("iscritto a " + this.topicDeleteDrug);
-            mqttClient.subscribe(this.topicDeleteTask);
+            this.mqttConnection.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
+            this.mqttConnection.subscribe(this.topicTask);
+            console.log("iscritto a " + this.topicTask);
           });
 
-          mqttClient.on("message", (topic, message) => {
+          this.mqttConnection.on("message", (topic, message) => {
             if (topic === this.topicDrug) this.setAlertDrugMqtt(message);
             else this.setAlertTaskFromMqtt(message);
           });
@@ -316,12 +327,12 @@ export default {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
             //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-            console.log(mqttClient);
-
-            mqttClient.on("connect", () => {
-              //console.log("connessione: " + this.mqttConnection.connected);
+            this.connectionId = "memoCaregiver";
+            this.mqttConnection = createMqttConnection(this.connectionId);
+            this.mqttConnection.on("connect", () => {
               console.log("connesso caregiver");
             });
+
             this.setFlag();
           }
         }
@@ -437,8 +448,8 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        console.log(mqttClient);
-        mqttClient.publish(this.topicTask, JSON.stringify(medicinale));
+        console.log(this.mqttConnection);
+        this.mqttConnection.publish(this.topicTask, JSON.stringify(medicinale));
         console.log("spedito");
       }
     },
