@@ -133,13 +133,14 @@ export default {
   },
 
   mounted() {
+    console.log(sessionStorage.getItem("flag"));
     //const topic = sessionStorage.getItem("email") + "/memo";
-    console.log(this.isPatient());
+    //console.log(this.isPatient());
+    console.log(this.checkFlag());
+    this.getMemos();
+    this.getFarmaci();
 
     if (this.isPatient() && this.checkFlag()) {
-      this.setFlag();
-      this.getMemos();
-      this.getFarmaci();
       this.setAlertsFarmaci();
       this.setAlertsTasks();
       const topicMemo = "cassa@gmail.com/memo"; //modificare
@@ -158,10 +159,13 @@ export default {
         console.log(topicMemo + " " + message);
         alert("nuovo task");
       });
+
+      this.setFlag();
     } else {
-      if (!this.isPatient && this.checkFlag()) {
-        this.setFlag();
-        this.flag = JSON.parse(true);
+      if (!this.isPatient() && this.checkFlag()) {
+        this.setAlertsFarmaci();
+        this.setAlertsTasks();
+        console.log("ciao");
         this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
         console.log(this.mqttConnection);
 
@@ -169,17 +173,18 @@ export default {
           //console.log("connessione: " + this.mqttConnection.connected);
           console.log("connesso");
         });
+        this.setFlag();
       }
     }
   },
 
   methods: {
     setFlag() {
-      sessionStorage.setItem("flag", null);
+      sessionStorage.setItem("flag", 1);
     },
 
     checkFlag() {
-      return sessionStorage.getItem("flag") === null;
+      return sessionStorage.getItem("flag") == null;
     },
 
     isPatient() {
