@@ -129,6 +129,10 @@ export default {
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
       mqttConnection: mqttClient,
+      topicDrug: "cassa@gmail.com/drug", //modificare
+      topicTask: "cassa@gmail.com/task", //modificare
+      topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
+      topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
     };
   },
 
@@ -258,9 +262,8 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              const topic = "cassa@gmail.com/task"; //modificare
               console.log(this.mqttConnection);
-              this.mqttConnection.publish(topic, JSON.stringify(memo));
+              this.mqttConnection.publish(this.topicTask, JSON.stringify(memo));
               console.log("spedito");
             }
           },
@@ -285,8 +288,6 @@ export default {
         if (this.checkFlag()) {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-          const topicDrug = "cassa@gmail.com/drug"; //modificare
-          const topicTask = "cassa@gmail.com/task"; //modificare
 
           //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
           //console.log(this.mqttConnection);
@@ -294,14 +295,18 @@ export default {
           this.mqttConnection.on("connect", () => {
             console.log("connessione: " + this.mqttConnection.connected);
             console.log("connesso");
-            this.mqttConnection.subscribe(topicDrug);
-            console.log("iscritto a " + topicDrug);
-            this.mqttConnection.subscribe(topicTask);
-            console.log("iscritto a " + topicTask);
+            this.mqttConnection.subscribe(this.topicDrug);
+            console.log("iscritto a " + this.topicDrug);
+            this.mqttConnection.subscribe(this.topicDeleteTask);
+            console.log("iscritto a " + this.topicDeleteTask);
+            this.mqttConnection.subscribe(this.topicDeleteDrug);
+            console.log("iscritto a " + this.topicDeleteDrug);
+            this.mqttConnection.subscribe(this.topicDeleteTask);
+            console.log("iscritto a " + this.topicDeleteTask);
           });
 
           this.mqttConnection.on("message", (topic, message) => {
-            if (topic === topicDrug) this.setAlertDrugMqtt(message);
+            if (topic === this.topicDrug) this.setAlertDrugMqtt(message);
             else this.setAlertTaskFromMqtt(message);
           });
         }
@@ -338,6 +343,7 @@ export default {
         orario: data.orario,
         data: data.giorno,
       };
+      const currentDate = new Date();
 
       if (
         giorno.getDate() === currentDate.getDate() &&
@@ -432,9 +438,8 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        const topic = "cassa@gmail.com/memo"; //modificare
         console.log(this.mqttConnection);
-        this.mqttConnection.publish(topic, JSON.stringify(medicinale));
+        this.mqttConnection.publish(this.topicTask, JSON.stringify(medicinale));
         console.log("spedito");
       }
     },
