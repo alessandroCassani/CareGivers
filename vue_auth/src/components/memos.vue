@@ -138,21 +138,38 @@ export default {
     },
   },
 
-  async mounted() {
+  mounted() {
     this.getMemos();
     this.getFarmaci();
     this.setAlertsFarmaci();
     this.setAlertsTasks();
-
     //const topic = sessionStorage.getItem("email") + "/memo";
-    console.log(sessionStorage.getItem("email"));
+    const topicMemo = "cassa@gmail.com/memo"; //modificare
 
-    let mqttConnection = await mqtt.connect("wss://test.mosquitto.org:8081");
+    //console.log(sessionStorage.getItem("email"));
+    //const mqttConnection = mqtt.connect("wss://test.mosquitto.org:8081");
+    const mqttConnectionMosca = mqtt.connect("mqtt://localhost:1234");
 
-    mqttConnection.on("connect", function () {
-      console.log("connected");
-      console.log(mqttConnection.connected);
+    mqttConnectionMosca.on("connect", function () {
+      console.log("connessione: " + mqttConnectionMosca.connected);
+
+      mqttConnectionMosca.subscribe(topicMemo);
+      console.log("iscritto a " + topicMemo);
     });
+
+    if (this.isPatient) {
+      mqttConnectionMosca.on("connect", function () {
+        console.log("connessione: " + mqttConnectionMosca.connected);
+
+        mqttConnectionMosca.subscribe(topicMemo);
+        console.log("iscritto a " + topicMemo);
+      });
+
+      mqttConnectionMosca.on("message", (topicMemo, message) => {
+        console.log(topicMemo + " " + message);
+        alert("nuovo task");
+      });
+    }
   },
 
   methods: {
@@ -275,6 +292,11 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
+              const topic = "cassa@gmail.com/memo"; //modificare
+              const mqttConnection = mqtt.connect(
+                "wss://test.mosquitto.org:8081"
+              );
+              mqttConnection.publish(topic, JSON.stringify(memo));
             }
           },
           (err) => {
