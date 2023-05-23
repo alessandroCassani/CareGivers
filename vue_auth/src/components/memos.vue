@@ -258,7 +258,7 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              const topic = "cassa@gmail.com/memo"; //modificare
+              const topic = "cassa@gmail.com/task"; //modificare
               console.log(this.mqttConnection);
               this.mqttConnection.publish(topic, JSON.stringify(memo));
               console.log("spedito");
@@ -333,6 +333,12 @@ export default {
       const giorno = data.giorno;
       console.log(data.orario);
 
+      const attivita = {
+        evento: data.evento,
+        orario: data.orario,
+        data: data.giorno,
+      };
+
       if (
         giorno.getDate() === currentDate.getDate() &&
         giorno.getMonth() === currentDate.getMonth() &&
@@ -352,6 +358,9 @@ export default {
             alert(evento + " alle ore " + orario);
           }, timeDiff);
         }
+
+        this.tasks.push(attivita);
+        alert("nuovo evento inserito!");
       }
     },
 
