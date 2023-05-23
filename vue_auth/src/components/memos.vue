@@ -128,119 +128,114 @@ export default {
       tasks: [],
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
+      flag: true,
+      mqttConnection: null,
     };
   },
 
-  computed: {
-    isPatient() {
-      //console.log(sessionStorage.getItem('ruolo'))
-      return this.ruolo === "paziente";
-    },
-  },
-
   mounted() {
-    this.getMemos();
-    this.getFarmaci();
-    this.setAlertsFarmaci();
-    this.setAlertsTasks();
     //const topic = sessionStorage.getItem("email") + "/memo";
-    const topicMemo = "cassa@gmail.com/memo"; //modificare
+    console.log(this.flag);
 
-    //console.log(sessionStorage.getItem("email"));
-    //const mqttConnection = mqtt.connect("wss://test.mosquitto.org:8081");
-    const mqttConnectionMosca = mqtt.connect("mqtt://localhost:1234");
+    if (this.isPatient() && this.flag === true) {
+      this.getMemos();
+      this.getFarmaci();
+      this.setAlertsFarmaci();
+      this.setAlertsTasks();
+      const topicMemo = "cassa@gmail.com/memo"; //modificare
 
-    mqttConnectionMosca.on("connect", function () {
-      console.log("connessione: " + mqttConnectionMosca.connected);
+      this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+      console.log(this.mqttConnection);
 
-      mqttConnectionMosca.subscribe(topicMemo);
-      console.log("iscritto a " + topicMemo);
-    });
-
-    if (this.isPatient) {
-      mqttConnectionMosca.on("connect", function () {
-        console.log("connessione: " + mqttConnectionMosca.connected);
-
-        mqttConnectionMosca.subscribe(topicMemo);
+      this.mqttConnection.on("connect", () => {
+        console.log("connessione: " + this.mqttConnection.connected);
+        console.log("connesso");
+        this.mqttConnection.subscribe(topicMemo);
         console.log("iscritto a " + topicMemo);
       });
 
-      mqttConnectionMosca.on("message", (topicMemo, message) => {
+      this.mqttConnection.on("message", (topicMemo, message) => {
         console.log(topicMemo + " " + message);
         alert("nuovo task");
       });
+      this.flag = false;
+    } else {
+      if (!this.isPatient && this.flag == true) {
+        this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+        console.log(this.mqttConnection);
+
+        this.mqttConnection.on("connect", () => {
+          //console.log("connessione: " + this.mqttConnection.connected);
+          console.log("connesso");
+        });
+        this.flag = false;
+      }
     }
   },
 
   methods: {
+    isPatient() {
+      //console.log(sessionStorage.getItem('ruolo'))
+      return this.ruolo === "paziente";
+    },
+
     setAlertsFarmaci() {
-      if (sessionStorage.getItem("flagAlertFarmaci") === null) {
-        console.log("DENTRO INSERIMENTO ALERT");
-        sessionStorage.setItem("flagAlertFarmaci", false);
+      for (let i = 0; i < this.terapia.length; i++) {
+        const nomeFarmaco = this.terapia[i].farmaco;
+        //console.log("nome farmaco: " + nomeFarmaco);
+        //console.log(this.terapia[i].orario + " orario terapia");
+        const [hours, minutes] = this.terapia[i].orario.split(":");
+        const dateObj = new Date();
+        dateObj.setHours(hours);
+        dateObj.setMinutes(minutes);
 
-        for (let i = 0; i < this.terapia.length; i++) {
-          const nomeFarmaco = this.terapia[i].farmaco;
-          //console.log("nome farmaco: " + nomeFarmaco);
-          //console.log(this.terapia[i].orario + " orario terapia");
-          const [hours, minutes] = this.terapia[i].orario.split(":");
-          const dateObj = new Date();
-          dateObj.setHours(hours);
-          dateObj.setMinutes(minutes);
+        console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
 
-          console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
+        let currentTime = new Date();
+        //console.log(currentTime.getTime() + " CURRENTIME");
+        let timeDiff = dateObj.getTime() - currentTime.getTime();
+        //console.log(timeDiff);
 
-          let currentTime = new Date();
-          //console.log(currentTime.getTime() + " CURRENTIME");
-          let timeDiff = dateObj.getTime() - currentTime.getTime();
-          //console.log(timeDiff);
-
-          if (timeDiff > 0) {
-            setTimeout(function () {
-              if (this.terapia[i].farmaco === nomeFarmaco) {
-                //controlla se il farmaco è stato eliminato prima di mandare alert
-                console.log("ALERT INVIATO " + nomeFarmaco);
-                alert(nomeFarmaco);
-              }
-            }, timeDiff);
-          }
+        if (timeDiff > 0) {
+          setTimeout(function () {
+            if (this.terapia[i].farmaco === nomeFarmaco) {
+              //controlla se il farmaco è stato eliminato prima di mandare alert
+              console.log("ALERT INVIATO " + nomeFarmaco);
+              alert(nomeFarmaco);
+            }
+          }, timeDiff);
         }
       }
     },
 
     setAlertsTasks() {
-      if (sessionStorage.getItem("flagAlertEventi") === null) {
-        sessionStorage.setItem("flagAlertEventi", false);
+      const currentDate = new Date();
+      for (let i = 0; i < this.tasks.length; i++) {
+        const evento = this.tasks[i].evento;
+        const data = new Date(this.tasks[i].data);
+        const orario = this.tasks[i].orario;
 
-        const currentDate = new Date();
-        for (let i = 0; i < this.tasks.length; i++) {
-          const evento = this.tasks[i].evento;
-          const data = new Date(this.tasks[i].data);
-          const orario = this.tasks[i].orario;
+        if (
+          data.getDate() === currentDate.getDate() &&
+          data.getMonth() === currentDate.getMonth() &&
+          data.getFullYear() === currentDate.getFullYear()
+        ) {
+          const [hours, minutes] = orario.split(":");
+          const dateObj = new Date();
+          dateObj.setHours(hours);
+          dateObj.setMinutes(minutes);
 
-          if (
-            data.getDate() === currentDate.getDate() &&
-            data.getMonth() === currentDate.getMonth() &&
-            data.getFullYear() === currentDate.getFullYear()
-          ) {
-            const [hours, minutes] = orario.split(":");
-            const dateObj = new Date();
-            dateObj.setHours(hours);
-            dateObj.setMinutes(minutes);
+          let currentTime = new Date();
+          let timeDiff = dateObj.getTime() - currentTime.getTime();
 
-            let currentTime = new Date();
-            let timeDiff = dateObj.getTime() - currentTime.getTime();
-
-            if (timeDiff > 0) {
-              setTimeout(function () {
-                if (this.tasks[i].evento === evento) {
-                  //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
-                  console.log("ALERT INVIATO PER EVENTO " + evento);
-                  alert(evento + " alle ore " + orario);
-                }
-              }, timeDiff);
-            }
-          } else {
-            console.log("non ci sono eventi programmati per oggi");
+          if (timeDiff > 0) {
+            setTimeout(function () {
+              if (this.tasks[i].evento === evento) {
+                //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
+                console.log("ALERT INVIATO PER EVENTO " + evento);
+                alert(evento + " alle ore " + orario);
+              }
+            }, timeDiff);
           }
         }
       }
@@ -293,10 +288,7 @@ export default {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
               const topic = "cassa@gmail.com/memo"; //modificare
-              const mqttConnection = mqtt.connect(
-                "wss://test.mosquitto.org:8081"
-              );
-              mqttConnection.publish(topic, JSON.stringify(memo));
+              this.mqttConnection.publish(topic, JSON.stringify(memo));
             }
           },
           (err) => {
