@@ -128,16 +128,16 @@ export default {
       tasks: [],
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
-      flag: true,
       mqttConnection: null,
     };
   },
 
   mounted() {
     //const topic = sessionStorage.getItem("email") + "/memo";
-    console.log(this.flag);
+    console.log(this.isPatient());
 
-    if (this.isPatient() && this.flag === true) {
+    if (this.isPatient() && this.checkFlag()) {
+      this.setFlag();
       this.getMemos();
       this.getFarmaci();
       this.setAlertsFarmaci();
@@ -158,9 +158,10 @@ export default {
         console.log(topicMemo + " " + message);
         alert("nuovo task");
       });
-      this.flag = false;
     } else {
-      if (!this.isPatient && this.flag == true) {
+      if (!this.isPatient && this.checkFlag()) {
+        this.setFlag();
+        this.flag = JSON.parse(true);
         this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
         console.log(this.mqttConnection);
 
@@ -168,12 +169,19 @@ export default {
           //console.log("connessione: " + this.mqttConnection.connected);
           console.log("connesso");
         });
-        this.flag = false;
       }
     }
   },
 
   methods: {
+    setFlag() {
+      sessionStorage.setItem("flag", null);
+    },
+
+    checkFlag() {
+      return sessionStorage.getItem("flag") === null;
+    },
+
     isPatient() {
       //console.log(sessionStorage.getItem('ruolo'))
       return this.ruolo === "paziente";
