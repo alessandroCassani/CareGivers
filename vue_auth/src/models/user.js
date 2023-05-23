@@ -18,10 +18,6 @@ const userSchema = new schema({
     patologie: [{
         patologia: String
     }],
-    terapie:[{
-        farmaco: String,
-        dosaggio: Number
-    }]
 });
 
 const user = mongoose.model('users',userSchema);

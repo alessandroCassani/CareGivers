@@ -37,9 +37,9 @@ export default {
     <br />
     <SidebarLink to="/">alert</SidebarLink>
     <br />
-    <SidebarLink to="/">promemoria</SidebarLink>
+    <SidebarLink to="/memos">promemoria</SidebarLink>
     <br />
-    <SidebarLink to="/">referenti</SidebarLink>
+    <SidebarLink to="/referenti">referenti</SidebarLink>
     <br />
     <SidebarLink to="/">info</SidebarLink>
 
