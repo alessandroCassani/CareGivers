@@ -269,10 +269,6 @@ export default {
             alert("Errore in fase di inserimento del promemoria");
           }
         );
-        const topicTask = "cassa@gmail.com/task"; //modificare
-        console.log(this.mqttConnection);
-        this.mqttConnection.publish(topicTask, JSON.stringify(memo));
-        console.log("spedito");
       }
     },
 
@@ -332,6 +328,31 @@ export default {
       const payload = message.toString(); // Convert payload to string
       const data = JSON.parse(payload);
       console.log(data); // Parse JSON message into an object
+      const evento = data.evento;
+      const orario = data.orario;
+      const giorno = data.giorno;
+      console.log(data.orario);
+
+      if (
+        giorno.getDate() === currentDate.getDate() &&
+        giorno.getMonth() === currentDate.getMonth() &&
+        giorno.getFullYear() === currentDate.getFullYear()
+      ) {
+        const [hours, minutes] = orario.split(":");
+        const dateObj = new Date();
+        dateObj.setHours(hours);
+        dateObj.setMinutes(minutes);
+
+        let currentTime = new Date();
+        let timeDiff = dateObj.getTime() - currentTime.getTime();
+
+        if (timeDiff > 0) {
+          setTimeout(function () {
+            console.log("ALERT INVIATO PER EVENTO " + evento);
+            alert(evento + " alle ore " + orario);
+          }, timeDiff);
+        }
+      }
     },
 
     setAlertDrugFromMqtt(message) {
@@ -350,7 +371,7 @@ export default {
         orario: orario,
         dosaggio: dosaggio,
       };
-      console.log(medicinale + "OOOOOOOO");
+      //console.log(medicinale + "OOOOOOOO");
 
       const [hours, minutes] = data.orario.split(":");
       const dateObj = new Date();
