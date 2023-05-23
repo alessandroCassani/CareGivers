@@ -22,4 +22,4 @@ export function closeMqttConnection(connectionId) {
     connections[connectionId].end();
     delete connections[connectionId];
   }
-}
+}   //problema: forse le connessioni si sovrappongono, capire cosa viene salvato veramente nel manager (se si riferisce a singola pagina o + client)

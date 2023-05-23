@@ -109,8 +109,6 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-//import mqttClientPatient from "./mqttConnectionPatient.js";
-//import mqttClientCaregiver from "./mqttConnectionCaregiver.js";
 import { createMqttConnection, closeMqttConnection } from "./mqttManager";
 
 export default {
