@@ -109,7 +109,7 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-import mqtt from "mqtt";
+const mqttClient = require("./mqttConnection.js");
 
 export default {
   name: "memos",
@@ -128,7 +128,7 @@ export default {
       tasks: [],
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
-      mqttConnection: null,
+      mqttConnection: mqttClient,
     };
   },
 
@@ -269,6 +269,10 @@ export default {
             alert("Errore in fase di inserimento del promemoria");
           }
         );
+        const topicTask = "cassa@gmail.com/task"; //modificare
+        console.log(this.mqttConnection);
+        this.mqttConnection.publish(topicTask, JSON.stringify(memo));
+        console.log("spedito");
       }
     },
 
@@ -279,50 +283,59 @@ export default {
       console.log(this.checkFlag());
       this.getMemos();
       this.getFarmaci();
-      this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+      //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
 
       if (this.isPatient()) {
         if (this.checkFlag()) {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
+          const topicDrug = "cassa@gmail.com/drug"; //modificare
+          const topicTask = "cassa@gmail.com/task"; //modificare
+
+          //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+          //console.log(this.mqttConnection);
+
+          this.mqttConnection.on("connect", () => {
+            console.log("connessione: " + this.mqttConnection.connected);
+            console.log("connesso");
+            this.mqttConnection.subscribe(topicDrug);
+            console.log("iscritto a " + topicDrug);
+            this.mqttConnection.subscribe(topicTask);
+            console.log("iscritto a " + topicTask);
+          });
+
+          this.mqttConnection.on("message", (topic, message) => {
+            if (topic === topicDrug) this.setAlertDrugMqtt(message);
+            else this.setAlertTaskFromMqtt(message);
+          });
         }
-        const topicMemo = "cassa@gmail.com/memo"; //modificare
-
-        this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-        console.log(this.mqttConnection);
-
-        this.mqttConnection.on("connect", () => {
-          console.log("connessione: " + this.mqttConnection.connected);
-          console.log("connesso");
-          this.mqttConnection.subscribe(topicMemo);
-          console.log("iscritto a " + topicMemo);
-        });
-
-        this.mqttConnection.on("message", (topicMemo, message) => {
-          this.setAlertDrugMqtt();
-        });
-
         this.setFlag();
       } else {
         if (!this.isPatient()) {
           if (this.checkFlag()) {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
-          }
-          this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-          console.log(this.mqttConnection);
+            //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
+            console.log(this.mqttConnection);
 
-          this.mqttConnection.on("connect", () => {
-            //console.log("connessione: " + this.mqttConnection.connected);
-            console.log("connesso");
-          });
-          this.setFlag();
+            this.mqttConnection.on("connect", () => {
+              //console.log("connessione: " + this.mqttConnection.connected);
+              console.log("connesso");
+            });
+            this.setFlag();
+          }
         }
       }
     },
 
-    setAlertDrugMqtt() {
-      console.log(topicMemo + " " + message);
+    setAlertTaskFromMqtt(message) {
+      const payload = message.toString(); // Convert payload to string
+      const data = JSON.parse(payload);
+      console.log(data); // Parse JSON message into an object
+    },
+
+    setAlertDrugFromMqtt(message) {
+      //console.log(topicMemo + " " + message);
       const payload = message.toString(); // Convert payload to string
       const data = JSON.parse(payload);
       console.log(data); // Parse JSON message into an object
@@ -352,7 +365,7 @@ export default {
         setTimeout(function () {
           //controlla se il farmaco è stato eliminato prima di mandare alert
           console.log("ALERT INVIATO " + nome);
-          alert(nome + " " + dosaggio);
+          alert("assumere " + nome + " " + dosaggio + "mg");
         }, timeDiff);
       }
       this.terapia.push(medicinale);
