@@ -109,7 +109,7 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-const mqttClient = require("./mqttConnection.js");
+import mqttClient from "./mqttConnection.js";
 
 export default {
   name: "memos",
@@ -128,7 +128,6 @@ export default {
       tasks: [],
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
-      mqttConnection: mqttClient,
       topicDrug: "cassa@gmail.com/drug", //modificare
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
@@ -262,8 +261,8 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              console.log(this.mqttConnection);
-              this.mqttConnection.publish(this.topicTask, JSON.stringify(memo));
+              console.log(mqttClient);
+              mqttClient.publish(this.topicTask, JSON.stringify(memo));
               console.log("spedito");
             }
           },
@@ -292,36 +291,36 @@ export default {
           //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
           //console.log(this.mqttConnection);
 
-          this.mqttConnection.on("connect", () => {
-            console.log("connessione: " + this.mqttConnection.connected);
-            console.log("connesso");
-            this.mqttConnection.subscribe(this.topicDrug);
+          mqttClient.on("connect", () => {
+            console.log("connessione: " + mqttClient.connected);
+            console.log("connesso paziente");
+            mqttClient.subscribe(this.topicDrug);
             console.log("iscritto a " + this.topicDrug);
-            this.mqttConnection.subscribe(this.topicDeleteTask);
+            mqttClient.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            this.mqttConnection.subscribe(this.topicDeleteDrug);
+            mqttClient.subscribe(this.topicDeleteDrug);
             console.log("iscritto a " + this.topicDeleteDrug);
-            this.mqttConnection.subscribe(this.topicDeleteTask);
+            mqttClient.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
           });
 
-          this.mqttConnection.on("message", (topic, message) => {
+          mqttClient.on("message", (topic, message) => {
             if (topic === this.topicDrug) this.setAlertDrugMqtt(message);
             else this.setAlertTaskFromMqtt(message);
           });
         }
         this.setFlag();
       } else {
-        if (!this.isPatient()) {
+        if (this.isPatient() === false) {
           if (this.checkFlag()) {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
             //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-            console.log(this.mqttConnection);
+            console.log(mqttClient);
 
-            this.mqttConnection.on("connect", () => {
+            mqttClient.on("connect", () => {
               //console.log("connessione: " + this.mqttConnection.connected);
-              console.log("connesso");
+              console.log("connesso caregiver");
             });
             this.setFlag();
           }
@@ -438,8 +437,8 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        console.log(this.mqttConnection);
-        this.mqttConnection.publish(this.topicTask, JSON.stringify(medicinale));
+        console.log(mqttClient);
+        mqttClient.publish(this.topicTask, JSON.stringify(medicinale));
         console.log("spedito");
       }
     },
