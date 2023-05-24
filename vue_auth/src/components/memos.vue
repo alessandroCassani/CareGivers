@@ -109,7 +109,7 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-import { createMqttConnection, closeMqttConnection } from "./mqttManager";
+const mqttConnection = require("./mqttConnection.js");
 
 export default {
   name: "memos",
@@ -132,8 +132,6 @@ export default {
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
       topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
-      mqttConnection: null,
-      connectionId: "",
     };
   },
 
@@ -142,8 +140,8 @@ export default {
   },
 
   beforeUnMount() {
-    const connectionId = this.connectionId;
-    closeMqttConnection(connectionId);
+    //const connectionId = this.connectionId;
+    //closeMqttConnection(connectionId);
   },
 
   methods: {
@@ -268,8 +266,8 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              console.log(this.mqttConnection);
-              this.mqttConnection.publish(this.topicTask, JSON.stringify(memo));
+              console.log(mqttConnection);
+              mqttConnection.publish(this.topicTask, JSON.stringify(memo));
               console.log("spedito");
             }
           },
@@ -295,26 +293,24 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
 
-          this.connectionId = "memoPatient";
-          this.mqttConnection = createMqttConnection(this.connectionId);
-
-          this.mqttConnection.on("connect", () => {
-            console.log("connessione: " + this.mqttConnection.connected);
+          mqttConnection.on("connect", () => {
+            console.log("connessione: " + mqttConnection.connected);
             console.log("connesso paziente");
-            this.mqttConnection.subscribe(this.topicDrug);
+            mqttConnection.subscribe(this.topicDrug);
             console.log("iscritto a " + this.topicDrug);
-            this.mqttConnection.subscribe(this.topicDeleteTask);
+            mqttConnection.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            this.mqttConnection.subscribe(this.topicDeleteDrug);
+            mqttConnection.subscribe(this.topicDeleteDrug);
             console.log("iscritto a " + this.topicDeleteDrug);
-            this.mqttConnection.subscribe(this.topicDeleteTask);
+            mqttConnection.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            this.mqttConnection.subscribe(this.topicTask);
+            mqttConnection.subscribe(this.topicTask);
             console.log("iscritto a " + this.topicTask);
           });
 
-          this.mqttConnection.on("message", (topic, message) => {
-            if (topic === this.topicDrug) this.setAlertDrugMqtt(message);
+          mqttConnection.on("message", (topic, message) => {
+            console.log("message triggered");
+            if (topic === this.topicDrug) this.setAlertDrugFromMqtt(message);
             else this.setAlertTaskFromMqtt(message);
           });
         }
@@ -325,9 +321,8 @@ export default {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
             //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
-            this.connectionId = "memoCaregiver";
-            this.mqttConnection = createMqttConnection(this.connectionId);
-            this.mqttConnection.on("connect", () => {
+
+            mqttConnection.on("connect", () => {
               console.log("connesso caregiver");
             });
 
@@ -380,6 +375,7 @@ export default {
 
     setAlertDrugFromMqtt(message) {
       //console.log(topicMemo + " " + message);
+      console.log("drug mqtt triggered");
       const payload = message.toString(); // Convert payload to string
       const data = JSON.parse(payload);
       console.log(data); // Parse JSON message into an object
@@ -405,6 +401,9 @@ export default {
       let timeDiff = dateObj.getTime() - currentTime.getTime();
       //console.log(timeDiff);
 
+      this.terapia.push(medicinale);
+      alert("terapia aggiornata!");
+
       if (timeDiff > 0) {
         setTimeout(function () {
           //controlla se il farmaco è stato eliminato prima di mandare alert
@@ -412,8 +411,6 @@ export default {
           alert("assumere " + nome + " " + dosaggio + "mg");
         }, timeDiff);
       }
-      this.terapia.push(medicinale);
-      alert("terapia aggiornata!");
     },
 
     async SubmitDrug() {
@@ -446,8 +443,8 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        console.log(this.mqttConnection);
-        this.mqttConnection.publish(this.topicTask, JSON.stringify(medicinale));
+        console.log(mqttConnection);
+        mqttConnection.publish(this.topicDrug, JSON.stringify(medicinale));
         console.log("spedito");
       }
     },
