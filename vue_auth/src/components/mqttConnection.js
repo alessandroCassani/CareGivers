@@ -1,28 +1,14 @@
-const mqtt = require('mqtt');
+import mqtt from 'mqtt';
 
-class MQTTConnection {
-  constructor() {
-    if (MQTTConnection.instance) {
-      return MQTTConnection.instance;
-    }
+const mqttBrokerUrl = 'mqtt://localhost:1234';
+const mqttConnection = mqtt.connect(mqttBrokerUrl);
 
-    const mqttBrokerUrl = 'mqtt://localhost:1234';
-    this.client = mqtt.connect(mqttBrokerUrl);
+mqttConnection.on('error', (error) => {
+  console.error('MQTT connection error:', error);
+});
 
-    this.client.on('error', (error) => {
-      console.error('MQTT connection error:', error);
-    });
+mqttConnection.on('close', () => {
+  console.log('MQTT connection closed');
+});
 
-    this.client.on('close', () => {
-      console.log('MQTT connection closed');
-    });
-
-    MQTTConnection.instance = this;
-  }
-
-  getClient() {
-    return this.client;
-  }
-}
-
-module.exports = new MQTTConnection().getClient();
+export default mqttConnection;

@@ -109,7 +109,7 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-const mqttConnection = require("./mqttConnection.js");
+import mqtt from "mqtt";
 
 export default {
   name: "memos",
@@ -137,11 +137,6 @@ export default {
 
   mounted() {
     this.setup();
-  },
-
-  beforeUnMount() {
-    //const connectionId = this.connectionId;
-    //closeMqttConnection(connectionId);
   },
 
   methods: {
@@ -266,8 +261,8 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              console.log(mqttConnection);
-              mqttConnection.publish(this.topicTask, JSON.stringify(memo));
+              console.log(this.client);
+              this.client.publish(this.topicTask, JSON.stringify(memo));
               console.log("spedito");
             }
           },
@@ -280,49 +275,51 @@ export default {
     },
 
     setup() {
-      console.log(sessionStorage.getItem("flag"));
+      //console.log(sessionStorage.getItem("flag"));
       //const topic = sessionStorage.getItem("email") + "/memo";
       //console.log(this.isPatient());
-      console.log(this.checkFlag());
+      //console.log(this.checkFlag());
       this.getMemos();
       this.getFarmaci();
-      //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
 
       if (this.isPatient()) {
         if (this.checkFlag()) {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
+          const client = mqtt.connect("mqtt://localhost:1234");
 
-          mqttConnection.on("connect", () => {
-            console.log("connessione: " + mqttConnection.connected);
+          client.on("connect", () => {
+            console.log("connessione: " + this.client.connected);
             console.log("connesso paziente");
-            mqttConnection.subscribe(this.topicDrug);
+            this.client.subscribe(this.topicDrug);
             console.log("iscritto a " + this.topicDrug);
-            mqttConnection.subscribe(this.topicDeleteTask);
+            this.client.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            mqttConnection.subscribe(this.topicDeleteDrug);
+            this.client.subscribe(this.topicDeleteDrug);
             console.log("iscritto a " + this.topicDeleteDrug);
-            mqttConnection.subscribe(this.topicDeleteTask);
+            this.client.subscribe(this.topicDeleteTask);
             console.log("iscritto a " + this.topicDeleteTask);
-            mqttConnection.subscribe(this.topicTask);
+            this.client.subscribe(this.topicTask);
             console.log("iscritto a " + this.topicTask);
           });
 
-          mqttConnection.on("message", (topic, message) => {
+          client.on("message", (topic, message) => {
             console.log("message triggered");
             if (topic === this.topicDrug) this.setAlertDrugFromMqtt(message);
             else this.setAlertTaskFromMqtt(message);
           });
         }
+
         this.setFlag();
       } else {
         if (this.isPatient() === false) {
           if (this.checkFlag()) {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
-            //this.mqttConnection = mqtt.connect("mqtt://localhost:1234");
 
-            mqttConnection.on("connect", () => {
+            const client = mqtt.connect("mqtt://localhost:1234");
+
+            client.on("connect", () => {
               console.log("connesso caregiver");
             });
 
