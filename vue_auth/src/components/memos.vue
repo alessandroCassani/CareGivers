@@ -228,6 +228,12 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               this.tasks.splice(index, 1);
+
+              const topic = "cassa@gmail.com/deleteTask";
+              const memo = "memo";
+              const message = JSON.stringify(this.tasks[index].evento);
+              this.$store.dispatch("publishMessage", { memo, topic, message });
+
               alert("promemoria eliminato correttamente");
             }
           },
@@ -308,6 +314,23 @@ export default {
           const callbackDeleteDrug = () => {
             const payload = message.toString(); // Convert payload to string
             const data = JSON.parse(payload);
+
+            for (let i = 0; i < this.terapia.length; i++) {
+              if (this.terapia[i].farmaco === data) {
+                this.terapia.splice(i, 1);
+              }
+            }
+          };
+
+          const callbackDeleteTask = () => {
+            const payload = message.toString(); // Convert payload to string
+            const data = JSON.parse(payload);
+
+            for (let i = 0; i < this.tasks.length; i++) {
+              if (this.tasks[i].evento === data) {
+                this.tasks.splice(i, 1);
+              }
+            }
           };
 
           const topicDrug = "cassa@gmail.com/drug"; //modificare
@@ -329,13 +352,13 @@ export default {
           this.$store.dispatch("subscribeTopic", {
             memo,
             topicDeletetask,
-            callbackTask,
+            callbackDeleteTask,
           });
 
           this.$store.dispatch("subscribeTopic", {
             memo,
             topicDeleteDrug,
-            callbackTask,
+            callbackDeleteDrug,
           });
         }
 
@@ -489,6 +512,12 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               this.terapia.splice(index, 1);
+
+              const topic = "cassa@gmail.com/deleteDrug";
+              const memo = "memo";
+              const message = JSON.stringify(this.terapia[index].farmaco);
+              this.$store.dispatch("publishMessage", { memo, topic, message });
+
               alert("farmaco eliminato correttamente");
             }
           },
