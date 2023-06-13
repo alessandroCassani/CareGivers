@@ -285,6 +285,7 @@ export default {
 
       if (this.isPatient()) {
         if (this.checkFlag()) {
+          // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.client = mqtt.connect("mqtt://localhost:1234");
