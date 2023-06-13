@@ -68,6 +68,14 @@ const store = createStore({
             commit('removeUserSubscription', { userId, topic });
           }
         },
+        publishMessage({ state }, { userId, topic, message }) {
+            const client = state.userClients[userId];
+      
+            if (client) {
+              client.publish(topic, message);
+              console.log("spedito");
+            }
+          },
       },
 });
 

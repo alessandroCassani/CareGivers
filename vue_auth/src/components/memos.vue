@@ -261,9 +261,12 @@ export default {
             if (res.status === 200) {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
-              console.log(this.client);
-              this.client.publish(this.topicTask, JSON.stringify(memo));
-              console.log("spedito");
+
+              const memo = "memo";
+              const topic = "cassa@gmail.com/task";
+              const message = JSON.stringify(memo);
+
+              this.$store.dispatch("publishMessage", { memo, topic, message });
             }
           },
           (err) => {
@@ -287,10 +290,53 @@ export default {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-          //this.client = mqtt.connect("mqtt://localhost:1234");
-          const paziente = "paziente";
+
+          const memo = "memo";
           const brokerUrl = "mqtt://localhost:1234";
-          this.$store.dispatch("connectMqttClient", { paziente, brokerUrl });
+          this.$store.dispatch("connectMqttClient", { memo, brokerUrl });
+
+          const callbackDrug = (topic, message) => {
+            console.log("message triggered");
+            this.setAlertDrugFromMqtt(message);
+          };
+
+          const callbackTask = (topic, message) => {
+            console.log("message triggered");
+            this.setAlertTaskFromMqtt(message);
+          };
+
+          const callbackDeleteDrug = () => {
+            const payload = message.toString(); // Convert payload to string
+            const data = JSON.parse(payload);
+          };
+
+          const topicDrug = "cassa@gmail.com/drug"; //modificare
+          const topicTask = "cassa@gmail.com/task"; //modificare
+          const topicDeletetask = "cassa@gmail.com/deletetask"; //modificare
+          const topicDeleteDrug = "cassa@gmail.com/deleteDrug"; //modificare
+
+          this.$store.dispatch("subscribeTopic", {
+            memo,
+            topicDrug,
+            callbackDrug,
+          });
+          this.$store.dispatch("subscribeTopic", {
+            memo,
+            topicTask,
+            callbackTask,
+          });
+
+          this.$store.dispatch("subscribeTopic", {
+            memo,
+            topicDeletetask,
+            callbackTask,
+          });
+
+          this.$store.dispatch("subscribeTopic", {
+            memo,
+            topicDeleteDrug,
+            callbackTask,
+          });
         }
 
         this.setFlag();
@@ -424,9 +470,11 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
+        const memo = "memo";
+        const topic = "cassa@gmail.com/drug";
+        const message = JSON.stringify(medicinale);
 
-        this.client.publish(this.topicDrug, JSON.stringify(medicinale));
-        console.log("spedito");
+        this.$store.dispatch("publishMessage", { memo, topic, message });
       }
     },
 
