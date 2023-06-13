@@ -110,12 +110,12 @@
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
 import mqtt from "mqtt";
-//import mqttModule from "./mqtt";
+import store from "./mqtt";
 
 export default {
   name: "memos",
   components: { Side_bar },
-  //mqttModule,
+  store,
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -172,7 +172,6 @@ export default {
         //console.log(currentTime.getTime() + " CURRENTIME");
         let timeDiff = dateObj.getTime() - currentTime.getTime();
         //console.log(timeDiff);
-
         if (timeDiff > 0) {
           setTimeout(function () {
             if (this.terapia[i].farmaco === nomeFarmaco) {
