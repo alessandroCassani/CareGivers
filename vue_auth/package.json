@@ -29,6 +29,7 @@
     "vue": "^3.2.13",
     "vue-ctk-date-time-picker": "^3.0.0-alpha.0",
     "vue-router": "^4.0.13",
+    "vuex": "^4.1.0",
     "websocket-stream": "^5.5.2"
   },
   "devDependencies": {

@@ -132,6 +132,7 @@ export default {
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
       topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
+      client: null,
     };
   },
 
@@ -286,9 +287,9 @@ export default {
         if (this.checkFlag()) {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-          const client = mqtt.connect("mqtt://localhost:1234");
+          this.client = mqtt.connect("mqtt://localhost:1234");
 
-          client.on("connect", () => {
+          this.client.on("connect", () => {
             console.log("connessione: " + this.client.connected);
             console.log("connesso paziente");
             this.client.subscribe(this.topicDrug);
@@ -303,7 +304,7 @@ export default {
             console.log("iscritto a " + this.topicTask);
           });
 
-          client.on("message", (topic, message) => {
+          this.client.on("message", (topic, message) => {
             console.log("message triggered");
             if (topic === this.topicDrug) this.setAlertDrugFromMqtt(message);
             else this.setAlertTaskFromMqtt(message);
@@ -317,9 +318,9 @@ export default {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
 
-            const client = mqtt.connect("mqtt://localhost:1234");
+            this.client = mqtt.connect("mqtt://localhost:1234");
 
-            client.on("connect", () => {
+            this.client.on("connect", () => {
               console.log("connesso caregiver");
             });
 
@@ -337,6 +338,7 @@ export default {
       const orario = data.orario;
       const giorno = data.giorno;
       console.log(data.orario);
+      console.log(giorno);
 
       const attivita = {
         evento: data.evento,
@@ -440,8 +442,8 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        console.log(mqttConnection);
-        mqttConnection.publish(this.topicDrug, JSON.stringify(medicinale));
+
+        this.client.publish(this.topicDrug, JSON.stringify(medicinale));
         console.log("spedito");
       }
     },
