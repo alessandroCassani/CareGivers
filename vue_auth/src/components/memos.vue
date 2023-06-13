@@ -110,10 +110,12 @@
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
 import mqtt from "mqtt";
+//import mqttModule from "./mqtt";
 
 export default {
   name: "memos",
   components: { Side_bar },
+  //mqttModule,
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -289,6 +291,8 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.client = mqtt.connect("mqtt://localhost:1234");
+
+          this.$;
 
           this.client.on("connect", () => {
             console.log("connessione: " + this.client.connected);
