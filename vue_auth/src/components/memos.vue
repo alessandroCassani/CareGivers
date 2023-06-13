@@ -110,12 +110,10 @@
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
 import mqtt from "mqtt";
-import store from "./mqtt";
 
 export default {
   name: "memos",
   components: { Side_bar },
-  store,
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -289,30 +287,10 @@ export default {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-          this.client = mqtt.connect("mqtt://localhost:1234");
-
-          this.$;
-
-          this.client.on("connect", () => {
-            console.log("connessione: " + this.client.connected);
-            console.log("connesso paziente");
-            this.client.subscribe(this.topicDrug);
-            console.log("iscritto a " + this.topicDrug);
-            this.client.subscribe(this.topicDeleteTask);
-            console.log("iscritto a " + this.topicDeleteTask);
-            this.client.subscribe(this.topicDeleteDrug);
-            console.log("iscritto a " + this.topicDeleteDrug);
-            this.client.subscribe(this.topicDeleteTask);
-            console.log("iscritto a " + this.topicDeleteTask);
-            this.client.subscribe(this.topicTask);
-            console.log("iscritto a " + this.topicTask);
-          });
-
-          this.client.on("message", (topic, message) => {
-            console.log("message triggered");
-            if (topic === this.topicDrug) this.setAlertDrugFromMqtt(message);
-            else this.setAlertTaskFromMqtt(message);
-          });
+          //this.client = mqtt.connect("mqtt://localhost:1234");
+          const paziente = "paziente";
+          const brokerUrl = "mqtt://localhost:1234";
+          this.$store.dispatch("connectMqttClient", { paziente, brokerUrl });
         }
 
         this.setFlag();
