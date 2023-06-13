@@ -1,56 +1,71 @@
+import { createStore } from 'vuex';
 import mqtt from 'mqtt';
 
-const mqttModule = {
+const store = createStore({
   state: {
-    clients: {},
-    subscriptions: {},
+    userClients: {},
+    userSubscriptions: {},
   },
   mutations: {
-    setClient(state, { clientId, client }) {
-      state.clients[clientId] = client;
+    setUserClient(state, { userId, client }) {
+      state.userClients[userId] = client;
     },
-    removeClient(state, clientId) {
-      delete state.clients[clientId];
-      delete state.subscriptions[clientId];
+    removeUserClient(state, userId) {
+      delete state.userClients[userId];
     },
-    setSubscriptions(state, { clientId, subscriptions }) {
-      state.subscriptions[clientId] = subscriptions;
+    setUserSubscription(state, { userId, topic, callback }) {
+      if (!state.userSubscriptions[userId]) {
+        state.userSubscriptions[userId] = {};
+      }
+      state.userSubscriptions[userId][topic] = callback;
+    },
+    removeUserSubscription(state, { userId, topic }) {
+      if (state.userSubscriptions[userId]) {
+        delete state.userSubscriptions[userId][topic];
+      }
     },
   },
   actions: {
-    connect({ commit }, { brokerUrl, clientId }) {
-      // Create a client instance
-      const client = mqtt.connect(brokerUrl, { clientId, clean: false });
+    connectMqttClient({ commit, state }, { userId, brokerUrl, options }) {
+      if (!state.userClients[userId]) {
+        const client = mqtt.connect(brokerUrl, options);
 
-      // Connect to the MQTT broker
-      client.on('connect', () => {
-        console.log(`Connected to MQTT broker with clientId: ${clientId}`);
-        commit('setClient', { clientId, client });
-      });
-
-      // Handle MQTT connection errors
-      client.on('error', (error) => {
-        console.error(`MQTT error for clientId ${clientId}:`, error);
-      });
+        // Save the MQTT client to the store
+        commit('setUserClient', { userId, client });
+      }
     },
-    disconnect({ state, commit }, clientId) {
-      if (state.clients[clientId]) {
-        state.clients[clientId].end(() => {
-          console.log(`Disconnected from MQTT broker for clientId: ${clientId}`);
-          commit('removeClient', clientId);
+    disconnectMqttClient({ commit, state }, userId) {
+      const client = state.userClients[userId];
+
+      if (client) {
+        client.end(() => {
+          // Remove the MQTT client from the store
+          commit('removeUserClient', userId);
         });
       }
     },
-    subscribe({ state, commit }, { clientId, topic }) {
-      if (state.clients[clientId]) {
-        state.clients[clientId].subscribe(topic);
-        const subscriptions = state.subscriptions[clientId] || [];
-        subscriptions.push(topic);
-        commit('setSubscriptions', { clientId, subscriptions });
-      }
-    }
-  },
-};
+    subscribeTopic({ commit, state }, { userId, topic, callback }) {
+      const client = state.userClients[userId];
 
-export default mqttModule;
-    
+      if (client) {
+        client.subscribe(topic);
+        client.on('message', callback);
+
+        // Save the subscription in the store
+        commit('setUserSubscription', { userId, topic, callback });
+      }
+    },
+    unsubscribeTopic({ commit, state }, { userId, topic }) {
+      const client = state.userClients[userId];
+
+      if (client) {
+        client.unsubscribe(topic);
+
+        // Remove the subscription from the store
+        commit('removeUserSubscription', { userId, topic });
+      }
+    },
+  },
+});
+
+export default store;
