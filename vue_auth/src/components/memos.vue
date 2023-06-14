@@ -296,9 +296,6 @@ export default {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-          const memo = "memo";
-
-          //const brokerUrl = "mqtt://localhost:1234";
 
           const objectConnection = {
             userId: "memo",
@@ -344,30 +341,37 @@ export default {
           const topicTask = "cassa@gmail.com/task"; //modificare
           const topicDeletetask = "cassa@gmail.com/deletetask"; //modificare
           const topicDeleteDrug = "cassa@gmail.com/deleteDrug"; //modificare
+
           const objectDrug = {
             userId: "memo",
             topic: topicDrug,
-            callbackDrug,
+            callback: callbackDrug,
           };
 
           this.$store.dispatch("subscribeTopic", objectDrug);
-          this.$store.dispatch("subscribeTopic", {
-            memo,
-            topicTask,
-            callbackTask,
-          });
 
-          this.$store.dispatch("subscribeTopic", {
-            memo,
-            topicDeletetask,
-            callbackDeleteTask,
-          });
+          const objectTask = {
+            userId: "memo",
+            topic: topicTask,
+            callback: callbackTask,
+          };
+          this.$store.dispatch("subscribeTopic", objectTask);
 
-          this.$store.dispatch("subscribeTopic", {
-            memo,
-            topicDeleteDrug,
-            callbackDeleteDrug,
-          });
+          const objectDeleteTask = {
+            userId: "memo",
+            topic: topicDeletetask,
+            callback: callbackDeleteTask,
+          };
+
+          this.$store.dispatch("subscribeTopic", objectDeleteTask);
+
+          const objectDeleteDrug = {
+            userId: "memo",
+            topic: topicDeleteDrug,
+            callback: callbackDeleteDrug,
+          };
+
+          this.$store.dispatch("subscribeTopic", objectDeleteDrug);
         }
 
         this.setFlag();

@@ -11,10 +11,10 @@ const store = createStore({
       },
       mutations: {
         setUserClient(state, { userId, client }) {
-          console.log(userId)
-          console.log(client)
+          //console.log(userId)
+          //console.log(client)
           state.userClients[userId] = client;
-          console.log(state.userClients)
+          //console.log(state.userClients)
         },
         removeUserClient(state, userId) {
           delete state.userClients[userId];
@@ -35,10 +35,10 @@ const store = createStore({
          connectMqttClient({ commit, state }, { userId, brokerUrl}) {
           if (!state.userClients[userId]) {
             try {
-              console.log(userId)
-              console.log(brokerUrl )
+              //console.log(userId)
+              //console.log(brokerUrl )
               const client = mqtt.connect(brokerUrl);
-              console.log(client)
+              //console.log(client)
               const object = {
                 userId: userId,
                 client: client
@@ -47,7 +47,6 @@ const store = createStore({
               client.on('connect', () => {
                 console.log('Connected to MQTT broker');
       
-                // Save the MQTT client to the store
                 commit('setUserClient',  object);
                 
               });
