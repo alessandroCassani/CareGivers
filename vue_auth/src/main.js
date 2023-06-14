@@ -14,13 +14,14 @@ const store = createStore({
           //console.log(userId)
           //console.log(client)
           state.userClients[userId] = client;
-          //console.log(state.userClients)
+          //  console.log(state.userClients)
         },
         removeUserClient(state, userId) {
           delete state.userClients[userId];
         },
         setUserSubscription(state, { userId, topic, callback }) {
           if (!state.userSubscriptions[userId]) {
+            //inizializza
             state.userSubscriptions[userId] = {};
           }
           state.userSubscriptions[userId][topic] = callback;
@@ -32,7 +33,7 @@ const store = createStore({
         },
       },
       actions: {
-         connectMqttClient({ commit, state }, { userId, brokerUrl}) {
+          async connectMqttClient({ commit, state }, { userId, brokerUrl}) {
           if (!state.userClients[userId]) {
             try {
               //console.log(userId)
@@ -44,12 +45,12 @@ const store = createStore({
                 client: client
               }
       
-              client.on('connect', () => {
-                console.log('Connected to MQTT broker');
-      
-                commit('setUserClient',  object);
-                
-              });
+              await new Promise((resolve) => {
+                client.on('connect', () => {
+                  console.log('Connected to MQTT broker');
+                  resolve();
+                  commit('setUserClient', object);
+                })});
       
               client.on('error', (error) => {
                 console.error('MQTT client error:', error);
@@ -69,7 +70,9 @@ const store = createStore({
             });
           }
         },
+
         subscribeTopic({ commit, state }, { userId, topic, callback }) {
+          console.log(state.userClients[userId])
           const client = state.userClients[userId];
           console.log('User ID:', userId);
           console.log('Client:', client);
