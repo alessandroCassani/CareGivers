@@ -78,9 +78,13 @@ const store = createStore({
           if (client) {
             client.subscribe(topic);
             client.on('message', callback);
-    
+            const object = {
+              userId: userId,
+              client: topic,
+              callback: callback
+            }
             // Save the subscription in the store
-            commit('setUserSubscription', { userId, topic, callback });
+            commit('setUserSubscription', object);
           }
         },
         unsubscribeTopic({ commit, state }, { userId, topic }) {
