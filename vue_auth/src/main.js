@@ -25,12 +25,7 @@ const store = createStore({
             state.userSubscriptions[userId] = {};
           }
           state.userSubscriptions[userId][topic] = callback;
-        },
-        removeUserSubscription(state, { userId, topic }) {
-          if (state.userSubscriptions[userId]) {
-            delete state.userSubscriptions[userId][topic];
-          }
-        },
+        }
       },
       actions: {
           async connectMqttClient({ commit, state }, { userId, brokerUrl}) {
@@ -88,16 +83,6 @@ const store = createStore({
             }
             // Save the subscription in the store
             commit('setUserSubscription', object);
-          }
-        },
-        unsubscribeTopic({ commit, state }, { userId, topic }) {
-          const client = state.userClients[userId];
-    
-          if (client) {
-            client.unsubscribe(topic);
-    
-            // Remove the subscription from the store
-            commit('removeUserSubscription', { userId, topic });
           }
         },
         publishMessage({ state }, { userId, topic, message }) {
