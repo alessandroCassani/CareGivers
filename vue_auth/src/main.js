@@ -11,7 +11,10 @@ const store = createStore({
       },
       mutations: {
         setUserClient(state, { userId, client }) {
+          console.log(userId)
+          console.log(client)
           state.userClients[userId] = client;
+          console.log(state.userClients)
         },
         removeUserClient(state, userId) {
           delete state.userClients[userId];
@@ -29,12 +32,32 @@ const store = createStore({
         },
       },
       actions: {
-        connectMqttClient({ commit, state }, { userId, brokerUrl, options }) {
+         connectMqttClient({ commit, state }, { userId, brokerUrl}) {
           if (!state.userClients[userId]) {
-            const client = mqtt.connect(brokerUrl, options);
-    
-            // Save the MQTT client to the store
-            commit('setUserClient', { userId, client });
+            try {
+              console.log(userId)
+              console.log(brokerUrl )
+              const client = mqtt.connect(brokerUrl);
+              console.log(client)
+              const object = {
+                userId: userId,
+                client: client
+              }
+      
+              client.on('connect', () => {
+                console.log('Connected to MQTT broker');
+      
+                // Save the MQTT client to the store
+                commit('setUserClient',  object);
+                
+              });
+      
+              client.on('error', (error) => {
+                console.error('MQTT client error:', error);
+              });
+            } catch (error) {
+              console.error('Error connecting to MQTT broker:', error);
+            }
           }
         },
         disconnectMqttClient({ commit, state }, userId) {
@@ -49,6 +72,9 @@ const store = createStore({
         },
         subscribeTopic({ commit, state }, { userId, topic, callback }) {
           const client = state.userClients[userId];
+          console.log('User ID:', userId);
+          console.log('Client:', client);
+          console.log('Topic:', topic);
     
           if (client) {
             client.subscribe(topic);

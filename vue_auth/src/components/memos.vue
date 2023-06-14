@@ -283,7 +283,7 @@ export default {
       }
     },
 
-    setup() {
+    async setup() {
       //console.log(sessionStorage.getItem("flag"));
       //const topic = sessionStorage.getItem("email") + "/memo";
       //console.log(this.isPatient());
@@ -296,22 +296,29 @@ export default {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-
           const memo = "memo";
-          const brokerUrl = "mqtt://localhost:1234";
-          this.$store.dispatch("connectMqttClient", { memo, brokerUrl });
 
-          const callbackDrug = (topic, message) => {
+          //const brokerUrl = "mqtt://localhost:1234";
+
+          const objectConnection = {
+            userId: "memo",
+            brokerUrl: "mqtt://localhost:1234",
+            options: "",
+          };
+
+          await this.$store.dispatch("connectMqttClient", objectConnection);
+
+          const callbackDrug = (message) => {
             console.log("message triggered");
             this.setAlertDrugFromMqtt(message);
           };
 
-          const callbackTask = (topic, message) => {
+          const callbackTask = (message) => {
             console.log("message triggered");
             this.setAlertTaskFromMqtt(message);
           };
 
-          const callbackDeleteDrug = () => {
+          const callbackDeleteDrug = (message) => {
             const payload = message.toString(); // Convert payload to string
             const data = JSON.parse(payload);
 
@@ -322,7 +329,7 @@ export default {
             }
           };
 
-          const callbackDeleteTask = () => {
+          const callbackDeleteTask = (message) => {
             const payload = message.toString(); // Convert payload to string
             const data = JSON.parse(payload);
 
@@ -337,12 +344,13 @@ export default {
           const topicTask = "cassa@gmail.com/task"; //modificare
           const topicDeletetask = "cassa@gmail.com/deletetask"; //modificare
           const topicDeleteDrug = "cassa@gmail.com/deleteDrug"; //modificare
-
-          this.$store.dispatch("subscribeTopic", {
-            memo,
-            topicDrug,
+          const objectDrug = {
+            userId: "memo",
+            topic: topicDrug,
             callbackDrug,
-          });
+          };
+
+          this.$store.dispatch("subscribeTopic", objectDrug);
           this.$store.dispatch("subscribeTopic", {
             memo,
             topicTask,
