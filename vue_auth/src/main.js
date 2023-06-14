@@ -45,7 +45,7 @@ const store = createStore({
                 client: client
               }
       
-              await new Promise((resolve) => {
+              await new Promise((resolve) => {           //connessione resa sincrona per avere cascata in seguito iscrizioni
                 client.on('connect', () => {
                   console.log('Connected to MQTT broker');
                   resolve();

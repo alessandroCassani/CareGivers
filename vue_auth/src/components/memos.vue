@@ -109,7 +109,6 @@
 <script>
 import axios from "axios";
 import Side_bar from "./Side_bar.vue";
-import mqtt from "mqtt";
 
 export default {
   name: "memos",
@@ -381,7 +380,13 @@ export default {
             this.setAlertsFarmaci();
             this.setAlertsTasks();
 
-            this.client = mqtt.connect("mqtt://localhost:1234");
+            const objectConnection = {
+              userId: "memo",
+              brokerUrl: "mqtt://localhost:1234",
+              options: "",
+            };
+
+            await this.$store.dispatch("connectMqttClient", objectConnection);
 
             this.client.on("connect", () => {
               console.log("connesso caregiver");
@@ -528,7 +533,12 @@ export default {
               const topic = "cassa@gmail.com/deleteDrug";
               const memo = "memo";
               const message = JSON.stringify(this.terapia[index].farmaco);
-              this.$store.dispatch("publishMessage", { memo, topic, message });
+              const info = {
+                topic: topic,
+                userId: memo,
+                message: message,
+              };
+              this.$store.dispatch("publishMessage", info);
 
               alert("farmaco eliminato correttamente");
             }
