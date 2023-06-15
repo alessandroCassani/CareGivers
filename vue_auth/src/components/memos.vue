@@ -267,11 +267,13 @@ export default {
               this.tasks.push(memo);
               alert("promemoria inserito correttamente");
 
-              const memo = "memo";
-              const topic = "cassa@gmail.com/task";
-              const message = JSON.stringify(memo);
+              const data = {
+                userId: "memo",
+                topic: "cassa@gmail.com/task",
+                message: JSON.stringify(memo),
+              };
 
-              this.$store.dispatch("publishMessage", { memo, topic, message });
+              this.$store.dispatch("publishMessage", data);
             }
           },
           (err) => {
@@ -387,10 +389,6 @@ export default {
             };
 
             await this.$store.dispatch("connectMqttClient", objectConnection);
-
-            this.client.on("connect", () => {
-              console.log("connesso caregiver");
-            });
 
             this.setFlag();
           }
@@ -510,11 +508,14 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-        const memo = "memo";
-        const topic = "cassa@gmail.com/drug";
-        const message = JSON.stringify(medicinale);
 
-        this.$store.dispatch("publishMessage", { memo, topic, message });
+        const data = {
+          userId: "memo",
+          topic: "cassa@gmail.com/drug",
+          message: JSON.stringify(medicinale),
+        };
+
+        this.$store.dispatch("publishMessage", data);
       }
     },
 
