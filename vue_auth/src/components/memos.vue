@@ -12,7 +12,12 @@
             type="text"
             v-model="farmaco"
             placeholder="Aggiungi farmaco..."
-          />&nbsp; <input type="number" v-model="dosaggio" />&nbsp;
+          />&nbsp;
+          <input
+            type="number"
+            v-model="dosaggio"
+            placeholder="Dosaggio (mg)"
+          />&nbsp;
           <input type="time" v-model="farmacOrario" />
           <button @click="SubmitDrug" class="add-btn-farmaci">AGGIUNGI</button>
         </div>

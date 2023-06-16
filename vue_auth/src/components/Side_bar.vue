@@ -83,9 +83,8 @@ export default {
     <br />
     <SidebarLink to="/memos">promemoria</SidebarLink>
     <br />
-    <SidebarLink to="/referenti">referenti</SidebarLink>
+    <SidebarLink to="/referenti">associa</SidebarLink>
     <br />
-    <SidebarLink to="/">info</SidebarLink>
 
     <span
       class="collapse-icon"
