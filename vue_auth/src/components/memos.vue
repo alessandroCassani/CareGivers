@@ -24,7 +24,7 @@
                 <th>Farmaco</th>
                 <th>Dosaggio (mg)</th>
                 <th>Orario</th>
-                <th v-if="!isPatient">Elimina</th>
+                <th v-if="!isPatient()">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -36,12 +36,11 @@
                 <td>{{ task.farmaco }}</td>
                 <td>{{ task.dosaggio }}</td>
                 <td>{{ task.orario }}</td>
-                <td v-if="!isPatient">
+                <td v-if="!isPatient()">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"
                     @click="deleteDrug(index)"
-                    s
                   >
                     Elimina
                   </href>
@@ -74,7 +73,7 @@
                 <th>Evento</th>
                 <th>Data</th>
                 <th>Orario</th>
-                <th v-if="!isPatient">Elimina</th>
+                <th v-if="!isPatient()">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -86,7 +85,7 @@
                 <td>{{ task.evento }}</td>
                 <td>{{ task.data }}</td>
                 <td>{{ task.orario }}</td>
-                <td v-if="!isPatient">
+                <td v-if="!isPatient()">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"
@@ -145,7 +144,7 @@ export default {
     },
 
     isPatient() {
-      //console.log(sessionStorage.getItem('ruolo'))
+      //console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
     },
 
@@ -222,8 +221,8 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
-              this.tasks.splice(index, 1);
               const message = JSON.stringify(this.tasks[index].evento);
+              this.tasks.splice(index, 1);
               this.client.publish(this.topicDeleteTask, message);
               alert("promemoria eliminato correttamente");
             }
@@ -306,10 +305,11 @@ export default {
               console.log("delete drug mqtt call");
               const payload = message.toString(); // Convert payload to string
               const data = JSON.parse(payload);
+              console.log(data);
 
-              for (let i = 0; i < this.tasks.length; i++) {
-                if (this.tasks[i].evento === data) {
-                  this.tasks.splice(i, 1);
+              for (let i = 0; i < this.terapia.length; i++) {
+                if (this.terapia[i].farmaco === data) {
+                  this.terapia.splice(i, 1);
                 }
               }
             }
@@ -462,8 +462,8 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
-              this.terapia.splice(index, 1);
               const message = JSON.stringify(this.terapia[index].farmaco);
+              this.terapia.splice(index, 1);
               this.client.publish(this.topicDeleteDrug, message);
               alert("farmaco eliminato correttamente");
             }
