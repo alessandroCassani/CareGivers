@@ -130,6 +130,11 @@ export default {
       client: null,
     };
   },
+  computed: {
+    mqttConnection() {
+      return this.$store.state.selectedItem;
+    },
+  },
 
   mounted() {
     this.setup();
@@ -223,12 +228,8 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               this.tasks.splice(index, 1);
-
-              const topic = "cassa@gmail.com/deleteTask";
-              const memo = "memo";
               const message = JSON.stringify(this.tasks[index].evento);
-              this.$store.dispatch("publishMessage", { memo, topic, message });
-
+              this.client.publish(this.topicDeleteTask, message);
               alert("promemoria eliminato correttamente");
             }
           },
@@ -250,7 +251,7 @@ export default {
       } else {
         const memo = {
           evento: this.task,
-          data: this.reminderDate,
+          giorno: this.reminderDate,
           orario: this.reminderTime,
           email_paziente: this.email_paziente,
         };
@@ -261,15 +262,8 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               this.tasks.push(memo);
+              this.client.publish(this.topicTask, JSON.stringify(memo));
               alert("promemoria inserito correttamente");
-
-              const data = {
-                userId: "memo",
-                topic: "cassa@gmail.com/task",
-                message: JSON.stringify(memo),
-              };
-
-              this.$store.dispatch("publishMessage", data);
             }
           },
           (err) => {
@@ -281,114 +275,66 @@ export default {
     },
 
     async setup() {
-      //console.log(sessionStorage.getItem("flag"));
       //const topic = sessionStorage.getItem("email") + "/memo";
-      //console.log(this.isPatient());
-      //console.log(this.checkFlag());
       this.getMemos();
       this.getFarmaci();
+      this.client = this.$store.state.selectedItem;
       console.log(this.$store.state.selectedItem);
+      console.log(this.client);
 
       if (this.isPatient()) {
         if (this.checkFlag()) {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
+          //iscrizioni
+          this.client.subscribe(this.topicTask);
+          this.client.subscribe(this.topicDrug);
+          this.client.subscribe(this.topicDeleteDrug);
+          this.client.subscribe(this.topicDeleteTask);
 
-          const objectConnection = {
-            userId: "memo",
-            brokerUrl: "mqtt://localhost:1234",
-            options: "",
-          };
+          this.client.on("message", (topic, message) => {
+            if (topic === this.topicDrug) {
+              console.log("drug mqtt call");
+              this.setAlertDrugFromMqtt(message);
+            }
+            if (topic === this.topicTask) {
+              console.log("task mqtt call");
+              this.setAlertTaskFromMqtt(message);
+            }
+            if (topic === this.topicDeleteDrug) {
+              console.log("delete drug mqtt call");
+              const payload = message.toString(); // Convert payload to string
+              const data = JSON.parse(payload);
 
-          await this.$store.dispatch("connectMqttClient", objectConnection);
-
-          const callbackDrug = (message) => {
-            console.log("message triggered");
-            this.setAlertDrugFromMqtt(message);
-          };
-
-          const callbackTask = (message) => {
-            console.log("message triggered");
-            this.setAlertTaskFromMqtt(message);
-          };
-
-          const callbackDeleteDrug = (message) => {
-            const payload = message.toString(); // Convert payload to string
-            const data = JSON.parse(payload);
-
-            for (let i = 0; i < this.terapia.length; i++) {
-              if (this.terapia[i].farmaco === data) {
-                this.terapia.splice(i, 1);
+              for (let i = 0; i < this.tasks.length; i++) {
+                if (this.tasks[i].evento === data) {
+                  this.tasks.splice(i, 1);
+                }
               }
             }
-          };
+            if (topic === this.topicDeleteTask) {
+              const payload = message.toString(); // Convert payload to string
+              const data = JSON.parse(payload);
+              console.log("task mqtt call");
 
-          const callbackDeleteTask = (message) => {
-            const payload = message.toString(); // Convert payload to string
-            const data = JSON.parse(payload);
-
-            for (let i = 0; i < this.tasks.length; i++) {
-              if (this.tasks[i].evento === data) {
-                this.tasks.splice(i, 1);
+              for (let i = 0; i < this.tasks.length; i++) {
+                if (this.tasks[i].evento === data) {
+                  this.tasks.splice(i, 1);
+                }
               }
             }
-          };
-
-          const topicDrug = "cassa@gmail.com/drug"; //modificare
-          const topicTask = "cassa@gmail.com/task"; //modificare
-          const topicDeletetask = "cassa@gmail.com/deletetask"; //modificare
-          const topicDeleteDrug = "cassa@gmail.com/deleteDrug"; //modificare
-
-          const objectDrug = {
-            userId: "memo",
-            topic: topicDrug,
-            callback: callbackDrug,
-          };
-
-          this.$store.dispatch("subscribeTopic", objectDrug);
-
-          const objectTask = {
-            userId: "memo",
-            topic: topicTask,
-            callback: callbackTask,
-          };
-          this.$store.dispatch("subscribeTopic", objectTask);
-
-          const objectDeleteTask = {
-            userId: "memo",
-            topic: topicDeletetask,
-            callback: callbackDeleteTask,
-          };
-
-          this.$store.dispatch("subscribeTopic", objectDeleteTask);
-
-          const objectDeleteDrug = {
-            userId: "memo",
-            topic: topicDeleteDrug,
-            callback: callbackDeleteDrug,
-          };
-
-          this.$store.dispatch("subscribeTopic", objectDeleteDrug);
+          });
+          this.$store.dispatch("updateSelectedItem", this.client);
         }
 
         this.setFlag();
       } else {
-        if (this.isPatient() === false) {
-          if (this.checkFlag()) {
-            this.setAlertsFarmaci();
-            this.setAlertsTasks();
+        if (this.checkFlag()) {
+          this.setAlertsFarmaci();
+          this.setAlertsTasks();
 
-            const objectConnection = {
-              userId: "memo",
-              brokerUrl: "mqtt://localhost:1234",
-              options: "",
-            };
-
-            await this.$store.dispatch("connectMqttClient", objectConnection);
-
-            this.setFlag();
-          }
+          this.setFlag();
         }
       }
     },
@@ -402,7 +348,8 @@ export default {
       const giorno = data.giorno;
       console.log(data.orario);
       console.log(giorno);
-
+      const dateParts = giorno.split("/");
+      const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
       const attivita = {
         evento: data.evento,
         orario: data.orario,
@@ -411,9 +358,9 @@ export default {
       const currentDate = new Date();
 
       if (
-        giorno.getDate() === currentDate.getDate() &&
-        giorno.getMonth() === currentDate.getMonth() &&
-        giorno.getFullYear() === currentDate.getFullYear()
+        date.getDate() === currentDate.getDate() &&
+        date.getMonth() === currentDate.getMonth() &&
+        date.getFullYear() === currentDate.getFullYear()
       ) {
         const [hours, minutes] = orario.split(":");
         const dateObj = new Date();
@@ -429,10 +376,9 @@ export default {
             alert(evento + " alle ore " + orario);
           }, timeDiff);
         }
-
-        this.tasks.push(attivita);
-        alert("nuovo evento inserito!");
       }
+      this.tasks.push(attivita);
+      alert("nuovo evento inserito!");
     },
 
     setAlertDrugFromMqtt(message) {
@@ -462,6 +408,7 @@ export default {
       //console.log(currentTime.getTime() + " CURRENTIME");
       let timeDiff = dateObj.getTime() - currentTime.getTime();
       //console.log(timeDiff);
+      console.log(medicinale);
 
       this.terapia.push(medicinale);
       alert("terapia aggiornata!");
@@ -497,6 +444,7 @@ export default {
               console.log(res.data);
               if (res.status === 200) {
                 this.terapia.push(medicinale);
+                this.client.publish(this.topicDrug, JSON.stringify(medicinale));
                 alert("terapia inserito correttamente");
               }
             },
@@ -505,14 +453,6 @@ export default {
               alert("Errore in fase di inserimento della terapia");
             }
           );
-
-        const data = {
-          userId: "memo",
-          topic: "cassa@gmail.com/drug",
-          message: JSON.stringify(medicinale),
-        };
-
-        this.$store.dispatch("publishMessage", data);
       }
     },
 
@@ -527,17 +467,8 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               this.terapia.splice(index, 1);
-
-              const topic = "cassa@gmail.com/deleteDrug";
-              const memo = "memo";
               const message = JSON.stringify(this.terapia[index].farmaco);
-              const info = {
-                topic: topic,
-                userId: memo,
-                message: message,
-              };
-              this.$store.dispatch("publishMessage", info);
-
+              this.client.publish(this.topicDeleteDrug, message);
               alert("farmaco eliminato correttamente");
             }
           },

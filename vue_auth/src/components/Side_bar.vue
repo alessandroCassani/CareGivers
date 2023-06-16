@@ -19,11 +19,11 @@ export default {
   },
 
   async mounted() {
-    if (this.checkFlag()) {
+    if (this.checkFlag() === true) {
       this.setFlag();
       await this.connectMQTT();
       await this.updateVuexConnection();
-      console.log(this.$store.state.selectedItem);
+      //console.log(this.$store.state.selectedItem);
     }
   },
   methods: {
