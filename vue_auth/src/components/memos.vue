@@ -130,11 +130,6 @@ export default {
       client: null,
     };
   },
-  computed: {
-    mqttConnection() {
-      return this.$store.state.selectedItem;
-    },
-  },
 
   mounted() {
     this.setup();
@@ -261,7 +256,11 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
-              this.tasks.push(memo);
+              this.tasks.push({
+                evento: this.task,
+                data: this.reminderDate,
+                orario: this.reminderTime,
+              });
               this.client.publish(this.topicTask, JSON.stringify(memo));
               alert("promemoria inserito correttamente");
             }
@@ -279,6 +278,7 @@ export default {
       this.getMemos();
       this.getFarmaci();
       this.client = this.$store.state.selectedItem;
+      //console.log(this.client)
       console.log(this.$store.state.selectedItem);
       console.log(this.client);
 
@@ -395,8 +395,8 @@ export default {
 
       const medicinale = {
         farmaco: nome,
-        orario: orario,
         dosaggio: dosaggio,
+        orario: orario,
       };
       //console.log(medicinale + "OOOOOOOO");
 

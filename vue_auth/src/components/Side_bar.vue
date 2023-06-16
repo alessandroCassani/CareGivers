@@ -18,7 +18,7 @@ export default {
     };
   },
 
-  async mounted() {
+  async created() {
     if (this.checkFlag() === true) {
       this.setFlag();
       await this.connectMQTT();
