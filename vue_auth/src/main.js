@@ -3,7 +3,6 @@ import App from './App.vue';
 import router from './routes';
 import { createStore } from 'vuex';
 
-
 const store = createStore({
   state: {
     selectedItem: '',
@@ -15,6 +14,7 @@ const store = createStore({
   },
   actions: {
     updateSelectedItem({ commit }, item) {
+      console.log('dentro')
       commit('setSelectedItem', item);
     },
   },

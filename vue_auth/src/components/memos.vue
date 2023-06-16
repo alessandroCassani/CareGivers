@@ -1,8 +1,6 @@
 <template>
   <body>
     <div class="wrapper">
-      <Side_bar></Side_bar>
-
       <div class="container-farmaci">
         <div class="heading-farmaci">
           <h3>FARMACI</h3>
@@ -108,11 +106,9 @@
 
 <script>
 import axios from "axios";
-import Side_bar from "./Side_bar.vue";
 
 export default {
   name: "memos",
-  components: { Side_bar },
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -291,6 +287,7 @@ export default {
       //console.log(this.checkFlag());
       this.getMemos();
       this.getFarmaci();
+      console.log(this.$store.state.selectedItem);
 
       if (this.isPatient()) {
         if (this.checkFlag()) {

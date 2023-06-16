@@ -1,12 +1,56 @@
 <script>
 import { collapsed, toggleSidebar, sidebarWidth } from "./state";
 import SidebarLink from "./SidebarLink.vue";
+import mqtt from "mqtt";
 
 export default {
   props: {},
   components: { SidebarLink },
   setup() {
     return { collapsed, toggleSidebar, sidebarWidth };
+  },
+
+  data() {
+    return {
+      brokerUrl: "mqtt://localhost:1234",
+      clientMQTT: null,
+      flag: "",
+    };
+  },
+
+  async mounted() {
+    if (this.checkFlag()) {
+      this.setFlag();
+      await this.connectMQTT();
+      await this.updateVuexConnection();
+      console.log(this.$store.state.selectedItem);
+    }
+  },
+  methods: {
+    connectMQTT() {
+      return new Promise((resolve) => {
+        //connessione resa sincrona per avere cascata in seguito iscrizioni
+        const client = mqtt.connect(this.brokerUrl);
+        client.on("connect", () => {
+          console.log("Connected to MQTT broker");
+          this.clientMQTT = client;
+          resolve();
+        });
+      });
+    },
+    updateVuexConnection() {
+      return new Promise((resolve) => {
+        this.$store.dispatch("updateSelectedItem", this.clientMQTT);
+        resolve();
+      });
+    },
+    setFlag() {
+      sessionStorage.setItem("flagBar", 1);
+    },
+
+    checkFlag() {
+      return sessionStorage.getItem("flagBar") == null;
+    },
   },
 };
 </script>
