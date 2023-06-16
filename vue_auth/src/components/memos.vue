@@ -365,7 +365,7 @@ export default {
         date.getMonth() === currentDate.getMonth() &&
         date.getFullYear() === currentDate.getFullYear()
       ) {
-        const [hours, minutes] = orario.split(":");
+        const [hours, minutes] = data.orario.split(":");
         const dateObj = new Date();
         dateObj.setHours(hours);
         dateObj.setMinutes(minutes);
@@ -375,8 +375,8 @@ export default {
 
         if (timeDiff > 0) {
           setTimeout(function () {
-            console.log("ALERT INVIATO PER EVENTO " + evento);
-            alert(evento + " alle ore " + orario);
+            console.log("ALERT INVIATO PER EVENTO " + data.evento);
+            alert(data.evento + " alle ore " + data.orario);
           }, timeDiff);
         }
       }
