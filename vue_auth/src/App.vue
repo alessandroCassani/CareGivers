@@ -1,25 +1,16 @@
 <template>
   <div class="container"></div>
-   <div>
-     <RouterView></RouterView>
-   
-   </div>
+  <Side_bar></Side_bar>
+  <div>
+    <RouterView></RouterView>
+  </div>
 </template>
 
-
-
-
-
 <script>
+import Side_bar from "./components/Side_bar.vue";
 
 export default {
-  name: 'App',
-  components: {
-    
-  },
-  
-}; 
+  name: "App",
+  components: { Side_bar },
+};
 </script>
-
-
-

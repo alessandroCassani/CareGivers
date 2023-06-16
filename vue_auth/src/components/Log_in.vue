@@ -44,7 +44,7 @@ export default {
             localStorage.setItem("token", res.data.token);
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("ruolo", res.data.ruolo);
-            this.$router.push("/referenti");
+            this.$router.push("/memos");
           }
         },
         (err) => {

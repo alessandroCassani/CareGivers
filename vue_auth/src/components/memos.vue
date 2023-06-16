@@ -1,20 +1,23 @@
 <template>
   <body>
     <div class="wrapper">
-      <Side_bar></Side_bar>
-
       <div class="container-farmaci">
         <div class="heading-farmaci">
           <h3>FARMACI</h3>
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert" v-if="!isPatient">
+        <div class="insert" v-if="!isPatient()">
           <input
             type="text"
             v-model="farmaco"
             placeholder="Aggiungi farmaco..."
-          />&nbsp; <input type="number" v-model="dosaggio" />&nbsp;
+          />&nbsp;
+          <input
+            type="number"
+            v-model="dosaggio"
+            placeholder="Dosaggio (mg)"
+          />&nbsp;
           <input type="time" v-model="farmacOrario" />
           <button @click="SubmitDrug" class="add-btn-farmaci">AGGIUNGI</button>
         </div>
@@ -26,7 +29,7 @@
                 <th>Farmaco</th>
                 <th>Dosaggio (mg)</th>
                 <th>Orario</th>
-                <th v-if="!isPatient">Elimina</th>
+                <th v-if="!isPatient()">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -38,12 +41,11 @@
                 <td>{{ task.farmaco }}</td>
                 <td>{{ task.dosaggio }}</td>
                 <td>{{ task.orario }}</td>
-                <td v-if="!isPatient">
+                <td v-if="!isPatient()">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"
                     @click="deleteDrug(index)"
-                    s
                   >
                     Elimina
                   </href>
@@ -59,7 +61,7 @@
           <hr style="width: 100%" color="black" />
         </div>
         <!-- input -->
-        <div class="insert" v-if="!isPatient">
+        <div class="insert" v-if="!isPatient()">
           <input
             type="text"
             v-model="task"
@@ -76,7 +78,7 @@
                 <th>Evento</th>
                 <th>Data</th>
                 <th>Orario</th>
-                <th v-if="!isPatient">Elimina</th>
+                <th v-if="!isPatient()">Elimina</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +90,7 @@
                 <td>{{ task.evento }}</td>
                 <td>{{ task.data }}</td>
                 <td>{{ task.orario }}</td>
-                <td v-if="!isPatient">
+                <td v-if="!isPatient()">
                   <href
                     class="del-btn"
                     style="border-radius: 4px"
@@ -108,9 +110,9 @@
 
 <script>
 import axios from "axios";
-import Side_bar from "./Side_bar.vue";
 
 export default {
+  name: "memos",
   data() {
     return {
       ruolo: sessionStorage.getItem("ruolo"),
@@ -125,86 +127,88 @@ export default {
       tasks: [],
       terapia: [],
       email_paziente: localStorage.getItem("email_paziente"),
+      topicDrug: "cassa@gmail.com/drug", //modificare
+      topicTask: "cassa@gmail.com/task", //modificare
+      topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
+      topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
+      client: null,
     };
   },
 
-  computed: {
-    isPatient() {
-      //console.log(sessionStorage.getItem('ruolo'))
-      return this.ruolo === "paziente";
-    },
-  },
-
-  async mounted() {
-    await this.getMemos();
-    await this.getFarmaci();
-    this.setAlertsFarmaci();
-    this.setAlertsTasks();
+  mounted() {
+    this.setup();
   },
 
   methods: {
+    setFlag() {
+      sessionStorage.setItem("flag", 1);
+    },
+
+    checkFlag() {
+      return sessionStorage.getItem("flag") == null;
+    },
+
+    isPatient() {
+      //console.log(sessionStorage.getItem("ruolo"));
+      return this.ruolo === "paziente";
+    },
+
     setAlertsFarmaci() {
-      if (sessionStorage.getItem("flagAlertFarmaci") === null) {
-        console.log("DENTRO INSERIMENTO ALERT");
-        sessionStorage.setItem("flagAlertFarmaci", false);
+      for (let i = 0; i < this.terapia.length; i++) {
+        const nomeFarmaco = this.terapia[i].farmaco;
+        //console.log("nome farmaco: " + nomeFarmaco);
+        //console.log(this.terapia[i].orario + " orario terapia");
+        const [hours, minutes] = this.terapia[i].orario.split(":");
+        const dateObj = new Date();
+        dateObj.setHours(hours);
+        dateObj.setMinutes(minutes);
 
-        for (let i = 0; i < this.terapia.length; i++) {
-          const nomeFarmaco = this.terapia[i].farmaco;
-          //console.log("nome farmaco: " + nomeFarmaco);
-          //console.log(this.terapia[i].orario + " orario terapia");
-          const [hours, minutes] = this.terapia[i].orario.split(":");
-          const dateObj = new Date();
-          dateObj.setHours(hours);
-          dateObj.setMinutes(minutes);
+        console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
 
-          console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
-
-          let currentTime = new Date();
-          //console.log(currentTime.getTime() + " CURRENTIME");
-          let timeDiff = dateObj.getTime() - currentTime.getTime();
-          //console.log(timeDiff);
-
-          if (timeDiff > 0) {
-            setTimeout(function () {
+        let currentTime = new Date();
+        //console.log(currentTime.getTime() + " CURRENTIME");
+        let timeDiff = dateObj.getTime() - currentTime.getTime();
+        //console.log(timeDiff);
+        if (timeDiff > 0) {
+          setTimeout(function () {
+            if (this.terapia[i].farmaco === nomeFarmaco) {
+              //controlla se il farmaco è stato eliminato prima di mandare alert
               console.log("ALERT INVIATO " + nomeFarmaco);
               alert(nomeFarmaco);
-            }, timeDiff);
-          }
+            }
+          }, timeDiff);
         }
       }
     },
 
     setAlertsTasks() {
-      if (sessionStorage.getItem("flagAlertEventi") === null) {
-        sessionStorage.setItem("flagAlertEventi", false);
+      const currentDate = new Date();
+      for (let i = 0; i < this.tasks.length; i++) {
+        const evento = this.tasks[i].evento;
+        const data = new Date(this.tasks[i].data);
+        const orario = this.tasks[i].orario;
 
-        const currentDate = new Date();
-        for (let i = 0; i < this.tasks.length; i++) {
-          const evento = this.tasks[i].evento;
-          const data = new Date(this.tasks[i].data);
-          const orario = this.tasks[i].orario;
+        if (
+          data.getDate() === currentDate.getDate() &&
+          data.getMonth() === currentDate.getMonth() &&
+          data.getFullYear() === currentDate.getFullYear()
+        ) {
+          const [hours, minutes] = orario.split(":");
+          const dateObj = new Date();
+          dateObj.setHours(hours);
+          dateObj.setMinutes(minutes);
 
-          if (
-            data.getDate() === currentDate.getDate() &&
-            data.getMonth() === currentDate.getMonth() &&
-            data.getFullYear() === currentDate.getFullYear()
-          ) {
-            const [hours, minutes] = orario.split(":");
-            const dateObj = new Date();
-            dateObj.setHours(hours);
-            dateObj.setMinutes(minutes);
+          let currentTime = new Date();
+          let timeDiff = dateObj.getTime() - currentTime.getTime();
 
-            let currentTime = new Date();
-            let timeDiff = dateObj.getTime() - currentTime.getTime();
-
-            if (timeDiff > 0) {
-              setTimeout(function () {
-                console.log("ALERT INVIATO  PER EVENTO " + evento);
+          if (timeDiff > 0) {
+            setTimeout(function () {
+              if (this.tasks[i].evento === evento) {
+                //controlla se l'evento è stato eliminato e quindi ancora uguale a quello salvato prima
+                console.log("ALERT INVIATO PER EVENTO " + evento);
                 alert(evento + " alle ore " + orario);
-              }, timeDiff);
-            }
-          } else {
-            console.log("non ci sono eventi programmati per oggi");
+              }
+            }, timeDiff);
           }
         }
       }
@@ -222,7 +226,9 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
+              const message = JSON.stringify(this.tasks[index].evento);
               this.tasks.splice(index, 1);
+              this.client.publish(this.topicDeleteTask, message);
               alert("promemoria eliminato correttamente");
             }
           },
@@ -254,7 +260,12 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
-              this.tasks.push(memo);
+              this.tasks.push({
+                evento: this.task,
+                data: this.reminderDate,
+                orario: this.reminderTime,
+              });
+              this.client.publish(this.topicTask, JSON.stringify(memo));
               alert("promemoria inserito correttamente");
             }
           },
@@ -263,6 +274,154 @@ export default {
             alert("Errore in fase di inserimento del promemoria");
           }
         );
+      }
+    },
+
+    async setup() {
+      //const topic = sessionStorage.getItem("email") + "/memo";
+      this.getMemos();
+      this.getFarmaci();
+      this.client = this.$store.state.selectedItem;
+      //console.log(this.client)
+      console.log(this.$store.state.selectedItem);
+      console.log(this.client);
+
+      if (this.isPatient()) {
+        if (this.checkFlag()) {
+          // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
+          this.setAlertsFarmaci();
+          this.setAlertsTasks();
+          //iscrizioni
+          this.client.subscribe(this.topicTask);
+          this.client.subscribe(this.topicDrug);
+          this.client.subscribe(this.topicDeleteDrug);
+          this.client.subscribe(this.topicDeleteTask);
+
+          this.client.on("message", (topic, message) => {
+            if (topic === this.topicDrug) {
+              console.log("drug mqtt call");
+              this.setAlertDrugFromMqtt(message);
+            }
+            if (topic === this.topicTask) {
+              console.log("task mqtt call");
+              this.setAlertTaskFromMqtt(message);
+            }
+            if (topic === this.topicDeleteDrug) {
+              console.log("delete drug mqtt call");
+              const payload = message.toString(); // Convert payload to string
+              const data = JSON.parse(payload);
+              console.log(data);
+
+              for (let i = 0; i < this.terapia.length; i++) {
+                if (this.terapia[i].farmaco === data) {
+                  this.terapia.splice(i, 1);
+                  alert("terapia eliminata");
+                }
+              }
+            }
+            if (topic === this.topicDeleteTask) {
+              const payload = message.toString(); // Convert payload to string
+              const data = JSON.parse(payload);
+              console.log("task mqtt call");
+
+              for (let i = 0; i < this.tasks.length; i++) {
+                if (this.tasks[i].evento === data) {
+                  this.tasks.splice(i, 1);
+                  alert("evento eliminato");
+                }
+              }
+            }
+          });
+          this.$store.dispatch("updateSelectedItem", this.client);
+        }
+
+        this.setFlag();
+      } else {
+        if (this.checkFlag()) {
+          this.setAlertsFarmaci();
+          this.setAlertsTasks();
+
+          this.setFlag();
+        }
+      }
+    },
+
+    setAlertTaskFromMqtt(message) {
+      const payload = message.toString(); // Convert payload to string
+      const data = JSON.parse(payload);
+      console.log(data); // Parse JSON message into an object
+
+      const dateParts = data.data.split("/");
+      const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+      const attivita = {
+        evento: data.evento,
+        orario: data.orario,
+        data: data.data,
+      };
+      const currentDate = new Date();
+
+      if (
+        date.getDate() === currentDate.getDate() &&
+        date.getMonth() === currentDate.getMonth() &&
+        date.getFullYear() === currentDate.getFullYear()
+      ) {
+        const [hours, minutes] = orario.split(":");
+        const dateObj = new Date();
+        dateObj.setHours(hours);
+        dateObj.setMinutes(minutes);
+
+        let currentTime = new Date();
+        let timeDiff = dateObj.getTime() - currentTime.getTime();
+
+        if (timeDiff > 0) {
+          setTimeout(function () {
+            console.log("ALERT INVIATO PER EVENTO " + evento);
+            alert(evento + " alle ore " + orario);
+          }, timeDiff);
+        }
+      }
+      this.tasks.push(attivita);
+      alert("nuovo evento inserito!");
+    },
+
+    setAlertDrugFromMqtt(message) {
+      //console.log(topicMemo + " " + message);
+      console.log("drug mqtt triggered");
+      const payload = message.toString(); // Convert payload to string
+      const data = JSON.parse(payload);
+      console.log(data); // Parse JSON message into an object
+
+      const nome = data.farmaco;
+      const orario = data.orario;
+      const dosaggio = data.dosaggio;
+      console.log(data.orario);
+
+      const medicinale = {
+        farmaco: nome,
+        dosaggio: dosaggio,
+        orario: orario,
+      };
+      //console.log(medicinale + "OOOOOOOO");
+
+      const [hours, minutes] = data.orario.split(":");
+      const dateObj = new Date();
+      dateObj.setHours(hours);
+      dateObj.setMinutes(minutes);
+      let currentTime = new Date();
+      //console.log(currentTime.getTime() + " CURRENTIME");
+      let timeDiff = dateObj.getTime() - currentTime.getTime();
+      //console.log(timeDiff);
+      console.log(medicinale);
+
+      this.terapia.push(medicinale);
+      alert("terapia aggiornata!");
+
+      if (timeDiff > 0) {
+        setTimeout(function () {
+          //controlla se il farmaco è stato eliminato prima di mandare alert
+          console.log("ALERT INVIATO " + nome);
+          alert("assumere " + nome + " " + dosaggio + "mg");
+        }, timeDiff);
       }
     },
 
@@ -288,6 +447,7 @@ export default {
               console.log(res.data);
               if (res.status === 200) {
                 this.terapia.push(medicinale);
+                this.client.publish(this.topicDrug, JSON.stringify(medicinale));
                 alert("terapia inserito correttamente");
               }
             },
@@ -309,7 +469,9 @@ export default {
           (res) => {
             console.log(res.data);
             if (res.status === 200) {
+              const message = JSON.stringify(this.terapia[index].farmaco);
               this.terapia.splice(index, 1);
+              this.client.publish(this.topicDeleteDrug, message);
               alert("farmaco eliminato correttamente");
             }
           },
@@ -321,7 +483,7 @@ export default {
     },
 
     async getMemos() {
-      const email = { email: this.email_paziente };
+      const email = { email: null };
       await axios
         .get("http://localhost:5002/getMemos", email)
         .then((response) => {
@@ -331,7 +493,7 @@ export default {
             const promemoria = {
               evento: documents[i].evento,
               orario: documents[i].orario,
-              data: documents[i].data.substr(0, 10), //substr aggiusta data
+              data: documents[i].data, //substr aggiusta data
             };
             this.tasks.push(promemoria);
           }
@@ -358,7 +520,6 @@ export default {
         });
     },
   },
-  components: { Side_bar },
 };
 </script>
 
