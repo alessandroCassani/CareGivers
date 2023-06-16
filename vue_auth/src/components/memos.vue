@@ -246,7 +246,7 @@ export default {
       } else {
         const memo = {
           evento: this.task,
-          giorno: this.reminderDate,
+          data: this.reminderDate,
           orario: this.reminderTime,
           email_paziente: this.email_paziente,
         };
@@ -343,17 +343,13 @@ export default {
       const payload = message.toString(); // Convert payload to string
       const data = JSON.parse(payload);
       console.log(data); // Parse JSON message into an object
-      const evento = data.evento;
-      const orario = data.orario;
-      const giorno = data.giorno;
-      console.log(data.orario);
-      console.log(giorno);
-      const dateParts = giorno.split("/");
+
+      const dateParts = data.data.split("/");
       const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
       const attivita = {
         evento: data.evento,
         orario: data.orario,
-        data: data.giorno,
+        data: data.data,
       };
       const currentDate = new Date();
 
@@ -480,7 +476,7 @@ export default {
     },
 
     async getMemos() {
-      const email = { email: this.email_paziente };
+      const email = { email: null };
       await axios
         .get("http://localhost:5002/getMemos", email)
         .then((response) => {
@@ -490,7 +486,7 @@ export default {
             const promemoria = {
               evento: documents[i].evento,
               orario: documents[i].orario,
-              data: documents[i].data.substr(0, 10), //substr aggiusta data
+              data: documents[i].data, //substr aggiusta data
             };
             this.tasks.push(promemoria);
           }
