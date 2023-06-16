@@ -310,6 +310,7 @@ export default {
               for (let i = 0; i < this.terapia.length; i++) {
                 if (this.terapia[i].farmaco === data) {
                   this.terapia.splice(i, 1);
+                  alert("terapia eliminata");
                 }
               }
             }
@@ -321,6 +322,7 @@ export default {
               for (let i = 0; i < this.tasks.length; i++) {
                 if (this.tasks[i].evento === data) {
                   this.tasks.splice(i, 1);
+                  alert("evento eliminato");
                 }
               }
             }
