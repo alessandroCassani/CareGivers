@@ -1,5 +1,22 @@
-<template><h1>ciao</h1></template>
+<template>
+  <canvas id="line"></canvas>
+</template>
 
-<script></script>
+<script>
+import Chart from "chart.js";
+import planetChartData from "./LineChart";
 
-<style></style>
+export default {
+  name: "line",
+  data() {
+    return {
+      planetChartData: planetChartData,
+    };
+  },
+
+  mounted() {
+    const ctx = document.getElementById("line");
+    new Chart(ctx, this.planetChartData);
+  },
+};
+</script>
