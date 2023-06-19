@@ -77,7 +77,7 @@ export default {
     </h1>
 
     <br /><br /><br />
-    <SidebarLink to="/">analytics</SidebarLink>
+    <SidebarLink to="/analytics">analytics</SidebarLink>
     <br />
     <SidebarLink to="/">alert</SidebarLink>
     <br />

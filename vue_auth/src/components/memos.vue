@@ -135,12 +135,21 @@ export default {
       client: null,
     };
   },
+  created() {
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
 
   mounted() {
     this.setup();
   },
 
   methods: {
+    handleBeforeUnload() {
+      location.href = "/memos";
+    },
     setFlag() {
       sessionStorage.setItem("flag", 1);
     },
