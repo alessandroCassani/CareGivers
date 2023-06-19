@@ -9,7 +9,8 @@
     "auth": "nodemon auth",
     "otp": "nodemon otp",
     "scheduling": "nodemon scheduling",
-    "mqtt": "nodemon mqttService"
+    "mqtt": "nodemon mqttService",
+    "charts": "nodemon charts"
   },
   "dependencies": {
     "@bachdgvn/vue-otp-input": "^1.0.8",
