@@ -131,6 +131,7 @@ export default {
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
       topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
+      topicPV: "cassa@gmail.com/pv", //modificare
       client: null,
     };
   },
@@ -340,8 +341,9 @@ export default {
         if (this.checkFlag()) {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
-
           this.setFlag();
+
+          this.client.subscribe(this.topicPV);
         }
       }
     },

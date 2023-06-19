@@ -1,4 +1,4 @@
-export const planetChartData = {
+export const fc = {
   type: "line",
   data: {
     labels: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
@@ -35,4 +35,4 @@ export const planetChartData = {
   }
 };
 
-export default planetChartData;
+export default fc;
