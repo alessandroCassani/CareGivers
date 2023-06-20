@@ -26,8 +26,14 @@ app.use(bodyParser.urlencoded({extended:false}));
         const database = client.db("careGivers");
         const collection = database.collection('dataset')
 
+        if(req.query.field === 'HR'){
         const minValue = 50;
-        const maxValue = 140;
+        const maxValue = 140;}
+        else{
+          if(req.query.field === 'spO2'){
+            const minValue = 85;
+            const maxValue = 100;
+        }}
 
         const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
         console.log(randomValue)
