@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({extended:false}));
     app.get('/getData', async (req,res) => {
       const field = req.query.field
       const field2 = req.query.field2
+      console.log('dentro get data charts')
       //console.log(req.query)
       try {
         await client.connect();
@@ -33,6 +34,7 @@ app.use(bodyParser.urlencoded({extended:false}));
         const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
         const document = await collection.findOne({[field]: {$gt: randomValue}});
         console.log(document)
+        res.json(document)
         }
         else{
           if(req.query.field === 'SpO2'){
@@ -42,6 +44,7 @@ app.use(bodyParser.urlencoded({extended:false}));
             console.log(randomValue)
             const document = await collection.findOne({[field]: {$gt: randomValue}});
             console.log(document)
+            res.json(document)
           }else{
             const minValueSystolic = 90
             const maxValueSystolic = 145
@@ -54,6 +57,7 @@ app.use(bodyParser.urlencoded({extended:false}));
               {[field2] : {$gt: randomValueDyastolic}}
             ]});
             console.log(document)
+            res.json(document)
           }
         }
 
