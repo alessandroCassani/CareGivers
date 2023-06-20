@@ -1,3 +1,8 @@
+
+
+//const response = await axios.get('http://localhost:5005/getPV')
+
+
 export const fc = {
   type: "line",
   data: {
@@ -5,7 +10,7 @@ export const fc = {
     datasets: [
       {
         label: "FC",
-        data: [0, 0, 1, 2, 79, 82, 27, 14],
+        data: [],
         backgroundColor: "rgba(54,73,93,.5)",
         borderColor: "#36495d",
         borderWidth: 3

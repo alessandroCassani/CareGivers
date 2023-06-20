@@ -148,7 +148,8 @@ export default {
 
   methods: {
     handleBeforeUnload() {
-      location.href = "/memos";
+      event.preventDefault();
+      event.returnValue = "";
     },
     setFlag() {
       sessionStorage.setItem("flag", 1);

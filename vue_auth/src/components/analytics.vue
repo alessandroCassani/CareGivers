@@ -7,6 +7,7 @@
 <script>
 import Chart from "chart.js";
 import fc from "./fcLineChart";
+import axios from "axios";
 
 export default {
   name: "line",
@@ -15,6 +16,7 @@ export default {
       fc: fc,
       client: null,
       topicPV: "cassa@gmail.com/pv",
+      ruolo: sessionStorage.getItem("ruolo"),
     };
   },
 
@@ -28,7 +30,10 @@ export default {
       this.$store.dispatch("updateSelectedItem", this.client);
 
       //on message methods
+    } else {
+      this.fetchData("HR");
     }
+
     const ctx = document.getElementById("line");
     new Chart(ctx, this.fc);
   },
@@ -37,6 +42,22 @@ export default {
     isPatient() {
       //console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
+    },
+
+    async fetchData(param) {
+      let data = {
+        field: param,
+        collection: "cassa@gmail.com/vitalparameters", //modificare
+      };
+      //console.log(data);
+      await axios
+        .get("http://localhost:5005/getData", { params: data })
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.fc.data.datasets.push(res.data);
+          }
+        });
     },
   },
 };
