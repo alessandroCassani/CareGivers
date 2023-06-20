@@ -8,7 +8,6 @@
 import Chart from "chart.js";
 import fc from "./fcLineChart";
 import axios from "axios";
-//import { onUnmounted } from "vue";
 
 export default {
   name: "line",
@@ -19,39 +18,24 @@ export default {
       topicPV: "cassa@gmail.com/pv",
       ruolo: sessionStorage.getItem("ruolo"),
       count: 0,
+      chartInstance: null,
+      isDataFetched: false, // Track whether data has been fetched
     };
   },
 
   mounted() {
     this.client = this.$store.state.selectedItem;
-    console.log(this.$store.state.selectedItem);
-    console.log(this.client);
 
     if (!this.isPatient()) {
       this.client.subscribe(this.topicPV);
       this.$store.dispatch("updateSelectedItem", this.client);
-
-      //on message methods
     } else {
-      this.fetchData("HR"); //starting values of pvs
-      this.fetchData("SpO2");
-      this.fetchDataBP();
-
+      this.fetchData("HR"); // Fetch initial data
       setInterval(() => {
-        console.log("secondo");
         this.fetchData("HR"); //get data every 10 minutes
-        this.fetchData("SpO2");
-        this.fetchDataBP();
         console.log(this.count++);
-      }, 600000);
-
-      //  onUnmounted(() => {
-      //    clearInterval(dataFromDb); //stop fetching data
-      //  });
+      }, 5000);
     }
-
-    const ctx = document.getElementById("line");
-    new Chart(ctx, this.fc);
   },
 
   created() {
@@ -68,41 +52,40 @@ export default {
     },
 
     isPatient() {
-      //console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
     },
 
     fetchData(param) {
       let data = {
         field: param,
-        collection: "cassa@gmail.com/vitalparameters", //modificare
+        collection: "cassa@gmail.com/vitalparameters",
       };
-      //console.log(data);
+
       axios
         .get("http://localhost:5005/getData", { params: data })
         .then((res) => {
           console.log(res.data);
           if (res.status === 200) {
-            this.fc.data.datasets.push(res.data);
+            const newData = res.data.HR;
+            this.updateChartData(newData);
+            if (!this.isDataFetched) {
+              this.createChart(); // Create the chart after the data has been fetched
+              this.isDataFetched = true;
+            }
           }
         });
     },
 
-    async fetchDataBP() {
-      let data = {
-        field: "systolic",
-        field2: "diastolic",
-        collection: "cassa@gmail.com/vitalparameters", //modificare
-      };
-      //console.log(data);
-      await axios
-        .get("http://localhost:5005/getData", { params: data })
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200) {
-            this.fc.data.datasets.push(res.data);
-          }
-        });
+    createChart() {
+      const ctx = document.getElementById("line");
+      this.chartInstance = new Chart(ctx, this.fc);
+    },
+
+    updateChartData(newData) {
+      this.fc.data.datasets[0].data.push(newData);
+      if (this.chartInstance) {
+        this.chartInstance.update(); // Update the chart
+      }
     },
   },
 };
@@ -111,7 +94,7 @@ export default {
 <style>
 .chart-container {
   width: 900px;
-  height: 800px; /* Imposta l'altezza desiderata */
+  height: 800px;
   margin-left: 10%;
 }
 </style>

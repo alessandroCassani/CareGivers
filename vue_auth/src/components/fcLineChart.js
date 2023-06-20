@@ -1,8 +1,4 @@
 
-
-//const response = await axios.get('http://localhost:5005/getPV')
-
-
 export const fc = {
   type: "line",
   data: {
