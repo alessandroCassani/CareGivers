@@ -8,6 +8,7 @@
 import Chart from "chart.js";
 import fc from "./fcLineChart";
 import axios from "axios";
+import { onMounted, onUnmounted } from "vue";
 
 export default {
   name: "line",
@@ -31,7 +32,17 @@ export default {
 
       //on message methods
     } else {
-      this.fetchData("SpO2");
+      const dataFromDb = () => {
+        this.fetchData("HR"); //get data every 10 minutes
+        this.fetchData("Spo2");
+        this.fetchDataBP();
+      };
+
+      setTimeout(() => {}, 600000);
+
+      onUnmounted(() => {
+        clearTimeout();
+      });
     }
 
     const ctx = document.getElementById("line");
@@ -47,6 +58,23 @@ export default {
     async fetchData(param) {
       let data = {
         field: param,
+        collection: "cassa@gmail.com/vitalparameters", //modificare
+      };
+      //console.log(data);
+      await axios
+        .get("http://localhost:5005/getData", { params: data })
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.fc.data.datasets.push(res.data);
+          }
+        });
+    },
+
+    async fetchDataBP() {
+      let data = {
+        field: "systolic",
+        field2: "diastolic",
         collection: "cassa@gmail.com/vitalparameters", //modificare
       };
       //console.log(data);
