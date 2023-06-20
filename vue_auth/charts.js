@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({extended:false}));
         const collection = database.collection('dataset')
 
         const minValue = 50;
-        const maxValue = 57;
+        const maxValue = 140;
 
         const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
         console.log(randomValue)
