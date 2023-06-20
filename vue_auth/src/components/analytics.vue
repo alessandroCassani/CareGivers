@@ -34,7 +34,7 @@ export default {
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
         console.log(this.count++);
-      }, 5000);
+      }, 10000);
     }
   },
 
@@ -82,7 +82,11 @@ export default {
     },
 
     updateChartData(newData) {
-      this.fc.data.datasets[0].data.push(newData);
+      const newDataset = {
+        ...this.fc.data.datasets[0], // Copy the existing dataset
+        data: [...this.fc.data.datasets[0].data, newData], // Append new data
+      };
+      this.fc.data.datasets = [newDataset]; // Assign the new dataset to the chart
       if (this.chartInstance) {
         this.chartInstance.update(); // Update the chart
       }
