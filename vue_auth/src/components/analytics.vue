@@ -31,7 +31,7 @@ export default {
 
       //on message methods
     } else {
-      this.fetchData("HR");
+      this.fetchData("SpO2");
     }
 
     const ctx = document.getElementById("line");

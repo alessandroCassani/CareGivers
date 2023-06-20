@@ -20,7 +20,8 @@ app.use(bodyParser.urlencoded({extended:false}));
 
     app.get('/getData', async (req,res) => {
       const field = req.query.field
-      console.log(req.query)
+      const field2 = req.query.field2
+      //console.log(req.query)
       try {
         await client.connect();
         const database = client.db("careGivers");
@@ -28,18 +29,33 @@ app.use(bodyParser.urlencoded({extended:false}));
 
         if(req.query.field === 'HR'){
         const minValue = 50;
-        const maxValue = 140;}
-        else{
-          if(req.query.field === 'spO2'){
-            const minValue = 85;
-            const maxValue = 100;
-        }}
-
+        const maxValue = 140;
         const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
-        console.log(randomValue)
-
         const document = await collection.findOne({[field]: {$gt: randomValue}});
         console.log(document)
+        }
+        else{
+          if(req.query.field === 'SpO2'){
+            const minValue = 85;
+            const maxValue = 99;
+            const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+            console.log(randomValue)
+            const document = await collection.findOne({[field]: {$gt: randomValue}});
+            console.log(document)
+          }else{
+            const minValueSystolic = 90
+            const maxValueSystolic = 145
+            const minValueDyastolic = 40
+            const maxValueDyastolic = 95
+            const randomValueSystolic = Math.floor(Math.random() * (maxValueSystolic - minValueSystolic + 1)) + minValueSystolic;
+            const randomValueDyastolic = Math.floor(Math.random() * (maxValueDyastolic - minValueDyastolic + 1)) + minValueDyastolic;
+            const document = await collection.findOne({$and:[
+              {[field]: {$gt: randomValueSystolic}},
+              {[field2] : {$gt: randomValueDyastolic}}
+            ]});
+            console.log(document)
+          }
+        }
 
       } catch (error) {
         console.log(error)
@@ -49,11 +65,8 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 
-
-
     app.listen(port,(err) => {
       if(err)
           console.log(err);
-   
       console.log('server running on port ' + port);
   })
