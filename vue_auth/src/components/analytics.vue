@@ -18,6 +18,7 @@ export default {
       client: null,
       topicPV: "cassa@gmail.com/pv",
       ruolo: sessionStorage.getItem("ruolo"),
+      count: 0,
     };
   },
 
@@ -32,11 +33,17 @@ export default {
 
       //on message methods
     } else {
+      this.fetchData("HR"); //starting values of pvs
+      this.fetchData("SpO2");
+      this.fetchDataBP();
+
       setInterval(() => {
+        console.log("secondo");
         this.fetchData("HR"); //get data every 10 minutes
-        this.fetchData("Spo2");
+        this.fetchData("SpO2");
         this.fetchDataBP();
-      }, 750);
+        console.log(this.count++);
+      }, 600000);
 
       //  onUnmounted(() => {
       //    clearInterval(dataFromDb); //stop fetching data
@@ -47,7 +54,19 @@ export default {
     new Chart(ctx, this.fc);
   },
 
+  created() {
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
+
   methods: {
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
+    },
+
     isPatient() {
       //console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
