@@ -17,6 +17,14 @@ export const fc = {
     responsive: true,
     lineTension: 1,
     scales: {
+      xAxes: [
+        {
+          ticks: {
+            maxTicksLimit: 10, // Limit the number of x-axis ticks to 10
+            padding: 10
+          }
+        }
+      ],
       yAxes: [
         {
           ticks: {

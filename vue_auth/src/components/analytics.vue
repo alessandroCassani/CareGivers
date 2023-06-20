@@ -34,7 +34,7 @@ export default {
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
         console.log(this.count++);
-      }, 10000);
+      }, 20000);
     }
   },
 
@@ -71,6 +71,8 @@ export default {
             if (!this.isDataFetched) {
               this.createChart(); // Create the chart after the data has been fetched
               this.isDataFetched = true;
+            } else {
+              this.updateChart();
             }
           }
         });
@@ -82,14 +84,13 @@ export default {
     },
 
     updateChartData(newData) {
-      const newDataset = {
-        ...this.fc.data.datasets[0], // Copy the existing dataset
-        data: [...this.fc.data.datasets[0].data, newData], // Append new data
-      };
-      this.fc.data.datasets = [newDataset]; // Assign the new dataset to the chart
-      if (this.chartInstance) {
-        this.chartInstance.update(); // Update the chart
-      }
+      const date = new Date();
+      this.fc.data.labels.push(date.getHours() + ":" + date.getMinutes()); // Add an empty label for the new data point
+      this.fc.data.datasets[0].data.push(newData);
+    },
+
+    updateChart() {
+      this.chartInstance.update(); // Update the chart
     },
   },
 };
