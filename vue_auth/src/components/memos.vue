@@ -612,7 +612,7 @@ tr:nth-child(even) {
 }
 
 button:hover {
-  background-color: green;
+  background-color: #9e331d;
 }
 
 .blue-bg {
