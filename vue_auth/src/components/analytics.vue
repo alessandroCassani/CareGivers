@@ -160,5 +160,8 @@ export default {
   width: 900px;
   height: 800px;
   margin-left: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 50px; /* Adjust the gap value as needed */
 }
 </style>
