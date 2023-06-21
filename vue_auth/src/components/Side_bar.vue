@@ -73,7 +73,7 @@ export default {
           <div>S</div>
         </div>
       </span>
-      <span v-else>&nbsp;careGivers</span>
+      <span v-else>&nbsp;Menù</span>
     </h1>
 
     <br /><br /><br />
@@ -98,7 +98,7 @@ export default {
 
 <style>
 :root {
-  --sidebar-bc-color: #3d2022;
+  --sidebar-bc-color: #9e331d;
   --sidebar-item-hover: #c79598;
   --sidebar-item-active: #276749;
 }
@@ -108,7 +108,6 @@ export default {
 .sidebar {
   color: white;
   background-color: var(--sidebar-bc-color);
-
   float: left;
   position: fixed;
   z-index: 1;
@@ -117,7 +116,6 @@ export default {
   bottom: 0;
   padding: 0.4em;
   padding-right: 70px;
-
   transition: 0.3s ease;
   display: flex;
   text-align: center;
