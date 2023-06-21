@@ -136,7 +136,8 @@ html {
 
 .box {
   font-size: large;
-  width: 400px;
+  font-style: normal;
+  width: 440px;
   padding: 20px;
   position: absolute;
   top: 50%;
@@ -152,7 +153,6 @@ html {
 .box h1 {
   color: black;
   text-transform: uppercase;
-  font-style: italic;
   font-weight: 500;
 }
 
