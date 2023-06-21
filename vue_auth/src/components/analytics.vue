@@ -30,11 +30,13 @@ export default {
       this.client.subscribe(this.topicPV);
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
+      this.createChart();
       this.fetchData("HR"); // Fetch initial data
+      console.log("mounted");
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
         console.log(this.count++);
-      }, 20000);
+      }, 10000);
     }
   },
 
@@ -55,23 +57,26 @@ export default {
       return this.ruolo === "paziente";
     },
 
-    fetchData(param) {
+    async fetchData(param) {
       let data = {
         field: param,
         collection: "cassa@gmail.com/vitalparameters",
       };
 
-      axios
+      await axios
         .get("http://localhost:5005/getData", { params: data })
         .then((res) => {
           console.log(res.data);
           if (res.status === 200) {
             const newData = res.data.HR;
+            console.log("updateChartData");
             this.updateChartData(newData);
             if (!this.isDataFetched) {
+              console.log("createChart");
               this.createChart(); // Create the chart after the data has been fetched
               this.isDataFetched = true;
             } else {
+              console.log("updateChart");
               this.updateChart();
             }
           }
@@ -83,14 +88,33 @@ export default {
       this.chartInstance = new Chart(ctx, this.fc);
     },
 
-    updateChartData(newData) {
-      const date = new Date();
-      this.fc.data.labels.push(date.getHours() + ":" + date.getMinutes()); // Add an empty label for the new data point
-      this.fc.data.datasets[0].data.push(newData);
+    updateChart() {
+      if (this.chartInstance) {
+        this.chartInstance.update(); // Update the chart if the chart instance exists
+      }
     },
 
-    updateChart() {
-      this.chartInstance.update(); // Update the chart
+    updateChartData(newData) {
+      const date = new Date();
+      const timeLabel = date.getHours() + ":" + date.getMinutes();
+
+      // Create new arrays for labels and data points
+      const newLabels = [...this.fc.data.labels, timeLabel];
+      const newDataPoints = [...this.fc.data.datasets[0].data, newData];
+
+      // Limit the number of data points displayed on the chart
+      const maxDataPoints = 10;
+      if (newLabels.length > maxDataPoints) {
+        newLabels.shift();
+        newDataPoints.shift();
+      }
+
+      // Update the chart instance with the new arrays
+      this.chartInstance.data.labels = newLabels;
+      this.chartInstance.data.datasets[0].data = newDataPoints;
+
+      // Update the chart
+      this.updateChart();
     },
   },
 };
