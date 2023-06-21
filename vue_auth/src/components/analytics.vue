@@ -1,6 +1,7 @@
 <template>
   <div class="chart-container">
     <canvas id="line"></canvas>
+    <canvas id="lineSpO2"></canvas>
   </div>
 </template>
 
@@ -69,14 +70,14 @@ export default {
           console.log(res.data);
           if (res.status === 200) {
             const newData = res.data.HR;
-            console.log("updateChartData");
+            //console.log("updateChartData");
             this.updateChartData(newData);
             if (!this.isDataFetched) {
-              console.log("createChart");
+              //  console.log("createChart");
               this.createChart(); // Create the chart after the data has been fetched
               this.isDataFetched = true;
             } else {
-              console.log("updateChart");
+              // console.log("updateChart");
               this.updateChart();
             }
           }
