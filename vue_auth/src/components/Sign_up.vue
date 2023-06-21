@@ -182,7 +182,7 @@ html {
 .box input[type="email"]:focus,
 .box input[type="password"]:focus,
 .box input[type="text"]:focus {
-  width: 240px;
+  width: 230px;
   background-color: #cdc7c9;
 }
 
