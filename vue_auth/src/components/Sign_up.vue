@@ -133,11 +133,6 @@ html {
   min-height: 100vh;
   width: 100%;
   font-family: sans-serif;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(0, 115, 255),
-    rgba(255, 255, 255, 0.86)
-  );
 }
 
 .box {

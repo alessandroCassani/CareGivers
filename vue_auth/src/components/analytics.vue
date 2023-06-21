@@ -8,6 +8,7 @@
 <script>
 import Chart from "chart.js";
 import fc from "./fcLineChart";
+import spO2 from "./spO2LineChart";
 import axios from "axios";
 
 export default {
@@ -15,11 +16,13 @@ export default {
   data() {
     return {
       fc: fc,
+      spO2: spO2,
       client: null,
       topicPV: "cassa@gmail.com/pv",
       ruolo: sessionStorage.getItem("ruolo"),
       count: 0,
-      chartInstance: null,
+      chartInstanceFC: null,
+      chartInstanceSpO2: null,
       isDataFetched: false, // Track whether data has been fetched
     };
   },
@@ -33,9 +36,11 @@ export default {
     } else {
       this.createChart();
       this.fetchData("HR"); // Fetch initial data
-      console.log("mounted");
+      this.fetchData("SpO2");
+      //console.log("mounted");
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
+        this.fetchData("SpO2");
         console.log(this.count++);
       }, 10000);
     }
@@ -69,7 +74,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           if (res.status === 200) {
-            const newData = res.data.HR;
+            const newData = res.data;
             //console.log("updateChartData");
             this.updateChartData(newData);
             if (!this.isDataFetched) {
@@ -85,13 +90,19 @@ export default {
     },
 
     createChart() {
-      const ctx = document.getElementById("line");
-      this.chartInstance = new Chart(ctx, this.fc);
+      const ctxFC = document.getElementById("line");
+      this.chartInstanceFC = new Chart(ctxFC, this.fc);
+
+      const ctxSpO2 = document.getElementById("lineSpO2");
+      this.chartInstanceSpO2 = new Chart(ctxSpO2, this.spO2);
     },
 
     updateChart() {
-      if (this.chartInstance) {
-        this.chartInstance.update(); // Update the chart if the chart instance exists
+      if (this.chartInstanceFC) {
+        this.chartInstanceFC.update(); // Update the chart if the chart instance exists
+      }
+      if (this.chartInstanceSpO2) {
+        this.chartInstanceSpO2.update(); // Update the chart if the chart instance exists
       }
     },
 
@@ -100,22 +111,45 @@ export default {
       const timeLabel = date.getHours() + ":" + date.getMinutes();
 
       // Create new arrays for labels and data points
-      const newLabels = [...this.fc.data.labels, timeLabel];
-      const newDataPoints = [...this.fc.data.datasets[0].data, newData];
+      if (newData.HR != null) {
+        const newLabelsFC = [...this.fc.data.labels, timeLabel];
+        const newDataPointsFC = [...this.fc.data.datasets[0].data, newData.HR];
 
-      // Limit the number of data points displayed on the chart
-      const maxDataPoints = 10;
-      if (newLabels.length > maxDataPoints) {
-        newLabels.shift();
-        newDataPoints.shift();
+        // Limit the number of data points displayed on the chart
+        const maxDataPoints = 10;
+        if (newLabelsFC.length > maxDataPoints) {
+          newLabelsFC.shift();
+          newDataPointsFC.shift();
+        }
+
+        // Update the chart instance with the new arrays
+        this.chartInstanceFC.data.labels = newLabelsFC;
+        this.chartInstanceFC.data.datasets[0].data = newDataPointsFC;
+
+        // Update the chart
+        this.updateChart();
       }
+      if (newData.SpO2 != null) {
+        const newLabelsSpO2 = [...this.spO2.data.labels, timeLabel];
+        const newDataPointsSpo2 = [
+          ...this.spO2.data.datasets[0].data,
+          newData.SpO2,
+        ];
 
-      // Update the chart instance with the new arrays
-      this.chartInstance.data.labels = newLabels;
-      this.chartInstance.data.datasets[0].data = newDataPoints;
+        // Limit the number of data points displayed on the chart
+        const maxDataPoints = 10;
+        if (newLabelsSpO2.length > maxDataPoints) {
+          newLabelsSpO2.shift();
+          newDataPointsSpo2.shift();
+        }
 
-      // Update the chart
-      this.updateChart();
+        // Update the chart instance with the new arrays
+        this.chartInstanceSpO2.data.labels = newLabelsSpO2;
+        this.chartInstanceSpO2.data.datasets[0].data = newDataPointsSpo2;
+
+        // Update the chart
+        this.updateChart();
+      }
     },
   },
 };
