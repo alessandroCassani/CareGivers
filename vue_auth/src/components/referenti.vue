@@ -27,10 +27,13 @@
     <div class="threeshold" v-if="!isPatient">
       <div><h3 style="color: red">ALERTS</h3></div>
       <label>FC:&nbsp</label>
-      <input type="number" />&nbsp&nbsp <label>spO2:&nbsp</label>&nbsp
-      <input type="number" /> &nbsp <label>sistolica:&nbsp</label>&nbsp
-      <input type="number" />&nbsp <label>diastolica:&nbsp</label>&nbsp
-      <input type="number" />
+      <input type="number" v-model="fc" />&nbsp&nbsp
+      <label>spO2:&nbsp</label>&nbsp
+      <input type="number" v-model="spO2" /> &nbsp
+      <label>sistolica:&nbsp</label>&nbsp
+      <input type="number" v-model="systolic" />&nbsp
+      <label>diastolica:&nbsp</label>&nbsp
+      <input type="number" v-model="diastolic" />
     </div>
 
     <div class="inputPaziente" v-if="isPatient">
@@ -61,6 +64,10 @@ export default {
       fourthOtp: "",
       fifthOtp: "",
       sidebarWidth,
+      fc: "",
+      spO2: "",
+      systolic: "",
+      diastolic: "",
     };
   },
   computed: {
