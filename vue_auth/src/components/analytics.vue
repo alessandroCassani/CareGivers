@@ -2,6 +2,7 @@
   <div class="chart-container">
     <canvas id="line"></canvas>
     <canvas id="lineSpO2"></canvas>
+    <canvas id="lineBP"></canvas>
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 import Chart from "chart.js";
 import fc from "./fcLineChart";
 import spO2 from "./spO2LineChart";
+import bp from "./BPLineChart";
 import axios from "axios";
 
 export default {
@@ -17,12 +19,14 @@ export default {
     return {
       fc: fc,
       spO2: spO2,
+      bp: bp,
       client: null,
       topicPV: "cassa@gmail.com/pv",
       ruolo: sessionStorage.getItem("ruolo"),
       count: 0,
       chartInstanceFC: null,
       chartInstanceSpO2: null,
+      chartInstanceBP: null,
       isDataFetched: false, // Track whether data has been fetched
     };
   },
@@ -35,13 +39,14 @@ export default {
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
       this.createChart();
-      this.fetchData("HR"); // Fetch initial data
-      this.fetchData("SpO2");
+      //this.fetchData("HR"); // Fetch initial data
+      //this.fetchData("SpO2");
+      this.fetchData("bp");
       //console.log("mounted");
       setInterval(() => {
-        this.fetchData("HR"); //get data every 10 minutes
-        this.fetchData("SpO2");
-        console.log(this.count++);
+        // this.fetchData("HR"); //get data every 10 minutes
+        //this.fetchData("SpO2");
+        this.fetchData("bp");
       }, 10000);
     }
   },
@@ -66,8 +71,16 @@ export default {
     async fetchData(param) {
       let data = {
         field: param,
-        collection: "cassa@gmail.com/vitalparameters",
+        collection: "cassa@gmail.com/vitalparameters", //modificare
       };
+
+      if (param === "bp") {
+        data = {
+          field: "systolic",
+          field2: "diastolic",
+          collection: "cassa@gmail.com/vitalparameters", //modificare
+        };
+      }
 
       await axios
         .get("http://localhost:5005/getData", { params: data })
@@ -95,6 +108,9 @@ export default {
 
       const ctxSpO2 = document.getElementById("lineSpO2");
       this.chartInstanceSpO2 = new Chart(ctxSpO2, this.spO2);
+
+      const ctxBP = document.getElementById("lineBP");
+      this.chartInstanceBP = new Chart(ctxBP, this.bp);
     },
 
     updateChart() {
@@ -103,6 +119,9 @@ export default {
       }
       if (this.chartInstanceSpO2) {
         this.chartInstanceSpO2.update(); // Update the chart if the chart instance exists
+      }
+      if (this.chartInstanceBP) {
+        this.chartInstanceBP.update(); // Update the chart if the chart instance exists
       }
     },
 
@@ -150,6 +169,34 @@ export default {
         // Update the chart
         this.updateChart();
       }
+      if (newData.systolic != null) {
+        const newLabelsBP = [...this.bp.data.labels, timeLabel];
+        const newDataPointsBPsys = [
+          ...this.bp.data.datasets[0].data,
+          newData.systolic,
+        ];
+
+        const newDataPointsBPdias = [
+          ...this.bp.data.datasets[1].data,
+          newData.diastolic,
+        ];
+
+        // Limit the number of data points displayed on the chart
+        const maxDataPoints = 10;
+        if (newLabelsBP.length > maxDataPoints) {
+          newLabelsBP.shift();
+          newDataPointsBPsys.shift();
+          newDataPointsBPdias.shift();
+        }
+
+        // Update the chart instance with the new arrays
+        this.chartInstanceBP.data.labels = newLabelsBP;
+        this.chartInstanceBP.data.datasets[0].data = newDataPointsBPsys;
+        this.chartInstanceBP.data.datasets[1].data = newDataPointsBPdias;
+
+        // Update the chart
+        this.updateChart();
+      }
     },
   },
 };
@@ -159,9 +206,10 @@ export default {
 .chart-container {
   width: 900px;
   height: 800px;
+  font-size: large;
   margin-left: 10%;
   display: flex;
   flex-direction: column;
-  gap: 50px; /* Adjust the gap value as needed */
+  gap: 70px; /* Adjust the gap value as needed */
 }
 </style>
