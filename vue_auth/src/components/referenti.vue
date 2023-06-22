@@ -157,6 +157,10 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             alert("soglie inserite correttamente");
+            localStorage.setItem("fcth", this.fc);
+            localStorage.setItem("spO2th", this.spO2);
+            localStorage.setItem("systh", this.systolic);
+            localStorage.setItem("diasth", this.diastolic);
           } else {
             alert("errore in fase di inserimento");
           }
