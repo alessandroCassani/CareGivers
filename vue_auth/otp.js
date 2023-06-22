@@ -96,6 +96,8 @@ const database = () => {
     }
   })
 
+  app.post('/insertAlerts')
+
 
 app.listen(port,(err) => {
     if(err)

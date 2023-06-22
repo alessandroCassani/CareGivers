@@ -140,6 +140,21 @@ export default {
         }
       );
     },
+
+    async insertAlerts() {
+      const data = {
+        //email: localStorage.getItem('email_paziente'),
+        email: "cassa@gmail.com",
+        fc: this.fc,
+        spO2: this.spO2,
+        systolic: this.systolic,
+        diastolic: this.diastolic,
+      };
+
+      await axios
+        .post("http://localhost:5001/insertAlerts", data)
+        .then((res) => {});
+    },
   },
 };
 </script>
