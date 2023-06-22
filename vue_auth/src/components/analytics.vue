@@ -36,6 +36,15 @@ export default {
 
     if (!this.isPatient()) {
       this.client.subscribe(this.topicPV);
+      this.client.on("message", (topic, message) => {
+        const payload = message.toString(); // Convert payload to string
+        const data = JSON.parse(payload);
+        console.log(data); // Parse JSON message into an object
+        this.createChart();
+        this.updateChartData(data); // Update the chart data with the received message
+        this.updateChart();
+      });
+
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
       this.createChart();
@@ -98,6 +107,8 @@ export default {
               // console.log("updateChart");
               this.updateChart();
             }
+
+            this.client.publish(this.topicPV, JSON.stringify(newData));
           }
         });
     },
