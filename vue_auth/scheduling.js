@@ -78,7 +78,6 @@ const database = () => {
   })
 
 
-
   app.get('/getMemos', async (req,res) => {
     //console.log('DENTRO GET-MEMO SERVER')
     database();
@@ -93,7 +92,6 @@ const database = () => {
           return;
     }
   })
-
 
 
   app.post('/insertTherapy', async(req,res) => {
@@ -119,7 +117,6 @@ const database = () => {
       return res.status(500).json({message: 'errore'})
     }
   })
-
 
 
   app.get('/getTherapy', async (req,res) => {
@@ -185,6 +182,24 @@ const database = () => {
       console.log(err);
           res.status(500).json({ message: 'Internal server error' });
           return;
+    }
+  })
+
+
+  app.get('/getEmailPatient', async(req,res)=>{
+    console.log('dentro get email paziente server')
+    console.log(req.query.email)
+    try {
+      await client.connect();
+        const database = client.db("associazioni");
+        const collection = database.collection('caregivers_patient')
+        console.log(collection.countDocuments())
+  
+        const result = await collection.findOne({caregiver: req.query.email})
+        //console.log(result)
+        res.json(result)
+    } catch (error) {
+      console.log(error)
     }
   })
 

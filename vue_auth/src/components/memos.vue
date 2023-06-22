@@ -349,6 +349,7 @@ export default {
         this.setFlag();
       } else {
         if (this.checkFlag()) {
+          // this.getEmailPaziente();
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.setFlag();
@@ -356,6 +357,21 @@ export default {
           this.client.subscribe(this.topicPV);
         }
       }
+    },
+
+    getEmailPaziente() {
+      console.log(localStorage);
+      const data = {
+        email: sessionStorage.getItem("email"),
+      };
+      axios
+        .get("http://localhost:5002/getEmailPatient", { data })
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200 && res.data != null) {
+            sessionStorage.setItem("email_paziente", res.data.patient);
+          }
+        });
     },
 
     setAlertTaskFromMqtt(message) {

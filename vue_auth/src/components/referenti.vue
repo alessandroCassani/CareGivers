@@ -24,6 +24,14 @@
       <input type="submit" @click="sendOtp()" value="CONFERMA" />
     </div>
 
+    <div class="threeshold">
+      <label>FC:&nbsp</label>
+      <input type="number" />&nbsp&nbsp <label>spO2:&nbsp</label>&nbsp
+      <input type="number" /> &nbsp <label>sistolica:&nbsp</label>&nbsp
+      <input type="number" />&nbsp <label>diastolica:&nbsp</label>&nbsp
+      <input type="number" />
+    </div>
+
     <div class="inputPaziente" v-if="isPatient">
       <h1>Genera OTP:</h1>
       <br />
@@ -218,5 +226,9 @@ body {
 
 .inputPaziente input[type="submit"]:hover {
   background: #c79598;
+}
+
+.threeshold {
+  margin-top: 60px;
 }
 </style>

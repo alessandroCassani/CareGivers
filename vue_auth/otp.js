@@ -36,9 +36,6 @@ const database = () => {
     }
   }
 
-
-
-
   app.post('/insertOtp', async (req,res) =>{
     console.log('DENTRO INSERT OTP SERVER')
     database();
@@ -98,7 +95,6 @@ const database = () => {
       console.log(error)
     }
   })
-
 
 
 app.listen(port,(err) => {
