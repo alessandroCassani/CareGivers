@@ -39,13 +39,13 @@ export default {
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
       this.createChart();
-      //this.fetchData("HR"); // Fetch initial data
-      //this.fetchData("SpO2");
+      this.fetchData("HR"); // Fetch initial data
+      this.fetchData("SpO2");
       this.fetchData("bp");
       //console.log("mounted");
       setInterval(() => {
-        // this.fetchData("HR"); //get data every 10 minutes
-        //this.fetchData("SpO2");
+        this.fetchData("HR"); //get data every 10 minutes
+        this.fetchData("SpO2");
         this.fetchData("bp");
       }, 10000);
     }
