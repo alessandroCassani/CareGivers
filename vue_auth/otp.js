@@ -4,7 +4,6 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { user } = require('./src/models/user.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
@@ -95,9 +94,6 @@ const database = () => {
       console.log(error)
     }
   })
-
-  app.post('/insertAlerts')
-
 
 app.listen(port,(err) => {
     if(err)

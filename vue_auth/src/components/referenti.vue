@@ -33,7 +33,8 @@
       <label>sistolica:&nbsp</label>&nbsp
       <input type="number" v-model="systolic" />&nbsp
       <label>diastolica:&nbsp</label>&nbsp
-      <input type="number" v-model="diastolic" />
+      <input type="number" v-model="diastolic" />&nbsp&nbsp&nbsp
+      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
     </div>
 
     <div class="inputPaziente" v-if="isPatient">
@@ -152,8 +153,14 @@ export default {
       };
 
       await axios
-        .post("http://localhost:5001/insertAlerts", data)
-        .then((res) => {});
+        .post("http://localhost:5005/insertAlerts", data)
+        .then((res) => {
+          if (res.status === 200) {
+            alert("soglie inserite correttamente");
+          } else {
+            alert("errore in fase di inserimento");
+          }
+        });
     },
   },
 };

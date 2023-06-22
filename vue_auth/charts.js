@@ -7,6 +7,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const router = require('express').Router();
+const {alerts} = require('./src/models/alerts.js')
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -16,6 +17,19 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+
+const database = () => {
+  const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+  try {
+     mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/alerts?retryWrites=true&w=majority')
+    console.log('DB connected')
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
     app.get('/getData', async (req,res) => {
@@ -67,7 +81,25 @@ app.use(bodyParser.urlencoded({extended:false}));
       }
     })
 
+    app.post('/insertAlerts', async(req,res) => {
+      console.log(req.body)
+      try{
+        database()
+      const alert = new alerts({
+        patient: req.body.email,
+        fc : req.body.fc,
+        spO2: req.body.spO2,
+        systolic: req.body.systolic,
+        diastolic: req.body.diastolic
+      })
+      const response = await alert.save()
+      console.log(response)
 
+      res.status(200).json({message: 'alert inseriti correttamente'})
+    }catch(error){
+      console.log(error)
+    }
+  })
 
     app.listen(port,(err) => {
       if(err)
