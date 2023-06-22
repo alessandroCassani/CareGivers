@@ -1,9 +1,8 @@
-const { S } = require('@bachdgvn/vue-otp-input');
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema;
 const userSchema = new schema({
-    patient: String,
+    patient: { type: String, unique: true},
     fc: String,
     spO2: String,
     systolic: String,

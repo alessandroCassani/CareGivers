@@ -85,12 +85,12 @@ const database = () => {
       console.log(req.body)
       try{
         database()
-      const alert = new alerts({
-        patient: req.body.email,
-        fc : req.body.fc,
-        spO2: req.body.spO2,
-        systolic: req.body.systolic,
-        diastolic: req.body.diastolic
+        const alert = new alerts({
+         patient: req.body.email,
+          fc : req.body.fc,
+          spO2: req.body.spO2,
+          systolic: req.body.systolic,
+          diastolic: req.body.diastolic
       })
       const response = await alert.save()
       console.log(response)
