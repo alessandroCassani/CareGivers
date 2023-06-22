@@ -24,7 +24,8 @@
       <input type="submit" @click="sendOtp()" value="CONFERMA" />
     </div>
 
-    <div class="threeshold">
+    <div class="threeshold" v-if="!isPatient">
+      <div><h3 style="color: red">ALERTS</h3></div>
       <label>FC:&nbsp</label>
       <input type="number" />&nbsp&nbsp <label>spO2:&nbsp</label>&nbsp
       <input type="number" /> &nbsp <label>sistolica:&nbsp</label>&nbsp
@@ -229,6 +230,7 @@ body {
 }
 
 .threeshold {
+  text-align: center;
   margin-top: 60px;
 }
 </style>
