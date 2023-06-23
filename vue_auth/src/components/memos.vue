@@ -131,6 +131,7 @@ export default {
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
       topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
       topicPV: "cassa@gmail.com/pv", //modificare
+      topicAlert: sessionStorage.getItem("email") + "/insAlert",
       client: null,
     };
   },
@@ -304,6 +305,7 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           //iscrizioni
+          this.client.subscribe(this.topicAlert);
           this.client.subscribe(this.topicTask);
           this.client.subscribe(this.topicDrug);
           this.client.subscribe(this.topicDeleteDrug);
@@ -313,6 +315,16 @@ export default {
             if (topic === this.topicDrug) {
               console.log("drug mqtt call");
               this.setAlertDrugFromMqtt(message);
+            }
+            if (topic === this.topicAlert) {
+              const payload = message.toString(); // Convert payload to string
+              const data = JSON.parse(payload);
+              localStorage.setItem("fcth", data.fcth);
+              localStorage.setItem("spO2th", data.spO2th);
+              localStorage.setItem("systh", data.systh);
+              localStorage.setItem("diasth", data.diasth);
+              alert("nuove soglie inserite");
+              //console.log(localStorage);
             }
             if (topic === this.topicTask) {
               console.log("task mqtt call");

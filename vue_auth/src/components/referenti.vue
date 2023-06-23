@@ -3,7 +3,7 @@
   <div :style="{ 'margin-left': sidebarWidth }"></div>
 
   <body>
-    <div class="inputReferente" v-if="!isPatient">
+    <div class="inputReferente" v-if="!isPatient()">
       <h3>Inserire email paziente:</h3>
       <input
         type="email"
@@ -24,7 +24,7 @@
       <input type="submit" @click="sendOtp()" value="CONFERMA" />
     </div>
 
-    <div class="threeshold" v-if="!isPatient">
+    <div class="threeshold" v-if="!isPatient()">
       <div><h3 style="color: red">ALERTS</h3></div>
       <label>FC:&nbsp;</label>
       <input type="number" v-model="fc" />&nbsp;&nbsp;
@@ -37,7 +37,7 @@
       <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
     </div>
 
-    <div class="inputPaziente" v-if="isPatient">
+    <div class="inputPaziente" v-if="isPatient()">
       <h1>Genera OTP:</h1>
       <br />
       <input type="submit" @click="createOtp()" value="GENERA" />
@@ -70,14 +70,7 @@ export default {
       systolic: "",
       diastolic: "",
       client: null,
-      topicAlert: sessionStorage.getItem("email") + "/insAlert",
     };
-  },
-  computed: {
-    isPatient() {
-      console.log(sessionStorage.getItem("ruolo") + " COMPUTED");
-      return this.ruolo === "paziente";
-    },
   },
 
   created() {
@@ -89,27 +82,12 @@ export default {
 
   mounted() {
     this.client = this.$store.state.selectedItem;
-
-    if (this.isPatient()) {
-      if (this.checkFlag()) {
-        this.client.subscribe(this.topicAlert);
-        this.client.on("message", (topic, message) => {
-          if (topic === this.topicAlert) {
-            alert("nuove soglie inserite");
-            const payload = message.toString(); // Convert payload to string
-            const data = JSON.parse(payload);
-            localStorage.setItem("fcth", data.fcth);
-            localStorage.setItem("spO2th", data.spO2th);
-            localStorage.setItem("systh", data.systh);
-            localStorage.setItem("diasth", data.diasth);
-            console.log(localStorage);
-          }
-        });
-      }
-    }
   },
 
   methods: {
+    isPatient() {
+      return this.ruolo === "paziente";
+    },
     setFlag() {
       sessionStorage.setItem("flagref", 1);
     },
@@ -182,25 +160,26 @@ export default {
       await axios.post("http://localhost:5005/insertAlerts", data).then(
         (res) => {
           if (res.status === 200) {
-            alert("soglie inserite correttamente");
             localStorage.setItem("fcth", this.fc);
             localStorage.setItem("spO2th", this.spO2);
             localStorage.setItem("systh", this.systolic);
             localStorage.setItem("diasth", this.diastolic);
 
-            const alert = {
+            const alerts = {
               fcth: this.fc,
               spO2th: this.spO2,
               systh: this.systolic,
               diasth: this.diastolic,
             };
-            this.client.publish(this.topicAlert, JSON.stringify(alert));
+            this.client.publish(this.topicAlert, JSON.stringify(alerts));
+            alert("soglie inserite correttamente");
           } else {
             alert("errore in fase di inserimento");
           }
         },
         (err) => {
-          alert(err + " errore! prego riprovare");
+          console.log(err);
+          alert("errore! prego riprovare");
         }
       );
     },
