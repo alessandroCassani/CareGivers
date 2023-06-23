@@ -26,14 +26,14 @@
 
     <div class="threeshold" v-if="!isPatient">
       <div><h3 style="color: red">ALERTS</h3></div>
-      <label>FC:&nbsp</label>
-      <input type="number" v-model="fc" />&nbsp&nbsp
-      <label>spO2:&nbsp</label>&nbsp
-      <input type="number" v-model="spO2" /> &nbsp
-      <label>sistolica:&nbsp</label>&nbsp
-      <input type="number" v-model="systolic" />&nbsp
-      <label>diastolica:&nbsp</label>&nbsp
-      <input type="number" v-model="diastolic" />&nbsp&nbsp&nbsp
+      <label>FC:&nbsp;</label>
+      <input type="number" v-model="fc" />&nbsp;&nbsp;
+      <label>spO2:&nbsp;</label>&nbsp;
+      <input type="number" v-model="spO2" /> &nbsp;
+      <label>sistolica:&nbsp;</label>&nbsp;
+      <input type="number" v-model="systolic" />&nbsp;
+      <label>diastolica:&nbsp;</label>&nbsp;
+      <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
       <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
     </div>
 
@@ -152,9 +152,8 @@ export default {
         diastolic: this.diastolic,
       };
 
-      await axios
-        .post("http://localhost:5005/insertAlerts", data)
-        .then((res) => {
+      await axios.post("http://localhost:5005/insertAlerts", data).then(
+        (res) => {
           if (res.status === 200) {
             alert("soglie inserite correttamente");
             localStorage.setItem("fcth", this.fc);
@@ -164,7 +163,11 @@ export default {
           } else {
             alert("errore in fase di inserimento");
           }
-        });
+        },
+        (err) => {
+          alert(err + " errore! prego riprovare");
+        }
+      );
     },
   },
 };

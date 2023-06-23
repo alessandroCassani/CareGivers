@@ -98,6 +98,7 @@ const database = () => {
       res.status(200).json({message: 'alert inseriti correttamente'})
     }catch(error){
       console.log(error)
+      res.status(500).json({message: 'alert già inserito'})
     }
   })
 

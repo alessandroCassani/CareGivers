@@ -186,18 +186,17 @@ const database = () => {
   })
 
 
-  app.get('/getEmailPatient', async(req,res)=>{
+  app.post('/getEmailPatient', async(req,res)=>{
     console.log('dentro get email paziente server')
-    console.log(req.query.email)
+    console.log(req.body.email)
     try {
       await client.connect();
         const database = client.db("associazioni");
-        const collection = database.collection('caregivers_patient')
-        console.log(collection.countDocuments())
+        const collection = database.collection('caregivers_patients')
   
-        const result = await collection.findOne({caregiver: req.query.email})
-        //console.log(result)
-        res.json(result)
+        const result = await collection.findOne({caregiver: req.body.email})
+        console.log(result)
+        res.status(200).json(result)
     } catch (error) {
       console.log(error)
     }

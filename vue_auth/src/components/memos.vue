@@ -289,6 +289,7 @@ export default {
     },
 
     async setup() {
+      console.log(localStorage);
       //const topic = sessionStorage.getItem("email") + "/memo";
       this.getMemos();
       this.getFarmaci();
@@ -349,7 +350,7 @@ export default {
         this.setFlag();
       } else {
         if (this.checkFlag()) {
-          // this.getEmailPaziente();
+          this.getEmailPaziente();
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.setFlag();
@@ -360,18 +361,17 @@ export default {
     },
 
     getEmailPaziente() {
-      console.log(localStorage);
+      //console.log(localStorage);
       const data = {
         email: sessionStorage.getItem("email"),
       };
-      axios
-        .get("http://localhost:5002/getEmailPatient", { data })
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200 && res.data != null) {
-            sessionStorage.setItem("email_paziente", res.data.patient);
-          }
-        });
+      axios.post("http://localhost:5002/getEmailPatient", data).then((res) => {
+        console.log(res.data);
+        if (res.status === 200 && res.data != null) {
+          sessionStorage.setItem("email_paziente", res.data.patient);
+          console.log(sessionStorage);
+        }
+      });
     },
 
     setAlertTaskFromMqtt(message) {
