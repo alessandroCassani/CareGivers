@@ -47,7 +47,7 @@ const database = () => {
         const maxValue = 140;
         const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
         const document = await collection.findOne({[field]: {$gt: randomValue}});
-        console.log(document)
+        //console.log(document)
         res.json(document)
         }
         else{
@@ -57,7 +57,7 @@ const database = () => {
             const randomValue = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
             console.log(randomValue)
             const document = await collection.findOne({[field]: {$gt: randomValue}});
-            console.log(document)
+            //console.log(document)
             res.json(document)
           }else{
             const minValueSystolic = 90
@@ -70,7 +70,7 @@ const database = () => {
               {[field]: {$gt: randomValueSystolic}},
               {[field2] : {$gt: randomValueDyastolic}}
             ]});
-            console.log(document)
+            //console.log(document)
             res.json(document)
           }
         }
@@ -82,7 +82,6 @@ const database = () => {
     })
 
     app.post('/getAlerts', async(req,res) => {
-      console.log('dentro get ALERTSSSSSSSS')
       console.log(req.body)
       try {
         await client.connect();

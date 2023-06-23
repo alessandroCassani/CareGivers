@@ -96,16 +96,18 @@ export default {
     },
 
     async fetchData(param) {
+      const rifPaziente = sessionStorage.getItem("email");
+      const collezione = rifPaziente + "/vitalparameters";
       let data = {
         field: param,
-        collection: "cassa@gmail.com/vitalparameters", //modificare
+        collection: collezione,
       };
 
       if (param === "bp") {
         data = {
           field: "systolic",
           field2: "diastolic",
-          collection: "cassa@gmail.com/vitalparameters", //modificare
+          collection: collezione,
         };
       }
 
