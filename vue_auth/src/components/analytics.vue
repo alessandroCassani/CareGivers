@@ -35,6 +35,7 @@ export default {
     this.client = this.$store.state.selectedItem;
 
     if (!this.isPatient()) {
+      this.getAlerts(sessionStorage.getItem("email_paziente"));
       this.client.subscribe(this.topicPV);
       this.client.on("message", (topic, message) => {
         const payload = message.toString(); // Convert payload to string
@@ -47,6 +48,7 @@ export default {
 
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
+      this.getAlerts(sessionStorage.getItem("email"));
       this.createChart();
       this.fetchData("HR"); // Fetch initial data
       this.fetchData("SpO2");
@@ -75,6 +77,22 @@ export default {
 
     isPatient() {
       return this.ruolo === "paziente";
+    },
+
+    async getAlerts(indirizzo) {
+      let data = {
+        email: indirizzo,
+      };
+      await axios.post("http://localhost:5005/getAlerts", data).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+          localStorage.setItem("fcth", res.data.fc);
+          localStorage.setItem("spO2th", res.data.spO2);
+          localStorage.setItem("systh", res.data.systolic);
+          localStorage.setItem("diasth", res.data.diastolic);
+          console.log("settaggio alert corretto");
+        }
+      });
     },
 
     async fetchData(param) {
@@ -142,6 +160,12 @@ export default {
 
       // Create new arrays for labels and data points
       if (newData.HR != null) {
+        if (
+          localStorage.getItem("fcth") != null &&
+          newData.HR > localStorage.getItem("fcth")
+        ) {
+          alert("ALERT FREQUENZA CARDIACA");
+        }
         const newLabelsFC = [...this.fc.data.labels, timeLabel];
         const newDataPointsFC = [...this.fc.data.datasets[0].data, newData.HR];
 
@@ -160,6 +184,12 @@ export default {
         this.updateChart();
       }
       if (newData.SpO2 != null) {
+        if (
+          localStorage.getItem("spO2th") != null &&
+          newData.SpO2 < localStorage.getItem("SpO2th")
+        ) {
+          alert("ALERT SATURAZIONE");
+        }
         const newLabelsSpO2 = [...this.spO2.data.labels, timeLabel];
         const newDataPointsSpo2 = [
           ...this.spO2.data.datasets[0].data,
@@ -181,6 +211,19 @@ export default {
         this.updateChart();
       }
       if (newData.systolic != null) {
+        if (
+          localStorage.getItem("systh") != null &&
+          newData.systolic > localStorage.getItem("systh")
+        ) {
+          alert("ALERT PRESSIONE SISTOLICA");
+        }
+        if (
+          localStorage.getItem("diasth") != null &&
+          newData.diastolic > localStorage.getItem("diasth")
+        ) {
+          alert("ALERT PRESSIONE DIASTOLICA");
+        }
+
         const newLabelsBP = [...this.bp.data.labels, timeLabel];
         const newDataPointsBPsys = [
           ...this.bp.data.datasets[0].data,

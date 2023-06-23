@@ -34,7 +34,7 @@
       <input type="number" v-model="systolic" />&nbsp;
       <label>diastolica:&nbsp;</label>&nbsp;
       <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
-      <input type="submit" @submit.prevent="insertAlerts()" value="AGGIUNGI" />
+      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
     </div>
 
     <div class="inputPaziente" v-if="isPatient()">

@@ -81,6 +81,23 @@ const database = () => {
       }
     })
 
+    app.post('/getAlerts', async(req,res) => {
+      console.log('dentro get ALERTSSSSSSSS')
+      console.log(req.body)
+      try {
+        await client.connect();
+        const database = client.db("alerts");
+        const collection = database.collection('alerts')
+
+        const result = await collection.findOne({patient: req.body.email})
+        console.log(result)
+        res.status(200).json(result)
+        
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
     app.post('/insertAlerts', async(req,res) => {
       console.log(req.body)
       try{
