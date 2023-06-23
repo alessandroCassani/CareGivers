@@ -126,7 +126,6 @@ export default {
       editTask: null,
       tasks: [],
       terapia: [],
-      email_paziente: localStorage.getItem("email_paziente"),
       topicDrug: "cassa@gmail.com/drug", //modificare
       topicTask: "cassa@gmail.com/task", //modificare
       topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
@@ -229,7 +228,7 @@ export default {
     async deleteTask(index) {
       await axios
         .post("http://localhost:5002/deleteTask", {
-          email: this.email_paziente,
+          email: sessionStorage.getItem("email_paziente"),
           evento: this.tasks[index].evento,
         })
         .then(
@@ -263,7 +262,7 @@ export default {
           evento: this.task,
           data: this.reminderDate,
           orario: this.reminderTime,
-          email_paziente: this.email_paziente,
+          email_paziente: sessionStorage.getItem("email_paziente"),
         };
         console.log(memo);
 
@@ -291,14 +290,15 @@ export default {
     async setup() {
       console.log(localStorage);
       //const topic = sessionStorage.getItem("email") + "/memo";
-      this.getMemos();
-      this.getFarmaci();
+
       this.client = this.$store.state.selectedItem;
       //console.log(this.client)
       console.log(this.$store.state.selectedItem);
       console.log(this.client);
 
       if (this.isPatient()) {
+        this.getMemos(sessionStorage.getItem("email"));
+        this.getFarmaci(sessionStorage.getItem("email"));
         if (this.checkFlag()) {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
@@ -349,6 +349,8 @@ export default {
 
         this.setFlag();
       } else {
+        this.getMemos(sessionStorage.getItem("email_paziente"));
+        this.getFarmaci(sessionStorage.getItem("email_paziente"));
         if (this.checkFlag()) {
           this.getEmailPaziente();
           this.setAlertsFarmaci();
@@ -361,7 +363,6 @@ export default {
     },
 
     getEmailPaziente() {
-      //console.log(localStorage);
       const data = {
         email: sessionStorage.getItem("email"),
       };
@@ -369,7 +370,6 @@ export default {
         console.log(res.data);
         if (res.status === 200 && res.data != null) {
           sessionStorage.setItem("email_paziente", res.data.patient);
-          console.log(sessionStorage);
         }
       });
     },
@@ -465,7 +465,7 @@ export default {
           farmaco: this.farmaco,
           orario: this.farmacOrario,
           dosaggio: this.dosaggio,
-          email_paziente: this.email_paziente,
+          email_paziente: sessionStorage.getItem("email_paziente"),
         };
 
         await axios
@@ -490,7 +490,7 @@ export default {
     async deleteDrug(index) {
       await axios
         .post("http://localhost:5002/deleteDrug", {
-          email: this.email_paziente,
+          email: sessionStorage.getItem("email_paziente"),
           farmaco: this.terapia[index].farmaco,
         })
         .then(
@@ -510,8 +510,8 @@ export default {
         );
     },
 
-    async getMemos() {
-      const email = { email: null };
+    async getMemos(email_) {
+      const email = { email: email_ };
       await axios
         .get("http://localhost:5002/getMemos", email)
         .then((response) => {
@@ -528,8 +528,8 @@ export default {
         });
     },
 
-    async getFarmaci() {
-      const email = { email: this.email_paziente };
+    async getFarmaci(email_) {
+      const email = { email: email_ };
 
       await axios
         .get("http://localhost:5002/getTherapy", email)
