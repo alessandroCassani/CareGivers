@@ -34,7 +34,7 @@
       <input type="number" v-model="systolic" />&nbsp;
       <label>diastolica:&nbsp;</label>&nbsp;
       <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
-      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
+      <input type="submit" @submit.prevent="insertAlerts()" value="AGGIUNGI" />
     </div>
 
     <div class="inputPaziente" v-if="isPatient()">
@@ -75,9 +75,13 @@ export default {
 
   created() {
     console.log("CREATED REFERENTI");
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
     if (localStorage.getItem("token") === null) {
       this.$router.push("/login");
     }
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
   },
 
   mounted() {
@@ -85,6 +89,10 @@ export default {
   },
 
   methods: {
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
+    },
     isPatient() {
       return this.ruolo === "paziente";
     },

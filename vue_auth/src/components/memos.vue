@@ -317,6 +317,7 @@ export default {
               this.setAlertDrugFromMqtt(message);
             }
             if (topic === this.topicAlert) {
+              console.log("alert TRIGGERED");
               const payload = message.toString(); // Convert payload to string
               const data = JSON.parse(payload);
               localStorage.setItem("fcth", data.fcth);

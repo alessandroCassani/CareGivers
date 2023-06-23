@@ -15,18 +15,35 @@ export default {
       brokerUrl: "mqtt://localhost:1234",
       clientMQTT: null,
       flag: "",
+      isInitialized: false,
     };
   },
 
-  async created() {
-    if (this.checkFlag() === true) {
-      this.setFlag();
-      await this.connectMQTT();
-      await this.updateVuexConnection();
-      //console.log(this.$store.state.selectedItem);
+  created() {
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
+
+  async mounted() {
+    if (!this.isInitialized) {
+      console.log(this.checkFlag());
+      if (this.checkFlag()) {
+        this.setFlag();
+        console.log(this.checkFlag());
+        await this.connectMQTT();
+        await this.updateVuexConnection();
+        //console.log(this.$store.state.selectedItem);
+      }
+      this.isInitialized = true;
     }
   },
   methods: {
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
+    },
     connectMQTT() {
       return new Promise((resolve) => {
         //connessione resa sincrona per avere cascata in seguito iscrizioni
@@ -49,7 +66,7 @@ export default {
     },
 
     checkFlag() {
-      return sessionStorage.getItem("flagBar") == null;
+      return sessionStorage.getItem("flagBar") === null;
     },
   },
 };
