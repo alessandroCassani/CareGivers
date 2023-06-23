@@ -69,6 +69,8 @@ export default {
       spO2: "",
       systolic: "",
       diastolic: "",
+      client: null,
+      topicAlert: sessionStorage.getItem("email") + "/insAlert",
     };
   },
   computed: {
@@ -86,10 +88,35 @@ export default {
   },
 
   mounted() {
-    console.log("MOUNTED " + sessionStorage.getItem("ruolo"));
+    this.client = this.$store.state.selectedItem;
+
+    if (this.isPatient()) {
+      if (this.checkFlag()) {
+        this.client.subscribe(this.topicAlert);
+        this.client.on("message", (topic, message) => {
+          if (topic === this.topicAlert) {
+            alert("nuove soglie inserite");
+            const payload = message.toString(); // Convert payload to string
+            const data = JSON.parse(payload);
+            localStorage.setItem("fcth", data.fcth);
+            localStorage.setItem("spO2th", data.spO2th);
+            localStorage.setItem("systh", data.systh);
+            localStorage.setItem("diasth", data.diasth);
+            console.log(localStorage);
+          }
+        });
+      }
+    }
   },
 
   methods: {
+    setFlag() {
+      sessionStorage.setItem("flagref", 1);
+    },
+
+    checkFlag() {
+      return sessionStorage.getItem("flagref") == null;
+    },
     createOtp() {
       const length = 5;
       let otp = "";
@@ -145,7 +172,7 @@ export default {
     async insertAlerts() {
       const data = {
         //email: localStorage.getItem('email_paziente'),
-        email: "cassa@gmail.com",
+        email: sessionStorage.getItem("email_paziente"),
         fc: this.fc,
         spO2: this.spO2,
         systolic: this.systolic,
@@ -160,6 +187,14 @@ export default {
             localStorage.setItem("spO2th", this.spO2);
             localStorage.setItem("systh", this.systolic);
             localStorage.setItem("diasth", this.diastolic);
+
+            const alert = {
+              fcth: this.fc,
+              spO2th: this.spO2,
+              systh: this.systolic,
+              diasth: this.diastolic,
+            };
+            this.client.publish(this.topicAlert, JSON.stringify(alert));
           } else {
             alert("errore in fase di inserimento");
           }
