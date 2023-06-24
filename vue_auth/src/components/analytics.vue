@@ -21,7 +21,7 @@ export default {
       spO2: spO2,
       bp: bp,
       client: null,
-      topicPV: "cassa@gmail.com/pv",
+      topicPV: sessionStorage.getItem("email_paziente") + "/pv",
       ruolo: sessionStorage.getItem("ruolo"),
       count: 0,
       chartInstanceFC: null,

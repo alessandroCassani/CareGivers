@@ -154,7 +154,6 @@ export default {
 
     async insertAlerts() {
       const data = {
-        //email: localStorage.getItem('email_paziente'),
         email: sessionStorage.getItem("email_paziente"),
         fc: this.fc,
         spO2: this.spO2,

@@ -126,11 +126,11 @@ export default {
       editTask: null,
       tasks: [],
       terapia: [],
-      topicDrug: "cassa@gmail.com/drug", //modificare
-      topicTask: "cassa@gmail.com/task", //modificare
-      topicDeleteDrug: "cassa@gmail.com/deleteDrug", //modificare
-      topicDeleteTask: "cassa@gmail.com/deleteTask", //modificare
-      topicPV: "cassa@gmail.com/pv", //modificare
+      topicDrug: sessionStorage.getItem("email") + "/drug",
+      topicTask: sessionStorage.getItem("email") + "/task",
+      topicDeleteDrug: sessionStorage.getItem("email") + "/deleteDrug",
+      topicDeleteTask: sessionStorage.getItem("email") + "/deleteTask",
+      topicPV: sessionStorage.getItem("email_paziente") + "/pv",
       topicAlert: sessionStorage.getItem("email") + "/insAlert",
       client: null,
     };
@@ -289,13 +289,7 @@ export default {
     },
 
     async setup() {
-      //const topic = sessionStorage.getItem("email") + "/memo";
-
       this.client = this.$store.state.selectedItem;
-      //console.log(this.client)
-      //console.log(this.$store.state.selectedItem);
-      //console.log(this.client);
-
       if (this.isPatient()) {
         this.getMemos(sessionStorage.getItem("email"));
         this.getFarmaci(sessionStorage.getItem("email"));
@@ -303,6 +297,7 @@ export default {
           // checkFlag() permette di far eseguire la parte dell'if solo una volta all'inizio
           this.setAlertsFarmaci();
           this.setAlertsTasks();
+
           //iscrizioni
           this.client.subscribe(this.topicAlert);
           this.client.subscribe(this.topicTask);
@@ -324,7 +319,6 @@ export default {
               localStorage.setItem("systh", data.systh);
               localStorage.setItem("diasth", data.diasth);
               alert("nuove soglie inserite");
-              //console.log(localStorage);
             }
             if (topic === this.topicTask) {
               console.log("task mqtt call");
@@ -441,16 +435,13 @@ export default {
         dosaggio: dosaggio,
         orario: orario,
       };
-      //console.log(medicinale + "OOOOOOOO");
 
       const [hours, minutes] = data.orario.split(":");
       const dateObj = new Date();
       dateObj.setHours(hours);
       dateObj.setMinutes(minutes);
       let currentTime = new Date();
-      //console.log(currentTime.getTime() + " CURRENTIME");
       let timeDiff = dateObj.getTime() - currentTime.getTime();
-      //console.log(timeDiff);
       console.log(medicinale);
 
       this.terapia.push(medicinale);
