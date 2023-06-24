@@ -117,14 +117,11 @@ export default {
           console.log(res.data);
           if (res.status === 200) {
             const newData = res.data;
-            //console.log("updateChartData");
             this.updateChartData(newData);
             if (!this.isDataFetched) {
-              //  console.log("createChart");
               this.createChart(); // Create the chart after the data has been fetched
               this.isDataFetched = true;
             } else {
-              // console.log("updateChart");
               this.updateChart();
             }
 
