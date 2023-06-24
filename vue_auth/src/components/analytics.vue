@@ -53,12 +53,15 @@ export default {
       this.fetchData("HR"); // Fetch initial data
       this.fetchData("SpO2");
       this.fetchData("bp");
+      this.extractObjectFromStorage();
       //console.log("mounted");
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
         this.fetchData("SpO2");
         this.fetchData("bp");
-      }, 10000);
+
+        this.extractObjectFromStorage();
+      }, 30000);
     }
   },
 
@@ -70,6 +73,21 @@ export default {
   },
 
   methods: {
+    extractObjectFromStorage() {
+      console.log("DENTRO");
+      let fc = JSON.parse(sessionStorage.getItem("fcValue"));
+      let spO2 = JSON.parse(sessionStorage.getItem("spO2Value"));
+      let sys = JSON.parse(sessionStorage.getItem("sysValue"));
+      let dias = JSON.parse(sessionStorage.getItem("diasValue"));
+      let object = {
+        fc: fc,
+        spO2: spO2,
+        systolic: sys,
+        diastolic: dias,
+      };
+      console.log(object);
+    },
+
     handleBeforeUnload() {
       event.preventDefault();
       event.returnValue = "";
@@ -79,11 +97,11 @@ export default {
       return this.ruolo === "paziente";
     },
 
-    async getAlerts(indirizzo) {
+    getAlerts(indirizzo) {
       let data = {
         email: indirizzo,
       };
-      await axios.post("http://localhost:5005/getAlerts", data).then((res) => {
+      axios.post("http://localhost:5005/getAlerts", data).then((res) => {
         if (res.status === 200) {
           console.log(res.data);
           localStorage.setItem("fcth", res.data.fc);
@@ -124,7 +142,6 @@ export default {
             } else {
               this.updateChart();
             }
-
             this.client.publish(this.topicPV, JSON.stringify(newData));
           }
         });
@@ -165,6 +182,9 @@ export default {
         ) {
           alert("ALERT FREQUENZA CARDIACA");
         }
+
+        sessionStorage.setItem("fcValue", JSON.stringify(newData.HR));
+
         const newLabelsFC = [...this.fc.data.labels, timeLabel];
         const newDataPointsFC = [...this.fc.data.datasets[0].data, newData.HR];
 
@@ -189,6 +209,9 @@ export default {
         ) {
           alert("ALERT SATURAZIONE");
         }
+
+        sessionStorage.setItem("spO2Value", JSON.stringify(newData.SpO2));
+
         const newLabelsSpO2 = [...this.spO2.data.labels, timeLabel];
         const newDataPointsSpo2 = [
           ...this.spO2.data.datasets[0].data,
@@ -222,6 +245,9 @@ export default {
         ) {
           alert("ALERT PRESSIONE DIASTOLICA");
         }
+
+        sessionStorage.setItem("sysValue", JSON.stringify(newData.systolic));
+        sessionStorage.setItem("diasValue", JSON.stringify(newData.diastolic));
 
         const newLabelsBP = [...this.bp.data.labels, timeLabel];
         const newDataPointsBPsys = [
