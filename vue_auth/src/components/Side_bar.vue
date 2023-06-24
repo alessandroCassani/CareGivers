@@ -2,6 +2,7 @@
 import { collapsed, toggleSidebar, sidebarWidth } from "./state";
 import SidebarLink from "./SidebarLink.vue";
 import mqtt from "mqtt";
+import { ref } from "vue";
 
 export default {
   props: {},
@@ -15,7 +16,7 @@ export default {
       brokerUrl: "mqtt://localhost:1234",
       clientMQTT: null,
       flag: "",
-      isInitialized: false,
+      isInitialized: ref(false),
     };
   },
 
@@ -27,16 +28,13 @@ export default {
   },
 
   async mounted() {
-    if (!this.isInitialized) {
+    console.log(!this.checkFlag());
+    if (!this.checkFlag()) {
+      this.setFlag();
       console.log(this.checkFlag());
-      if (this.checkFlag()) {
-        this.setFlag();
-        console.log(this.checkFlag());
-        await this.connectMQTT();
-        await this.updateVuexConnection();
-        //console.log(this.$store.state.selectedItem);
-      }
-      this.isInitialized = true;
+      await this.connectMQTT();
+      await this.updateVuexConnection();
+      //console.log(this.$store.state.selectedItem);
     }
   },
   methods: {
@@ -62,11 +60,11 @@ export default {
       });
     },
     setFlag() {
-      sessionStorage.setItem("flagBar", 1);
+      sessionStorage.setItem("flagBar", "1");
     },
 
     checkFlag() {
-      return sessionStorage.getItem("flagBar") === null;
+      return sessionStorage.getItem("flagBar") === "1";
     },
   },
 };

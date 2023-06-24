@@ -46,13 +46,10 @@
 </template>
 
 <script>
-import Side_bar from "@/components/Side_bar.vue";
-import sidebarWidth from "@/components/state";
 import axios from "axios";
 
 export default {
   name: "referenti",
-  components: { Side_bar },
 
   data() {
     return {
@@ -64,7 +61,6 @@ export default {
       thirdOtp: "",
       fourthOtp: "",
       fifthOtp: "",
-      sidebarWidth,
       fc: "",
       spO2: "",
       systolic: "",
