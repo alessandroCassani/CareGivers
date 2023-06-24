@@ -289,13 +289,12 @@ export default {
     },
 
     async setup() {
-      console.log(localStorage);
       //const topic = sessionStorage.getItem("email") + "/memo";
 
       this.client = this.$store.state.selectedItem;
       //console.log(this.client)
-      console.log(this.$store.state.selectedItem);
-      console.log(this.client);
+      //console.log(this.$store.state.selectedItem);
+      //console.log(this.client);
 
       if (this.isPatient()) {
         this.getMemos(sessionStorage.getItem("email"));

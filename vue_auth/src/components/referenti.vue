@@ -66,6 +66,7 @@ export default {
       systolic: "",
       diastolic: "",
       client: null,
+      topicAlert: sessionStorage.getItem("email_paziente") + "/insAlert",
     };
   },
 
@@ -175,6 +176,7 @@ export default {
               systh: this.systolic,
               diasth: this.diastolic,
             };
+            console.log(this.client);
             this.client.publish(this.topicAlert, JSON.stringify(alerts));
             alert("soglie inserite correttamente");
           } else {
