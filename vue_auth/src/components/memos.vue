@@ -130,11 +130,8 @@ export default {
       topicTask: sessionStorage.getItem("email") + "/task",
       topicDeleteDrug: sessionStorage.getItem("email") + "/deleteDrug",
       topicDeleteTask: sessionStorage.getItem("email") + "/deleteTask",
-      topicPV: sessionStorage.getItem("email_paziente") + "/pv",
       topicAlert: sessionStorage.getItem("email") + "/insAlert",
       client: null,
-      topicUrgentAlert:
-        sessionStorage.getItem("email_paziente") + "/urgentAlert",
     };
   },
   created() {
@@ -354,19 +351,23 @@ export default {
           });
           this.$store.dispatch("updateSelectedItem", this.client);
         }
-
         this.setFlag();
       } else {
+        await this.getEmailPaziente();
         this.getMemos(sessionStorage.getItem("email_paziente"));
         this.getFarmaci(sessionStorage.getItem("email_paziente"));
+
         if (this.checkFlag()) {
-          this.getEmailPaziente();
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.setFlag();
+          console.log(sessionStorage.getItem("email_paziente"));
+          const topicPV = sessionStorage.getItem("email_paziente") + "/pv";
+          const topicUrgentAlert =
+            sessionStorage.getItem("email_paziente") + "/urgentAlert";
 
-          this.client.subscribe(this.topicPV);
-          this.client.subscribe(this.topicUrgentAlert);
+          this.client.subscribe(topicPV);
+          this.client.subscribe(topicUrgentAlert);
           this.client.on("message", (topic, message) => {
             if (topic === this.topicUrgentAlert) {
               console.log("alert urgente");
@@ -380,14 +381,17 @@ export default {
     },
 
     getEmailPaziente() {
-      const data = {
-        email: sessionStorage.getItem("email"),
-      };
-      axios.post("http://localhost:5002/getEmailPatient", data).then((res) => {
-        console.log(res.data);
-        if (res.status === 200 && res.data != null) {
-          sessionStorage.setItem("email_paziente", res.data.patient);
-        }
+      return new Promise((resolve) => {
+        const data = {
+          email: sessionStorage.getItem("email"),
+        };
+        axios
+          .post("http://localhost:5002/getEmailPatient", data)
+          .then((res) => {
+            console.log(res.data.patient);
+            sessionStorage.setItem("email_paziente", res.data.patient);
+            resolve();
+          });
       });
     },
 
