@@ -94,7 +94,7 @@ export default {
     <br /><br /><br />
     <SidebarLink to="/analytics">analytics</SidebarLink>
     <br />
-    <SidebarLink to="/">alert</SidebarLink>
+    <SidebarLink to="/alert">alert</SidebarLink>
     <br />
     <SidebarLink to="/memos">promemoria</SidebarLink>
     <br />

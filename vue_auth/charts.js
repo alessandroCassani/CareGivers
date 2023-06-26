@@ -133,6 +133,21 @@ const database = () => {
     } catch (error) {
       console.log(error)
     }
+  }),
+
+
+  app.post('/getLastValue', async (req,res) => {
+    console.log(req.body)
+    try {
+      await client.connect()
+      const database = client.db('alerts');
+      const collection = database.collection(req.body.collection)
+      const result = await collection.findOne({}, { sort: { _id: -1 } })
+      res.json(result)
+    } catch (error) {
+      console.log(error)
+      res.status(500)
+    }
   })
 
     app.listen(port,(err) => {
