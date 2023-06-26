@@ -71,10 +71,6 @@ app.post('/signup', express.json(), async (req, res) => {
       message: "ERROR"
       })
     }
-
-   
-   
-      
 }) ;
 
 

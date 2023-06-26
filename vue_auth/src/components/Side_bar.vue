@@ -2,6 +2,7 @@
 import { collapsed, toggleSidebar, sidebarWidth } from "./state";
 import SidebarLink from "./SidebarLink.vue";
 import mqtt from "mqtt";
+import { ref } from "vue";
 
 export default {
   props: {},
@@ -15,18 +16,32 @@ export default {
       brokerUrl: "mqtt://localhost:1234",
       clientMQTT: null,
       flag: "",
+      isInitialized: ref(false),
     };
   },
 
-  async created() {
-    if (this.checkFlag() === true) {
+  created() {
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
+
+  async mounted() {
+    console.log(!this.checkFlag());
+    if (!this.checkFlag()) {
       this.setFlag();
+      console.log(this.checkFlag());
       await this.connectMQTT();
       await this.updateVuexConnection();
       //console.log(this.$store.state.selectedItem);
     }
   },
   methods: {
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
+    },
     connectMQTT() {
       return new Promise((resolve) => {
         //connessione resa sincrona per avere cascata in seguito iscrizioni
@@ -45,11 +60,11 @@ export default {
       });
     },
     setFlag() {
-      sessionStorage.setItem("flagBar", 1);
+      sessionStorage.setItem("flagBar", "1");
     },
 
     checkFlag() {
-      return sessionStorage.getItem("flagBar") == null;
+      return sessionStorage.getItem("flagBar") === "1";
     },
   },
 };
@@ -73,11 +88,11 @@ export default {
           <div>S</div>
         </div>
       </span>
-      <span v-else>&nbsp;careGivers</span>
+      <span v-else>&nbsp;Menù</span>
     </h1>
 
     <br /><br /><br />
-    <SidebarLink to="/">analytics</SidebarLink>
+    <SidebarLink to="/analytics">analytics</SidebarLink>
     <br />
     <SidebarLink to="/">alert</SidebarLink>
     <br />
@@ -98,7 +113,7 @@ export default {
 
 <style>
 :root {
-  --sidebar-bc-color: #3d2022;
+  --sidebar-bc-color: #9e331d;
   --sidebar-item-hover: #c79598;
   --sidebar-item-active: #276749;
 }
@@ -108,7 +123,6 @@ export default {
 .sidebar {
   color: white;
   background-color: var(--sidebar-bc-color);
-
   float: left;
   position: fixed;
   z-index: 1;
@@ -117,7 +131,6 @@ export default {
   bottom: 0;
   padding: 0.4em;
   padding-right: 70px;
-
   transition: 0.3s ease;
   display: flex;
   text-align: center;

@@ -64,19 +64,18 @@
     </div>
 
     <div class="form group">
-      <label>ruolo:</label>
-      <input
-        type="text"
-        v-model="ruolo"
-        class="form-control"
-        placeholder="ruolo"
-        autocomplete="on"
-      />
-      <br />
+      <label>ruolo:</label><br />
+      <select id="ruolo" v-model="ruolo" style="width: 180px">
+        <option value="paziente">paziente</option>
+        <option value="caregiver" selected>caregiver</option>
+      </select>
     </div>
 
     <input type="submit" name="" value="REGISTER" />
-    <p id="text">hai un account? <RouterLink to="/login">login</RouterLink></p>
+    <p id="text">
+      hai un account?
+      <RouterLink to="/login" style="color: black">login</RouterLink>
+    </p>
   </form>
 </template>
 
@@ -133,31 +132,27 @@ html {
   min-height: 100vh;
   width: 100%;
   font-family: sans-serif;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(0, 115, 255),
-    rgba(255, 255, 255, 0.86)
-  );
 }
 
 .box {
-  width: 400px;
+  font-size: large;
+  font-style: normal;
+  width: 440px;
   padding: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: black;
+  background: #9e331d;
   text-align: center;
   border-radius: 10px;
-  opacity: 0.5;
+  opacity: 0.8;
   border-color: white;
 }
 
 .box h1 {
-  color: white;
+  color: black;
   text-transform: uppercase;
-  font-style: italic;
   font-weight: 500;
 }
 
@@ -187,7 +182,8 @@ html {
 .box input[type="email"]:focus,
 .box input[type="password"]:focus,
 .box input[type="text"]:focus {
-  width: 280px;
+  width: 230px;
+  background-color: #cdc7c9;
 }
 
 .box input[type="submit"] {
@@ -207,7 +203,7 @@ html {
 }
 
 .box input[type="submit"]:hover {
-  background: #3498db;
+  background: #c79598;
 }
 
 #text {

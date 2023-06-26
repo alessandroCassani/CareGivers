@@ -3,7 +3,7 @@
   <div :style="{ 'margin-left': sidebarWidth }"></div>
 
   <body>
-    <div class="inputReferente" v-if="!isPatient">
+    <div class="inputReferente" v-if="!isPatient()">
       <h3>Inserire email paziente:</h3>
       <input
         type="email"
@@ -24,7 +24,20 @@
       <input type="submit" @click="sendOtp()" value="CONFERMA" />
     </div>
 
-    <div class="inputPaziente" v-if="isPatient">
+    <div class="threeshold" v-if="!isPatient()">
+      <div><h3 style="color: red">ALERTS</h3></div>
+      <label>FC:&nbsp;</label>
+      <input type="number" v-model="fc" />&nbsp;&nbsp;
+      <label>spO2:&nbsp;</label>&nbsp;
+      <input type="number" v-model="spO2" /> &nbsp;
+      <label>sistolica:&nbsp;</label>&nbsp;
+      <input type="number" v-model="systolic" />&nbsp;
+      <label>diastolica:&nbsp;</label>&nbsp;
+      <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
+      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
+    </div>
+
+    <div class="inputPaziente" v-if="isPatient()">
       <h1>Genera OTP:</h1>
       <br />
       <input type="submit" @click="createOtp()" value="GENERA" />
@@ -33,13 +46,10 @@
 </template>
 
 <script>
-import Side_bar from "@/components/Side_bar.vue";
-import sidebarWidth from "@/components/state";
 import axios from "axios";
 
 export default {
   name: "referenti",
-  components: { Side_bar },
 
   data() {
     return {
@@ -51,28 +61,45 @@ export default {
       thirdOtp: "",
       fourthOtp: "",
       fifthOtp: "",
-      sidebarWidth,
+      fc: "",
+      spO2: "",
+      systolic: "",
+      diastolic: "",
+      client: null,
+      topicAlert: sessionStorage.getItem("email_paziente") + "/insAlert",
     };
-  },
-  computed: {
-    isPatient() {
-      console.log(sessionStorage.getItem("ruolo") + " COMPUTED");
-      return this.ruolo === "paziente";
-    },
   },
 
   created() {
     console.log("CREATED REFERENTI");
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
     if (localStorage.getItem("token") === null) {
       this.$router.push("/login");
     }
   },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
 
   mounted() {
-    console.log("MOUNTED " + sessionStorage.getItem("ruolo"));
+    this.client = this.$store.state.selectedItem;
   },
 
   methods: {
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
+    },
+    isPatient() {
+      return this.ruolo === "paziente";
+    },
+    setFlag() {
+      sessionStorage.setItem("flagref", 1);
+    },
+
+    checkFlag() {
+      return sessionStorage.getItem("flagref") == null;
+    },
     createOtp() {
       const length = 5;
       let otp = "";
@@ -121,6 +148,43 @@ export default {
         },
         (err) => {
           alert(err + " errore! prego riprovare");
+        }
+      );
+    },
+
+    async insertAlerts() {
+      const data = {
+        email: sessionStorage.getItem("email_paziente"),
+        fc: this.fc,
+        spO2: this.spO2,
+        systolic: this.systolic,
+        diastolic: this.diastolic,
+      };
+
+      await axios.post("http://localhost:5005/insertAlerts", data).then(
+        (res) => {
+          if (res.status === 200) {
+            localStorage.setItem("fcth", this.fc);
+            localStorage.setItem("spO2th", this.spO2);
+            localStorage.setItem("systh", this.systolic);
+            localStorage.setItem("diasth", this.diastolic);
+
+            const alerts = {
+              fcth: this.fc,
+              spO2th: this.spO2,
+              systh: this.systolic,
+              diasth: this.diastolic,
+            };
+            console.log(this.client);
+            this.client.publish(this.topicAlert, JSON.stringify(alerts));
+            alert("soglie inserite correttamente");
+          } else {
+            alert("errore in fase di inserimento");
+          }
+        },
+        (err) => {
+          console.log(err);
+          alert("errore! prego riprovare");
         }
       );
     },
@@ -218,5 +282,10 @@ body {
 
 .inputPaziente input[type="submit"]:hover {
   background: #c79598;
+}
+
+.threeshold {
+  text-align: center;
+  margin-top: 60px;
 }
 </style>

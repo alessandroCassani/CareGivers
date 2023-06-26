@@ -12,7 +12,8 @@
       />
       <input type="submit" name="" value="LOGIN" />
       <p id="text">
-        Non hai un account? <RouterLink to="/signup">Registrati</RouterLink>
+        Non hai un account?
+        <RouterLink to="/signup" style="color: black">Registrati</RouterLink>
       </p>
     </form>
   </body>
@@ -64,31 +65,26 @@ html {
   min-height: 100vh;
   width: 100%;
   font-family: sans-serif;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(0, 115, 255),
-    rgba(255, 255, 255, 0.86)
-  );
 }
 
 .box h1 {
-  color: white;
+  color: black;
   text-transform: uppercase;
-  font-style: italic;
   font-weight: 500;
 }
 
 .box {
-  width: 400px;
-  padding: 40px;
+  font-size: large;
+  width: 425px;
+  padding: 50px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: black;
+  background: #9e331d;
   text-align: center;
   border-radius: 10px;
-  opacity: 0.5;
+  opacity: 0.8;
   border-color: white;
 }
 
@@ -111,7 +107,8 @@ html {
 
 .box input[type="email"]:focus,
 .box input[type="password"]:focus {
-  width: 280px;
+  width: 250px;
+  background: #cdc7c9;
 }
 
 .box input[type="submit"] {
@@ -131,7 +128,7 @@ html {
 }
 
 .box input[type="submit"]:hover {
-  background: #3498db;
+  background: #c79598;
 }
 
 #text {

@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './routes';
 import { createStore } from 'vuex';
+import CanvasJSChart from '@canvasjs/vue-charts';
 
 let initialState = {
   selectedItem: null,
@@ -30,6 +31,7 @@ const store = createStore({
 });
 
 const app = createApp(App);
+app.use(CanvasJSChart);
 app.use(router);
 app.use(store);
 
