@@ -361,7 +361,6 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.setFlag();
-          console.log(sessionStorage.getItem("email_paziente"));
           const topicPV = sessionStorage.getItem("email_paziente") + "/pv";
           const topicUrgentAlert =
             sessionStorage.getItem("email_paziente") + "/urgentAlert";
@@ -369,7 +368,7 @@ export default {
           this.client.subscribe(topicPV);
           this.client.subscribe(topicUrgentAlert);
           this.client.on("message", (topic, message) => {
-            if (topic === this.topicUrgentAlert) {
+            if (topic === topicUrgentAlert) {
               console.log("alert urgente");
               const payload = message.toString();
               alert("ATTENZIONE: " + payload);

@@ -66,7 +66,7 @@ export default {
             res.data.spO2 +
             " systolic = " +
             res.data.systolic +
-            " diastolic : " +
+            " diastolic = " +
             res.data.diastolic;
           this.client.publish(topic, stringMQTT);
           alert("alert inviato");
