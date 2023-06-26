@@ -50,10 +50,10 @@ export default {
     } else {
       this.getAlerts(sessionStorage.getItem("email"));
       this.createChart();
-      this.fetchData("HR"); // Fetch initial data
-      this.fetchData("SpO2");
-      this.fetchData("bp");
-      this.extractObjectFromStorage();
+      this.fetchData("HR")
+        .then(() => this.fetchData("SpO2"))
+        .then(() => this.fetchData("bp"))
+        .then(() => this.extractObjectFromStorage());
       //console.log("mounted");
       setInterval(() => {
         this.fetchData("HR"); //get data every 10 minutes
