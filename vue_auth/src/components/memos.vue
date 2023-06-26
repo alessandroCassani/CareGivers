@@ -133,6 +133,8 @@ export default {
       topicPV: sessionStorage.getItem("email_paziente") + "/pv",
       topicAlert: sessionStorage.getItem("email") + "/insAlert",
       client: null,
+      topicUrgentAlert:
+        sessionStorage.getItem("email_paziente") + "/urgentAlert",
     };
   },
   created() {
@@ -364,6 +366,15 @@ export default {
           this.setFlag();
 
           this.client.subscribe(this.topicPV);
+          this.client.subscribe(this.topicUrgentAlert);
+          this.client.on("message", (topic, message) => {
+            if (topic === this.topicUrgentAlert) {
+              console.log("alert urgente");
+              const payload = message.toString();
+              alert("ATTENZIONE: " + payload);
+            }
+          });
+          this.$store.dispatch("updateSelectedItem", this.client);
         }
       }
     },

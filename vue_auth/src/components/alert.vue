@@ -2,6 +2,7 @@
   <div>
     <button
       id="alert"
+      v-if="isPatient"
       style="
         background-color: red;
         border-radius: 5px;
@@ -29,25 +30,18 @@ export default {
     return {
       data: "",
       client: null,
-      topicUrgentAlert:
-        sessionStorage.getItem("email_paziente") + "/urgentAlert",
     };
   },
 
   mounted() {
     this.client = this.$store.state.selectedItem;
-    if (!this.isPatient) {
-      this.client.subscribe(this.topicUrgentAlert);
-    }
-  },
-
-  computed: {
-    isPatient() {
-      return this.ruolo === "paziente";
-    },
   },
 
   methods: {
+    isPatient() {
+      return this.ruolo === "paziente";
+    },
+
     sendEmergency() {
       const userInput = window.prompt("Cosa succede?");
       const topic = sessionStorage.getItem("email") + "/urgentAlert";
@@ -57,13 +51,13 @@ export default {
 
       axios.post("http://localhost:5005/getLastValue", data).then((res) => {
         if (res.status === 200) {
-          const result = {
-            fc: res.data.fc,
-            spO2: res.data.spO2,
-            systolic: res.data.systolic,
-            diastolic: res.data.diastolic,
-            issue: userInput,
-          };
+          //const result = {
+          //fc: res.data.fc,
+          //spO2: res.data.spO2,
+          //systolic: res.data.systolic,
+          //diastolic: res.data.diastolic,
+          //issue: userInput,
+          //};
           const stringMQTT =
             userInput +
             " FC = " +
@@ -75,7 +69,6 @@ export default {
             " diastolic : " +
             res.data.diastolic;
           this.client.publish(topic, stringMQTT);
-
           alert("alert inviato");
         }
       });
