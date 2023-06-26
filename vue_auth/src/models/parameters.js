@@ -9,7 +9,7 @@ const userSchema = new schema({
     movements: String,
     timestamp: {
         type: Date,
-        default: moment().defaultFormat('DD/MM/YYYY')
+        default: Date.now()
       },
 });
 

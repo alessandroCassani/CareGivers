@@ -89,7 +89,11 @@ export default {
       };
       console.log(object);
 
-      axios.post("http://localhost:5005/insertPv", object);
+      axios.post("http://localhost:5005/insertPv", object).then((res) => {
+        if (res.status === 200) {
+          console.log("parametri inseriti correttamente");
+        }
+      });
     },
 
     handleBeforeUnload() {
@@ -105,7 +109,7 @@ export default {
       let data = {
         email: indirizzo,
       };
-      axios.post("'http://localhost:5005/getAlerts'", data).then((res) => {
+      axios.post("http://localhost:5005/getAlerts", data).then((res) => {
         if (res.status === 200) {
           console.log(res.data);
           localStorage.setItem("fcth", res.data.fc);

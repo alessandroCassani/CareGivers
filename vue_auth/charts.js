@@ -113,19 +113,23 @@ const database = () => {
   })
 
 
-  axios.post('/insertPv', async (req,res) => {
+  app.post('/insertPv', async (req,res) => {
     console.log(req.body)
     try {
-      database()
+      const collezione= req.body.collection
+      await client.connect();
+        const database = client.db("alerts");
+        const collection = database.collection(collezione)
+    
       const parameter = new parameters({
          fc : req.body.fc,
          spO2: req.body.spO2,
          systolic: req.body.systolic,
-         diastolic: req.body.diastolic,
-         timestamp: re
+         diastolic: req.body.diastolic
      })
 
-
+     collection.insertOne(parameter)
+     res.status(200)
     } catch (error) {
       console.log(error)
     }
