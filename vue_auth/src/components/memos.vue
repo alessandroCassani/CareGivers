@@ -547,7 +547,6 @@ export default {
             };
             this.terapia.push(farmaco);
           }
-          console.log("getfarmaci");
         });
     },
   },
