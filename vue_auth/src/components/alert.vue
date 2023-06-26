@@ -1,29 +1,43 @@
 <template>
-  <Side_bar> </Side_bar>
+  <div>
+    <button
+      id="alert"
+      style="
+        background-color: red;
+        border-radius: 5px;
+        width: 200px;
+        height: 90px;
+        position: absolute;
+        top: 90px;
+        color: white;
+        font-size: 26px;
+      "
+    >
+      ALERT
+    </button>
+  </div>
 </template>
 
 <script>
-import Side_bar from "@/components/Side_bar.vue";
-import sidebarWidth from "@/components/state";
-
 export default {
   name: "alert",
-  components: { Side_bar },
 
   data() {
     return {
       data: "",
-      sidebarWidth,
     };
   },
 
   computed: {
     isPatient() {
-      console.log(sessionStorage.getItem("ruolo") + " COMPUTED");
       return this.ruolo === "paziente";
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.alert {
+  width: 100px;
+}
+</style>
