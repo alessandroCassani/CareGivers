@@ -112,6 +112,25 @@ const database = () => {
     }
   })
 
+
+  axios.post('/insertPv', async (req,res) => {
+    console.log(req.body)
+    try {
+      database()
+      const parameter = new parameters({
+         fc : req.body.fc,
+         spO2: req.body.spO2,
+         systolic: req.body.systolic,
+         diastolic: req.body.diastolic,
+         timestamp: re
+     })
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
     app.listen(port,(err) => {
       if(err)
           console.log(err);

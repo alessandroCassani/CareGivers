@@ -79,13 +79,17 @@ export default {
       let spO2 = JSON.parse(sessionStorage.getItem("spO2Value"));
       let sys = JSON.parse(sessionStorage.getItem("sysValue"));
       let dias = JSON.parse(sessionStorage.getItem("diasValue"));
+
       let object = {
         fc: fc,
         spO2: spO2,
         systolic: sys,
         diastolic: dias,
+        collection: sessionStorage.getItem("email") + "/vitalparameters",
       };
       console.log(object);
+
+      axios.post("http://localhost:5005/insertPv", object);
     },
 
     handleBeforeUnload() {
@@ -101,7 +105,7 @@ export default {
       let data = {
         email: indirizzo,
       };
-      axios.post("http://localhost:5005/getAlerts", data).then((res) => {
+      axios.post("'http://localhost:5005/getAlerts'", data).then((res) => {
         if (res.status === 200) {
           console.log(res.data);
           localStorage.setItem("fcth", res.data.fc);
