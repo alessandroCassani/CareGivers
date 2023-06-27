@@ -83,9 +83,9 @@ export default {
   },
 
   created() {
-    console.log("CREATED REFERENTI");
     window.addEventListener("beforeunload", this.handleBeforeUnload);
     if (localStorage.getItem("token") === null) {
+      alert("non autorizzato");
       this.$router.push("/login");
     }
   },

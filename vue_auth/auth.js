@@ -125,9 +125,8 @@ app.post('/login',   (req,res) =>{
       error: 'invalid credentials'
     })
   }
-
   
-  console.log('trovato')
+  //console.log('trovato')
   let token = jwt.sign({userID: User._id},'secretKey');
   return res.status(200).json({
     message: 'login avvenuto correttamente',
@@ -137,8 +136,6 @@ app.post('/login',   (req,res) =>{
   })
 });
 });
-
-
 
 
 app.listen(port,(err) => {

@@ -59,6 +59,16 @@ export default {
       buttonHover: false,
     };
   },
+  created() {
+    if (sessionStorage.getItem("token") === null) {
+      alert("non autorizzato");
+      this.$router.push("/login");
+    }
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
 
   mounted() {
     this.client = this.$store.state.selectedItem;
@@ -99,6 +109,11 @@ export default {
           alert("alert inviato");
         }
       });
+    },
+
+    handleBeforeUnload() {
+      event.preventDefault();
+      event.returnValue = "";
     },
 
     getMedia() {

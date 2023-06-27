@@ -42,7 +42,7 @@ export default {
           console.log(res.data);
           if (res.status === 200) {
             console.log(res.data.token);
-            localStorage.setItem("token", res.data.token);
+            sessionStorage.setItem("token", res.data.token);
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("ruolo", res.data.ruolo);
             this.$router.push("/memos");

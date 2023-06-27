@@ -1,14 +1,7 @@
 <template>
+  <Side_bar></Side_bar>
   <div class="container"></div>
-  <div
-    v-if="
-      shouldIncludeComponent &&
-      $route.name !== 'login' &&
-      $route.name !== 'signUp'
-    "
-  >
-    <Side_bar></Side_bar>
-  </div>
+  <div></div>
   <div>
     <RouterView></RouterView>
   </div>

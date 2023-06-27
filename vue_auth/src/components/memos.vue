@@ -120,6 +120,7 @@ export default {
       task: "",
       farmaco: "",
       farmacOrario: "",
+      isSideBarMounted: false,
       dosaggio: "",
       reminderTime: this.memo ? this.memo.reminderTime : "",
       reminderDate: this.memo ? this.memo.reminderDate : "",
@@ -135,6 +136,10 @@ export default {
     };
   },
   created() {
+    if (sessionStorage.getItem("token") === null) {
+      alert("non autorizzato");
+      this.$router.push("/login");
+    }
     window.addEventListener("beforeunload", this.handleBeforeUnload);
   },
   beforeUnmount() {
