@@ -197,13 +197,13 @@ html {
   padding: 8px 40px;
   outline: none;
   color: black;
-  border-radius: 20px;
+  border-radius: 12px;
   transition: o.25s;
   cursor: pointer;
 }
 
 .box input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 #text {

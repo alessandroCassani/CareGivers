@@ -4,7 +4,7 @@
       id="alert"
       v-if="isPatient"
       style="
-        background-color: red;
+        background-color: #9e331d;
         border-radius: 5px;
         width: 200px;
         height: 90px;
@@ -12,7 +12,10 @@
         color: white;
         font-size: 26px;
       "
-      @click="sendEmergency()"
+      :style="{ backgroundColor: buttonHover ? '#ff0000' : '#9e331d' }"
+      @click="sendEmergency"
+      @mouseenter="buttonHover = true"
+      @mouseleave="buttonHover = false"
     >
       ALERT
     </button>
@@ -53,6 +56,7 @@ export default {
       endDate: null,
       parametro: null,
       avg: "Inserisci le informazioni per calcolare la media dei parametri vitali relativa ai valori selezionati",
+      buttonHover: false,
     };
   },
 
@@ -137,6 +141,11 @@ export default {
 .alert {
   width: 100px;
 }
+
+.alert :hover {
+  background-color: red;
+}
+
 .layout {
   text-align: center;
 }
@@ -145,7 +154,7 @@ export default {
   text-align: center;
   border-radius: 10px;
   margin-top: 200px;
-  background: lightgray;
+  background: #c59c9f;
   height: 350px;
   width: 700px;
 }

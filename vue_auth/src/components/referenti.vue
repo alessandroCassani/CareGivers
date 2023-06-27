@@ -45,7 +45,11 @@
       />
     </div>
 
-    <div class="inputPaziente" v-if="isPatient()">
+    <div
+      class="inputPaziente"
+      v-if="isPatient()"
+      style="background-color: #c59c9f"
+    >
       <h1>Genera OTP:</h1>
       <br />
       <input type="submit" @click="createOtp()" value="GENERA" />
@@ -245,7 +249,7 @@ body {
 
 .inputReferente {
   text-align: center;
-  background-color: lightgray;
+  background-color: #c59c9f;
   border-radius: 10px;
   padding: 40px;
   width: 400px;
@@ -265,7 +269,7 @@ body {
 }
 
 .inputReferente input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 .inputPaziente {
@@ -289,7 +293,7 @@ body {
 }
 
 .inputPaziente input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 .threeshold {
