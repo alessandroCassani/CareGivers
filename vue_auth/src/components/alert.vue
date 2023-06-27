@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <button
       id="alert"
       v-if="isPatient"
@@ -8,8 +8,7 @@
         border-radius: 5px;
         width: 200px;
         height: 90px;
-        position: absolute;
-        top: 90px;
+        top: 70px;
         color: white;
         font-size: 26px;
       "
@@ -17,6 +16,22 @@
     >
       ALERT
     </button>
+    <div class="analitiche">
+      <div class="header">
+        <h1 style="padding-top: 20px">STATISTICHE</h1>
+        <hr style="width: 100%" color="black" />
+      </div>
+      <input type="date" v-model="startDate" />&nbsp;&nbsp;&nbsp;
+      <input type="date" v-model="endDate" />&nbsp;&nbsp;&nbsp;
+      <select id="dropdownMenu" v-model="parametro">
+        <option value="spO2">spO2</option>
+        <option value="fc">fc</option>
+        <option value="systolic">systolic</option>
+        <option value="diastolic">diastolic</option>
+      </select>
+      &nbsp;&nbsp;&nbsp;
+      <input type="button" value="CALCOLA" @click="getMedia()" />
+    </div>
   </div>
 </template>
 
@@ -30,6 +45,9 @@ export default {
     return {
       data: "",
       client: null,
+      startDate: null,
+      endDate: null,
+      parametro: null,
     };
   },
 
@@ -73,6 +91,36 @@ export default {
         }
       });
     },
+
+    getMedia() {
+      console.log(sessionStorage);
+      let collezione;
+      if (this.isPatient) {
+        collezione = sessionStorage.getItem("email") + "/vitalparameters";
+      } else {
+        collezione =
+          sessionStorage.getItem("email_paziente") + "/vitalparameters";
+      }
+
+      if (
+        this.startDate != null &&
+        this.endDate != null &&
+        this.parametro != null
+      ) {
+        const data = {
+          collection: collezione,
+          firstDate: this.startDate,
+          secondDate: this.endDate,
+          parametro: this.parametro,
+        };
+        console.log(data);
+        axios.post("http://localhost:5005/getMedia", data).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+          }
+        });
+      }
+    },
   },
 };
 </script>
@@ -80,5 +128,17 @@ export default {
 <style>
 .alert {
   width: 100px;
+}
+.layout {
+  text-align: center;
+}
+
+.analitiche {
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 200px;
+  background: lightgray;
+  height: 350px;
+  width: 700px;
 }
 </style>

@@ -25,7 +25,10 @@
     </div>
 
     <div class="threeshold" v-if="!isPatient()">
-      <div><h3 style="color: red">ALERTS</h3></div>
+      <div>
+        <h3 style="color: #c35b46">ALERTS</h3>
+        <hr style="width: 100%" color="#9e331d" />
+      </div>
       <label>FC:&nbsp;</label>
       <input type="number" v-model="fc" />&nbsp;&nbsp;
       <label>spO2:&nbsp;</label>&nbsp;
@@ -34,7 +37,12 @@
       <input type="number" v-model="systolic" />&nbsp;
       <label>diastolica:&nbsp;</label>&nbsp;
       <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
-      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
+      <input
+        type="submit"
+        @click="insertAlerts()"
+        value="AGGIUNGI"
+        style="color: white; padding: 3px; background-color: #c35b46"
+      />
     </div>
 
     <div class="inputPaziente" v-if="isPatient()">
