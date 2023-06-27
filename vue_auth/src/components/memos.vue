@@ -136,7 +136,7 @@ export default {
     };
   },
   created() {
-    console.log(process.env.VUE_APP_SECRET_KEY);
+    //console.log(process.env.VUE_APP_SECRET_KEY);
     if (sessionStorage.getItem("token") === null) {
       alert("non autorizzato");
       this.$router.push("/login");
@@ -178,7 +178,6 @@ export default {
         const dateObj = new Date();
         dateObj.setHours(hours);
         dateObj.setMinutes(minutes);
-
         console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
 
         let currentTime = new Date();
