@@ -157,8 +157,6 @@ const database = () => {
 
     const firstDate = new Date(req.body.firstDate + 'T00:00:00.000Z');
     const secondDate = new Date(req.body.secondDate + 'T23:59:59.999Z');
-    
-    const field = req.body.parametro
 
     try {
       await client.connect()

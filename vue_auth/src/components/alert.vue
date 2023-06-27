@@ -29,8 +29,12 @@
         <option value="systolic">systolic</option>
         <option value="diastolic">diastolic</option>
       </select>
-      &nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type="button" value="CALCOLA" @click="getMedia()" />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div style="margin-top: 40px">
+        {{ avg }}
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +52,7 @@ export default {
       startDate: null,
       endDate: null,
       parametro: null,
+      avg: "Inserisci le informazioni per calcolare la media dei parametri vitali relativa ai valori selezionati",
     };
   },
 
@@ -93,7 +98,7 @@ export default {
     },
 
     getMedia() {
-      console.log(sessionStorage);
+      //console.log(sessionStorage);
       let collezione;
       if (this.isPatient) {
         collezione = sessionStorage.getItem("email") + "/vitalparameters";
@@ -116,7 +121,10 @@ export default {
         console.log(data);
         axios.post("http://localhost:5005/getMedia", data).then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            const stringa =
+              "La media dei valori rilevati per il periodo selezionato è di " +
+              res.data[0].averageField;
+            this.avg = stringa;
           }
         });
       }
