@@ -136,6 +136,7 @@ export default {
     };
   },
   created() {
+    console.log(process.env.VUE_APP_SECRET_KEY);
     if (sessionStorage.getItem("token") === null) {
       alert("non autorizzato");
       this.$router.push("/login");

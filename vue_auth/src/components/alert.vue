@@ -60,6 +60,7 @@ export default {
     };
   },
   created() {
+    console.log(process.env.SECRET_KEY);
     if (sessionStorage.getItem("token") === null) {
       alert("non autorizzato");
       this.$router.push("/login");
