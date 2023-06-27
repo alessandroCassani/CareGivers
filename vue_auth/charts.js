@@ -173,6 +173,19 @@ const database = () => {
               $lte: secondDate
             }
           }
+        },
+        {
+          $addFields: {
+            convertedField: {
+              $toInt: '$' + req.body.parametro
+            }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            averageField: { $avg: '$convertedField' }
+          }
         }
       ]).toArray();
       
