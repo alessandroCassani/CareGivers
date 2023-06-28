@@ -497,7 +497,7 @@ export default {
         const medicinaleCiphered = {
           farmaco: encrypt(this.farmaco),
           orario: encrypt(this.farmacOrario),
-          dosaggio: encrypt(this.dosaggio),
+          dosaggio: this.dosaggio.toString(),
           email_paziente: sessionStorage.getItem("email_paziente"),
         };
 
