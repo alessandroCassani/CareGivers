@@ -32,6 +32,7 @@
     "mongoose": "^6.10.0",
     "mqtt": "^4.3.7",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "sjcl": "^1.0.8",
     "sors": "^1.0.2",
     "vue": "^3.1.4",
     "vue-ctk-date-time-picker": "^3.0.0-alpha.0",

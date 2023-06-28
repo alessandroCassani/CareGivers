@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt } from "./cipher";
 
 export default {
   name: "Log_in",
@@ -34,9 +35,10 @@ export default {
   methods: {
     async login() {
       let loggedUser = {
-        email: this.email,
-        password: this.password,
+        email: encrypt(this.email),
+        password: encrypt(this.password),
       };
+
       await axios.post("http://localhost:5000/login", loggedUser).then(
         (res) => {
           console.log(res.data);
