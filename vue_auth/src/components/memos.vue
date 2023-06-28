@@ -166,7 +166,7 @@ export default {
     },
 
     isPatient() {
-      //console.log(sessionStorage.getItem("ruolo"));
+      console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
     },
 
@@ -494,11 +494,15 @@ export default {
           email_paziente: sessionStorage.getItem("email_paziente"),
         };
 
+        const medicinaleCiphered = {
+          farmaco: encrypt(this.farmaco),
+          orario: encrypt(this.farmacOrario),
+          dosaggio: encrypt(this.dosaggio),
+          email_paziente: sessionStorage.getItem("email_paziente"),
+        };
+
         await axios
-          .post(
-            "http://localhost:5002/insertTherapy",
-            encryptObject(medicinale)
-          )
+          .post("http://localhost:5002/insertTherapy", medicinaleCiphered)
           .then(
             (res) => {
               console.log(res.data);
@@ -506,7 +510,7 @@ export default {
                 this.terapia.push(medicinale);
                 this.client.publish(
                   this.topicDrug,
-                  JSON.stringify(encryptObject(medicinale))
+                  JSON.stringify(medicinaleCiphered)
                 );
                 alert("terapia inserito correttamente");
               }

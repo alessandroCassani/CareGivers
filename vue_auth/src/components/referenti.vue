@@ -59,6 +59,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt } from "./cipher";
 
 export default {
   name: "referenti",
@@ -146,7 +147,7 @@ export default {
           this.thirdOtp +
           this.fourthOtp +
           this.fifthOtp,
-        email_paziente: this.e_mail,
+        email_paziente: encrypt(this.e_mail),
         email_caregiver: sessionStorage.getItem("email"),
       };
 

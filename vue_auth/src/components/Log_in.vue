@@ -21,7 +21,7 @@
 
 <script>
 import axios from "axios";
-import { encrypt } from "./cipher";
+import { encrypt, decrypt } from "./cipher";
 
 export default {
   name: "Log_in",
@@ -46,7 +46,7 @@ export default {
             console.log(res.data.token);
             sessionStorage.setItem("token", res.data.token);
             sessionStorage.setItem("email", res.data.email);
-            sessionStorage.setItem("ruolo", res.data.ruolo);
+            sessionStorage.setItem("ruolo", decrypt(res.data.ruolo));
             this.$router.push("/memos");
           }
         },
