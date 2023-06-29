@@ -123,7 +123,7 @@ export default {
       console.log(otp);
 
       const data = {
-        otp: otp,
+        otp: encrypt(otp),
         email: sessionStorage.getItem("email"),
       };
       axios.post("http://localhost:5001/insertOtp", data).then(
@@ -141,12 +141,13 @@ export default {
 
     sendOtp() {
       const data = {
-        otp:
+        otp: encrypt(
           this.firstOtp +
-          this.secondOtp +
-          this.thirdOtp +
-          this.fourthOtp +
-          this.fifthOtp,
+            this.secondOtp +
+            this.thirdOtp +
+            this.fourthOtp +
+            this.fifthOtp
+        ),
         email_paziente: encrypt(this.e_mail),
         email_caregiver: sessionStorage.getItem("email"),
       };
@@ -168,10 +169,10 @@ export default {
     async insertAlerts() {
       const data = {
         email: sessionStorage.getItem("email_paziente"),
-        fc: this.fc,
-        spO2: this.spO2,
-        systolic: this.systolic,
-        diastolic: this.diastolic,
+        fc: encrypt(this.fc.toString()),
+        spO2: encrypt(this.spO2.toString()),
+        systolic: encrypt(this.systolic.toString()),
+        diastolic: encrypt(this.diastolic.toString()),
       };
 
       await axios.post("http://localhost:5005/insertAlerts", data).then(
@@ -183,12 +184,12 @@ export default {
             localStorage.setItem("diasth", this.diastolic);
 
             const alerts = {
-              fcth: this.fc,
-              spO2th: this.spO2,
-              systh: this.systolic,
-              diasth: this.diastolic,
+              fcth: encrypt(this.fc.toString()),
+              spO2th: encrypt(this.spO2.toString()),
+              systh: encrypt(this.systolic.toString()),
+              diasth: encrypt(this.diastolic.toString()),
             };
-            console.log(this.client);
+            //console.log(this.client);
             this.client.publish(this.topicAlert, JSON.stringify(alerts));
             alert("soglie inserite correttamente");
           } else {

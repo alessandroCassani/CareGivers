@@ -48,6 +48,8 @@ export default {
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("ruolo", decrypt(res.data.ruolo));
             this.$router.push("/memos");
+          } else {
+            alert("errore! controllare le credenziali inserite");
           }
         },
         (err) => {

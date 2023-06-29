@@ -324,7 +324,9 @@ export default {
             }
             if (topic === this.topicAlert) {
               console.log("alert TRIGGERED");
-              const data = JSON.parse(decrypt(message.toString()));
+              const data = JSON.parse(message.toString());
+
+              console.log("ALERT SOGLIE " + data);
               localStorage.setItem("fcth", data.fcth);
               localStorage.setItem("spO2th", data.spO2th);
               localStorage.setItem("systh", data.systh);
