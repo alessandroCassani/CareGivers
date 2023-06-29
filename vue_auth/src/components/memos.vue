@@ -128,11 +128,11 @@ export default {
       editTask: null,
       tasks: [],
       terapia: [],
-      topicDrug: encrypt(sessionStorage.getItem("email")) + "/drug",
+      topicDrug: sessionStorage.getItem("email") + "/drug",
       topicTask: sessionStorage.getItem("email") + "/task",
-      topicDeleteDrug: encrypt(sessionStorage.getItem("email")) + "/deleteDrug",
-      topicDeleteTask: encrypt(sessionStorage.getItem("email")) + "/deleteTask",
-      topicAlert: encrypt(sessionStorage.getItem("email")) + "/insAlert",
+      topicDeleteDrug: sessionStorage.getItem("email") + "/deleteDrug",
+      topicDeleteTask: sessionStorage.getItem("email") + "/deleteTask",
+      topicAlert: sessionStorage.getItem("email") + "/insAlert",
       client: null,
     };
   },
@@ -299,7 +299,7 @@ export default {
     async setup() {
       this.client = this.$store.state.selectedItem;
       if (this.isPatient()) {
-        console.log(this.topicTask + " TOPIC TASK");
+        console.log(this.topicDrug + " TOPIC drug");
         this.getMemos(sessionStorage.getItem("email"));
         this.getFarmaci(sessionStorage.getItem("email"));
         if (this.checkFlag()) {
@@ -446,13 +446,13 @@ export default {
       //console.log(topicMemo + " " + message);
       console.log("drug mqtt triggered");
 
-      const data = JSON.parse(decrypt(message.toString()));
+      const data = JSON.parse(message.toString());
       console.log(data); // Parse JSON message into an object
 
-      const nome = data.farmaco;
-      const orario = data.orario;
+      const nome = decrypt(data.farmaco);
+      const orario = decrypt(data.orario);
       const dosaggio = data.dosaggio;
-      console.log(data.orario);
+      //console.log(data.orario);
 
       const medicinale = {
         farmaco: nome,
@@ -509,10 +509,10 @@ export default {
               console.log(res.data);
               if (res.status === 200) {
                 this.terapia.push(medicinale);
-                this.client.publish(
-                  this.topicDrug,
-                  JSON.stringify(medicinaleCiphered)
-                );
+                const topic =
+                  sessionStorage.getItem("email_paziente") + "/drug";
+                console.log(topic + " TOPIC DRUG");
+                this.client.publish(topic, JSON.stringify(medicinaleCiphered));
                 alert("terapia inserito correttamente");
               }
             },
