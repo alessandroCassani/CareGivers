@@ -9,13 +9,10 @@ const bcrypt = require('bcrypt');
 const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js')
 mongoose.set('strictQuery', false);
 const jwt = require('jsonwebtoken')
-const sjcl = require('sjcl');
 
 
 const app = express()
 const port = process.env.port || 5000;
-
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 })
 
 const database =  () => {
   const connectionParams = {
@@ -52,13 +49,6 @@ app.post('/signup', express.json(), async (req, res) => {
     try{
     const utente = await newUser.save()
     console.log(utente)
-    
-    if(req.body.ruolo === 'paziente'){
-      const associato = new patient_caregivers({
-            email: req.body.email,
-      })
-      await associato.save()
-    }
     
     return res.status(200).json({
         message: "User created"
