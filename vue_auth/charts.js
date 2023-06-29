@@ -9,6 +9,7 @@ mongoose.set('strictQuery', false);
 const router = require('express').Router();
 const {alerts} = require('./src/models/alerts.js')
 const {parameters} = require('./src/models/parameters.js')
+const moment = require('moment')
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -131,6 +132,65 @@ const database = () => {
      collection.insertOne(parameter)
      res.status(200)
     } catch (error) {
+      console.log(error)
+    }
+  }),
+
+
+  app.post('/getLastValue', async (req,res) => {
+    console.log(req.body)
+    try {
+      await client.connect()
+      const database = client.db('alerts');
+      const collection = database.collection(req.body.collection)
+      const result = await collection.findOne({}, { sort: { _id: -1 } })
+      res.json(result)
+    } catch (error) {
+      console.log(error)
+      res.status(500)
+    }
+  })
+
+
+  app.post('/getMedia', async (req,res) => {
+    console.log(req.body)
+
+    const firstDate = new Date(req.body.firstDate + 'T00:00:00.000Z');
+    const secondDate = new Date(req.body.secondDate + 'T23:59:59.999Z');
+
+    try {
+      await client.connect()
+      const database = client.db('alerts');
+      const collection = database.collection(req.body.collection)
+
+      const result = await collection.aggregate([
+        {
+          $match: {
+            timestamp: {
+              $gte: firstDate,
+              $lte: secondDate
+            }
+          }
+        },
+        {
+          $addFields: {
+            convertedField: {
+              $toInt: '$' + req.body.parametro
+            }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            averageField: { $avg: '$convertedField' }
+          }
+        }
+      ]).toArray();
+      
+      console.log(result)
+      res.json(result)
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred' });
       console.log(error)
     }
   })

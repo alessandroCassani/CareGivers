@@ -25,7 +25,10 @@
     </div>
 
     <div class="threeshold" v-if="!isPatient()">
-      <div><h3 style="color: red">ALERTS</h3></div>
+      <div>
+        <h3 style="color: #c35b46">ALERTS</h3>
+        <hr style="width: 100%" color="#9e331d" />
+      </div>
       <label>FC:&nbsp;</label>
       <input type="number" v-model="fc" />&nbsp;&nbsp;
       <label>spO2:&nbsp;</label>&nbsp;
@@ -34,10 +37,19 @@
       <input type="number" v-model="systolic" />&nbsp;
       <label>diastolica:&nbsp;</label>&nbsp;
       <input type="number" v-model="diastolic" />&nbsp;&nbsp;&nbsp;
-      <input type="submit" @click="insertAlerts()" value="AGGIUNGI" />
+      <input
+        type="submit"
+        @click="insertAlerts()"
+        value="AGGIUNGI"
+        style="color: white; padding: 3px; background-color: #c35b46"
+      />
     </div>
 
-    <div class="inputPaziente" v-if="isPatient()">
+    <div
+      class="inputPaziente"
+      v-if="isPatient()"
+      style="background-color: #c59c9f"
+    >
       <h1>Genera OTP:</h1>
       <br />
       <input type="submit" @click="createOtp()" value="GENERA" />
@@ -47,6 +59,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt } from "./cipher";
 
 export default {
   name: "referenti",
@@ -71,9 +84,9 @@ export default {
   },
 
   created() {
-    console.log("CREATED REFERENTI");
     window.addEventListener("beforeunload", this.handleBeforeUnload);
     if (localStorage.getItem("token") === null) {
+      alert("non autorizzato");
       this.$router.push("/login");
     }
   },
@@ -110,7 +123,7 @@ export default {
       console.log(otp);
 
       const data = {
-        otp: otp,
+        otp: encrypt(otp),
         email: sessionStorage.getItem("email"),
       };
       axios.post("http://localhost:5001/insertOtp", data).then(
@@ -128,13 +141,14 @@ export default {
 
     sendOtp() {
       const data = {
-        otp:
+        otp: encrypt(
           this.firstOtp +
-          this.secondOtp +
-          this.thirdOtp +
-          this.fourthOtp +
-          this.fifthOtp,
-        email_paziente: this.e_mail,
+            this.secondOtp +
+            this.thirdOtp +
+            this.fourthOtp +
+            this.fifthOtp
+        ),
+        email_paziente: encrypt(this.e_mail),
         email_caregiver: sessionStorage.getItem("email"),
       };
 
@@ -155,10 +169,10 @@ export default {
     async insertAlerts() {
       const data = {
         email: sessionStorage.getItem("email_paziente"),
-        fc: this.fc,
-        spO2: this.spO2,
-        systolic: this.systolic,
-        diastolic: this.diastolic,
+        fc: encrypt(this.fc.toString()),
+        spO2: encrypt(this.spO2.toString()),
+        systolic: encrypt(this.systolic.toString()),
+        diastolic: encrypt(this.diastolic.toString()),
       };
 
       await axios.post("http://localhost:5005/insertAlerts", data).then(
@@ -170,12 +184,12 @@ export default {
             localStorage.setItem("diasth", this.diastolic);
 
             const alerts = {
-              fcth: this.fc,
-              spO2th: this.spO2,
-              systh: this.systolic,
-              diasth: this.diastolic,
+              fcth: encrypt(this.fc.toString()),
+              spO2th: encrypt(this.spO2.toString()),
+              systh: encrypt(this.systolic.toString()),
+              diasth: encrypt(this.diastolic.toString()),
             };
-            console.log(this.client);
+            //console.log(this.client);
             this.client.publish(this.topicAlert, JSON.stringify(alerts));
             alert("soglie inserite correttamente");
           } else {
@@ -237,7 +251,7 @@ body {
 
 .inputReferente {
   text-align: center;
-  background-color: lightgray;
+  background-color: #c59c9f;
   border-radius: 10px;
   padding: 40px;
   width: 400px;
@@ -257,7 +271,7 @@ body {
 }
 
 .inputReferente input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 .inputPaziente {
@@ -281,7 +295,7 @@ body {
 }
 
 .inputPaziente input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 .threeshold {

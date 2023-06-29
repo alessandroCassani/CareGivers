@@ -12,6 +12,7 @@ import fc from "./fcLineChart";
 import spO2 from "./spO2LineChart";
 import bp from "./BPLineChart";
 import axios from "axios";
+import { encrypt, decrypt } from "./cipher";
 
 export default {
   name: "line",
@@ -38,12 +39,19 @@ export default {
       this.getAlerts(sessionStorage.getItem("email_paziente"));
       this.client.subscribe(this.topicPV);
       this.client.on("message", (topic, message) => {
-        const payload = message.toString(); // Convert payload to string
-        const data = JSON.parse(payload);
-        console.log(data); // Parse JSON message into an object
-        this.createChart();
-        this.updateChartData(data); // Update the chart data with the received message
-        this.updateChart();
+        if (topic === sessionStorage.getItem("email_paziente") + "/pv") {
+          const data = JSON.parse(decrypt(message.toString()));
+          const pv = {
+            HR: data.HR,
+            SpO2: data.SpO2,
+            systolic: data.systolic,
+            diastolic: data.diastolic,
+          };
+
+          this.createChart();
+          this.updateChartData(pv); // Update the chart data with the received message
+          this.updateChart();
+        }
       });
 
       this.$store.dispatch("updateSelectedItem", this.client);
@@ -61,12 +69,16 @@ export default {
         this.fetchData("bp");
 
         this.extractObjectFromStorage();
-      }, 30000);
+      }, 10000);
     }
   },
 
   created() {
     window.addEventListener("beforeunload", this.handleBeforeUnload);
+    if (sessionStorage.getItem("token") === null) {
+      alert("non autorizzato");
+      this.$router.push("/login");
+    }
   },
   beforeUnmount() {
     window.removeEventListener("beforeunload", this.handleBeforeUnload);
@@ -74,20 +86,19 @@ export default {
 
   methods: {
     extractObjectFromStorage() {
-      console.log("DENTRO");
       let fc = JSON.parse(sessionStorage.getItem("fcValue"));
       let spO2 = JSON.parse(sessionStorage.getItem("spO2Value"));
       let sys = JSON.parse(sessionStorage.getItem("sysValue"));
       let dias = JSON.parse(sessionStorage.getItem("diasValue"));
 
       let object = {
-        fc: fc,
-        spO2: spO2,
-        systolic: sys,
-        diastolic: dias,
+        fc: fc.toString(),
+        spO2: spO2.toString(),
+        systolic: sys.toString(),
+        diastolic: dias.toString(),
         collection: sessionStorage.getItem("email") + "/vitalparameters",
       };
-      console.log(object);
+      // console.log(object);
 
       axios.post("http://localhost:5005/insertPv", object).then((res) => {
         if (res.status === 200) {
@@ -111,11 +122,10 @@ export default {
       };
       axios.post("http://localhost:5005/getAlerts", data).then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
-          localStorage.setItem("fcth", res.data.fc);
-          localStorage.setItem("spO2th", res.data.spO2);
-          localStorage.setItem("systh", res.data.systolic);
-          localStorage.setItem("diasth", res.data.diastolic);
+          localStorage.setItem("fcth", decrypt(res.data.fc));
+          localStorage.setItem("spO2th", decrypt(res.data.spO2));
+          localStorage.setItem("systh", decrypt(res.data.systolic));
+          localStorage.setItem("diasth", decrypt(res.data.diastolic));
           console.log("settaggio alert corretto");
         }
       });
@@ -140,7 +150,6 @@ export default {
       await axios
         .get("http://localhost:5005/getData", { params: data })
         .then((res) => {
-          console.log(res.data);
           if (res.status === 200) {
             const newData = res.data;
             this.updateChartData(newData);
@@ -150,7 +159,8 @@ export default {
             } else {
               this.updateChart();
             }
-            this.client.publish(this.topicPV, JSON.stringify(newData));
+            const topic = sessionStorage.getItem("email") + "/pv";
+            this.client.publish(topic, encrypt(JSON.stringify(newData)));
           }
         });
     },
@@ -191,7 +201,7 @@ export default {
           alert("ALERT FREQUENZA CARDIACA");
         }
 
-        sessionStorage.setItem("fcValue", JSON.stringify(newData.HR));
+        sessionStorage.setItem("fcValue", newData.HR);
 
         const newLabelsFC = [...this.fc.data.labels, timeLabel];
         const newDataPointsFC = [...this.fc.data.datasets[0].data, newData.HR];

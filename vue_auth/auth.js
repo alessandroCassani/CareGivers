@@ -14,11 +14,6 @@ const jwt = require('jsonwebtoken')
 const app = express()
 const port = process.env.port || 5000;
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 })
-
-
-
-
 const database =  () => {
   const connectionParams = {
     useNewUrlParser: true,
@@ -55,13 +50,6 @@ app.post('/signup', express.json(), async (req, res) => {
     const utente = await newUser.save()
     console.log(utente)
     
-    if(req.body.ruolo === 'paziente'){
-      const associato = new patient_caregivers({
-            email: req.body.email,
-      })
-      await associato.save()
-    }
-    
     return res.status(200).json({
         message: "User created"
     });
@@ -75,35 +63,11 @@ app.post('/signup', express.json(), async (req, res) => {
 
 
 
-app.post('/user', (req,res) => {
-  console.log('dentro USER')
-  let token = req.body.token
-  jwt.verify(token, 'secretKey', (err, decoded) => {
-  if(err) return res.status(401).json({
-    title: "non autorizzato"
- })
- console.log(decoded)
- //token valido
- user.findOne({_id: decoded.userId}, (err,User) => {
-    if(err) return console.log(err)
-   console.log(User)
-   console.log('INFO TROVATE')
-   return res.status(200).json({
-     title: 'info trovate',
-      User: {
-       // email:User.email,
-        ruolo: User.ruolo
-     }
-   })
- })
-  })
-})
-
-
-app.post('/login',   (req,res) =>{
+app.post('/login', (req,res) =>{
   database();
   var jwt = require('jsonwebtoken')
   console.log('dentro login server')
+  console.log(req.body)
    
    user.findOne({email:req.body.email}, (err,User) => {
     if(err) return res.status(500).json({
@@ -125,9 +89,8 @@ app.post('/login',   (req,res) =>{
       error: 'invalid credentials'
     })
   }
-
   
-  console.log('trovato')
+  //console.log('trovato')
   let token = jwt.sign({userID: User._id},'secretKey');
   return res.status(200).json({
     message: 'login avvenuto correttamente',
@@ -137,8 +100,6 @@ app.post('/login',   (req,res) =>{
   })
 });
 });
-
-
 
 
 app.listen(port,(err) => {

@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt, decrypt } from "./cipher";
 
 export default {
   name: "Log_in",
@@ -34,18 +35,21 @@ export default {
   methods: {
     async login() {
       let loggedUser = {
-        email: this.email,
-        password: this.password,
+        email: encrypt(this.email),
+        password: encrypt(this.password),
       };
+
       await axios.post("http://localhost:5000/login", loggedUser).then(
         (res) => {
           console.log(res.data);
           if (res.status === 200) {
             console.log(res.data.token);
-            localStorage.setItem("token", res.data.token);
+            sessionStorage.setItem("token", res.data.token);
             sessionStorage.setItem("email", res.data.email);
-            sessionStorage.setItem("ruolo", res.data.ruolo);
+            sessionStorage.setItem("ruolo", decrypt(res.data.ruolo));
             this.$router.push("/memos");
+          } else {
+            alert("errore! controllare le credenziali inserite");
           }
         },
         (err) => {

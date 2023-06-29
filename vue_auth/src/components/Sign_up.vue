@@ -81,6 +81,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt } from "./cipher";
 
 export default {
   name: "Sign_up",
@@ -100,13 +101,13 @@ export default {
   methods: {
     async signUp() {
       let newUser = {
-        nome: this.nome,
-        cognome: this.cognome,
+        nome: encrypt(this.nome),
+        cognome: encrypt(this.cognome),
         dataDiNascita: this.dataDiNascita,
-        email: this.email,
-        password: this.password,
-        ripetiPassword: this.ripetiPassword,
-        ruolo: this.ruolo,
+        email: encrypt(this.email),
+        password: encrypt(this.password),
+        ripetiPassword: encrypt(this.ripetiPassword),
+        ruolo: encrypt(this.ruolo),
       };
 
       await axios.post("http://localhost:5000/signup", newUser).then(
@@ -197,13 +198,13 @@ html {
   padding: 8px 40px;
   outline: none;
   color: black;
-  border-radius: 20px;
+  border-radius: 12px;
   transition: o.25s;
   cursor: pointer;
 }
 
 .box input[type="submit"]:hover {
-  background: #c79598;
+  background: lightgray;
 }
 
 #text {

@@ -11,13 +11,6 @@ const userSchema = new schema({
     confermaPassword: String,
     ruolo: String,
     email: String,
-    recapiti: {
-        telefono1: String,
-        telefono2: String
-    },
-    patologie: [{
-        patologia: String
-    }],
 });
 
 const user = mongoose.model('users',userSchema);
