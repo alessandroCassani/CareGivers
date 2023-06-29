@@ -44,6 +44,7 @@
 
 <script>
 import axios from "axios";
+import { encrypt, decrypt } from "./cipher";
 
 export default {
   name: "alert",
@@ -60,7 +61,7 @@ export default {
     };
   },
   created() {
-    console.log(process.env.SECRET_KEY);
+    // console.log(process.env.SECRET_KEY);
     if (sessionStorage.getItem("token") === null) {
       alert("non autorizzato");
       this.$router.push("/login");
@@ -107,7 +108,7 @@ export default {
             " diastolic = " +
             res.data.diastolic;
           this.client.publish(topic, stringMQTT);
-          alert("alert inviato");
+          ("alert inviato");
         }
       });
     },

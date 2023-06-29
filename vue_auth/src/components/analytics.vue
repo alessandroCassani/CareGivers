@@ -97,10 +97,10 @@ export default {
       let dias = JSON.parse(sessionStorage.getItem("diasValue"));
 
       let object = {
-        fc: encrypt(fc.toString()),
-        spO2: encrypt(spO2.toString()),
-        systolic: encrypt(sys.toString()),
-        diastolic: encrypt(dias.toString()),
+        fc: fc.toString(),
+        spO2: spO2.toString(),
+        systolic: sys.toString(),
+        diastolic: dias.toString(),
         collection: sessionStorage.getItem("email") + "/vitalparameters",
       };
       // console.log(object);
