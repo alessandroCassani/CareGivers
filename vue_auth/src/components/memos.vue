@@ -241,9 +241,12 @@ export default {
         (res) => {
           console.log(res.data);
           if (res.status === 200) {
-            const message = JSON.stringify(encrypt(this.tasks[index].evento));
+            const message = encrypt(this.tasks[index].evento);
             this.tasks.splice(index, 1);
-            this.client.publish(this.topicDeleteTask, message);
+
+            const topic =
+              sessionStorage.getItem("email_paziente") + "/deleteTask";
+            this.client.publish(topic, message);
             alert("promemoria eliminato correttamente");
           }
         },
@@ -334,18 +337,19 @@ export default {
             }
             if (topic === this.topicDeleteDrug) {
               console.log("delete drug mqtt call");
-              const data = JSON.parse(decrypt(message.toString()));
+              const data = decrypt(message.toString());
               console.log(data);
 
               for (let i = 0; i < this.terapia.length; i++) {
                 if (this.terapia[i].farmaco === data) {
+                  console.log(this.terapia[i].farmaco === data);
                   this.terapia.splice(i, 1);
                   alert("terapia eliminata");
                 }
               }
             }
             if (topic === this.topicDeleteTask) {
-              const data = JSON.parse(decrypt(message.toString()));
+              const data = decrypt(message.toString());
               console.log("task mqtt call");
 
               for (let i = 0; i < this.tasks.length; i++) {
@@ -368,12 +372,10 @@ export default {
           this.setAlertsFarmaci();
           this.setAlertsTasks();
           this.setFlag();
-          const topicPV = encrypt(
-            sessionStorage.getItem("email_paziente") + "/pv"
-          );
-          const topicUrgentAlert = encrypt(
-            sessionStorage.getItem("email_paziente") + "/urgentAlert"
-          );
+          const topicPV = sessionStorage.getItem("email_paziente") + "/pv";
+
+          const topicUrgentAlert =
+            sessionStorage.getItem("email_paziente") + "/urgentAlert";
 
           this.client.subscribe(topicPV);
           this.client.subscribe(topicUrgentAlert);
@@ -449,16 +451,15 @@ export default {
       const data = JSON.parse(message.toString());
       console.log(data); // Parse JSON message into an object
 
-      const nome = decrypt(data.farmaco);
-      const orario = decrypt(data.orario);
-      const dosaggio = data.dosaggio;
-      //console.log(data.orario);
-
       const medicinale = {
-        farmaco: nome,
-        dosaggio: dosaggio,
-        orario: orario,
+        farmaco: decrypt(data.farmaco),
+        orario: decrypt(data.orario),
+        dosaggio: data.dosaggio,
       };
+
+      this.terapia.push(medicinale);
+      console.log(this.terapia);
+      console.log(medicinale);
 
       const [hours, minutes] = data.orario.split(":");
       const dateObj = new Date();
@@ -466,16 +467,15 @@ export default {
       dateObj.setMinutes(minutes);
       let currentTime = new Date();
       let timeDiff = dateObj.getTime() - currentTime.getTime();
-      console.log(medicinale);
-
-      this.terapia.push(medicinale);
       alert("terapia aggiornata!");
 
       if (timeDiff > 0) {
         setTimeout(function () {
           //controlla se il farmaco è stato eliminato prima di mandare alert
-          console.log("ALERT INVIATO " + nome);
-          alert("assumere " + nome + " " + dosaggio + "mg");
+          console.log("ALERT INVIATO " + medicinale.farmacox);
+          alert(
+            "assumere " + medicinale.farmaco + " " + medicinale.dosaggio + "mg"
+          );
         }, timeDiff);
       }
     },
@@ -533,13 +533,13 @@ export default {
         (res) => {
           console.log(res.data);
           if (res.status === 200) {
-            const message = encrypt(
-              JSON.stringify(this.terapia[index].farmaco)
-            );
+            const message = encrypt(this.terapia[index].farmaco);
             console.log(message);
+            const topic =
+              sessionStorage.getItem("email_paziente") + "/deleteDrug";
 
             this.terapia.splice(index, 1);
-            this.client.publish(this.topicDeleteDrug, message);
+            this.client.publish(topic, message);
             alert("farmaco eliminato correttamente");
           }
         },
