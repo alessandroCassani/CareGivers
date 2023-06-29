@@ -110,7 +110,7 @@
 
 <script>
 import axios from "axios";
-import { encrypt, encryptObject, decryptObject } from "./cipher";
+import { encrypt, decrypt } from "./cipher";
 
 export default {
   name: "memos",
@@ -128,11 +128,11 @@ export default {
       editTask: null,
       tasks: [],
       terapia: [],
-      topicDrug: encrypt(sessionStorage.getItem("email") + "/drug"),
-      topicTask: encrypt(sessionStorage.getItem("email") + "/task"),
-      topicDeleteDrug: encrypt(sessionStorage.getItem("email") + "/deleteDrug"),
-      topicDeleteTask: encrypt(sessionStorage.getItem("email") + "/deleteTask"),
-      topicAlert: encrypt(sessionStorage.getItem("email") + "/insAlert"),
+      topicDrug: encrypt(sessionStorage.getItem("email")) + "/drug",
+      topicTask: sessionStorage.getItem("email") + "/task",
+      topicDeleteDrug: encrypt(sessionStorage.getItem("email")) + "/deleteDrug",
+      topicDeleteTask: encrypt(sessionStorage.getItem("email")) + "/deleteTask",
+      topicAlert: encrypt(sessionStorage.getItem("email")) + "/insAlert",
       client: null,
     };
   },
@@ -166,7 +166,6 @@ export default {
     },
 
     isPatient() {
-      console.log(sessionStorage.getItem("ruolo"));
       return this.ruolo === "paziente";
     },
 
@@ -234,27 +233,25 @@ export default {
     async deleteTask(index) {
       const data = {
         email: sessionStorage.getItem("email_paziente"),
-        evento: this.tasks[index].evento,
+        evento: encrypt(this.tasks[index].evento),
       };
 
-      await axios
-        .post("http://localhost:5002/deleteTask", encryptObject(data))
-        .then(
-          //modificare
-          (res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              const message = JSON.stringify(encrypt(this.tasks[index].evento));
-              this.tasks.splice(index, 1);
-              this.client.publish(this.topicDeleteTask, message);
-              alert("promemoria eliminato correttamente");
-            }
-          },
-          (err) => {
-            console.log(err);
-            alert("Errore in fase di cancellazione del promemoria");
+      await axios.post("http://localhost:5002/deleteTask", data).then(
+        //modificare
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            const message = JSON.stringify(encrypt(this.tasks[index].evento));
+            this.tasks.splice(index, 1);
+            this.client.publish(this.topicDeleteTask, message);
+            alert("promemoria eliminato correttamente");
           }
-        );
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di cancellazione del promemoria");
+        }
+      );
     },
 
     // Add Task
@@ -266,40 +263,43 @@ export default {
         this.tasks[this.editTask].name = this.task;
         this.editTask = null;
       } else {
-        const memo = {
-          evento: this.task,
+        const memoCiphered = {
+          evento: encrypt(this.task),
           data: this.reminderDate,
-          orario: this.reminderTime,
+          orario: encrypt(this.reminderTime),
           email_paziente: sessionStorage.getItem("email_paziente"),
         };
-        console.log(memo);
+        console.log(memoCiphered);
 
-        await axios
-          .post("http://localhost:5002/insertMemo", encryptObject(memo))
-          .then(
-            (res) => {
-              console.log(res.data);
-              if (res.status === 200) {
-                this.tasks.push({
-                  evento: this.task,
-                  data: this.reminderDate,
-                  orario: this.reminderTime,
-                });
-                this.client.publish(this.topicTask, memo);
-                alert("promemoria inserito correttamente");
-              }
-            },
-            (err) => {
-              console.log(err);
-              alert("Errore in fase di inserimento del promemoria");
+        await axios.post("http://localhost:5002/insertMemo", memoCiphered).then(
+          (res) => {
+            console.log(res.data);
+            if (res.status === 200) {
+              this.tasks.push({
+                evento: this.task,
+                data: this.reminderDate,
+                orario: this.reminderTime,
+              });
+
+              const topic = sessionStorage.getItem("email_paziente") + "/task";
+
+              console.log(topic + " TOPIC TASK MQTT");
+              this.client.publish(topic, JSON.stringify(memoCiphered));
+              alert("promemoria inserito correttamente");
             }
-          );
+          },
+          (err) => {
+            console.log(err);
+            alert("Errore in fase di inserimento del promemoria");
+          }
+        );
       }
     },
 
     async setup() {
       this.client = this.$store.state.selectedItem;
       if (this.isPatient()) {
+        console.log(this.topicTask + " TOPIC TASK");
         this.getMemos(sessionStorage.getItem("email"));
         this.getFarmaci(sessionStorage.getItem("email"));
         if (this.checkFlag()) {
@@ -321,7 +321,7 @@ export default {
             }
             if (topic === this.topicAlert) {
               console.log("alert TRIGGERED");
-              const data = decryptObject(message);
+              const data = JSON.parse(decrypt(message.toString()));
               localStorage.setItem("fcth", data.fcth);
               localStorage.setItem("spO2th", data.spO2th);
               localStorage.setItem("systh", data.systh);
@@ -334,7 +334,7 @@ export default {
             }
             if (topic === this.topicDeleteDrug) {
               console.log("delete drug mqtt call");
-              const data = decryptObject(message);
+              const data = JSON.parse(decrypt(message.toString()));
               console.log(data);
 
               for (let i = 0; i < this.terapia.length; i++) {
@@ -345,7 +345,7 @@ export default {
               }
             }
             if (topic === this.topicDeleteTask) {
-              const data = JSON.parse(message);
+              const data = JSON.parse(decrypt(message.toString()));
               console.log("task mqtt call");
 
               for (let i = 0; i < this.tasks.length; i++) {
@@ -380,7 +380,7 @@ export default {
           this.client.on("message", (topic, message) => {
             if (topic === topicUrgentAlert) {
               console.log("alert urgente");
-              const payload = decryptObject(message);
+              const payload = JSON.parse(decrypt(message.toString()));
               alert("ATTENZIONE: " + payload);
             }
           });
@@ -394,10 +394,11 @@ export default {
         const data = {
           email: sessionStorage.getItem("email"),
         };
+        console.log(sessionStorage.getItem("email") + " email caregiver");
         axios
           .post("http://localhost:5002/getEmailPatient", data)
           .then((res) => {
-            console.log(res.data.patient);
+            console.log(res.data.patient + " email paziente associato");
             sessionStorage.setItem("email_paziente", res.data.patient);
             resolve();
           });
@@ -405,14 +406,14 @@ export default {
     },
 
     setAlertTaskFromMqtt(message) {
-      const data = decryptObject(message);
+      const data = JSON.parse(message.toString());
       console.log(data); // Parse JSON message into an object
 
       const dateParts = data.data.split("/");
       const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
       const attivita = {
-        evento: data.evento,
-        orario: data.orario,
+        evento: decrypt(data.evento),
+        orario: decrypt(data.orario),
         data: data.data,
       };
       const currentDate = new Date();
@@ -445,7 +446,7 @@ export default {
       //console.log(topicMemo + " " + message);
       console.log("drug mqtt triggered");
 
-      const data = decryptObject(message);
+      const data = JSON.parse(decrypt(message.toString()));
       console.log(data); // Parse JSON message into an object
 
       const nome = data.farmaco;
@@ -526,27 +527,27 @@ export default {
     async deleteDrug(index) {
       const data = {
         email: sessionStorage.getItem("email_paziente"),
-        farmaco: this.terapia[index].farmaco,
+        farmaco: encrypt(this.terapia[index].farmaco),
       };
-      await axios
-        .post("http://localhost:5002/deleteDrug", encryptObject(data))
-        .then(
-          (res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              const message = JSON.stringify(this.terapia[index].farmaco);
-              console.log(message);
+      await axios.post("http://localhost:5002/deleteDrug", data).then(
+        (res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            const message = encrypt(
+              JSON.stringify(this.terapia[index].farmaco)
+            );
+            console.log(message);
 
-              this.terapia.splice(index, 1);
-              this.client.publish(this.topicDeleteDrug, message);
-              alert("farmaco eliminato correttamente");
-            }
-          },
-          (err) => {
-            console.log(err);
-            alert("Errore in fase di cancellazione del farmaco");
+            this.terapia.splice(index, 1);
+            this.client.publish(this.topicDeleteDrug, message);
+            alert("farmaco eliminato correttamente");
           }
-        );
+        },
+        (err) => {
+          console.log(err);
+          alert("Errore in fase di cancellazione del farmaco");
+        }
+      );
     },
 
     async getMemos(email_) {
@@ -558,11 +559,11 @@ export default {
 
           for (let i = 0; i < documents.length; i++) {
             const promemoria = {
-              evento: documents[i].evento,
-              orario: documents[i].orario,
-              data: documents[i].data, //substr aggiusta data
+              evento: decrypt(documents[i].evento),
+              orario: decrypt(documents[i].orario),
+              data: documents[i].data.substr(0, 10), //substr aggiusta data
             };
-            this.tasks.push(decryptObject(promemoria));
+            this.tasks.push(promemoria);
           }
         });
     },
@@ -577,11 +578,11 @@ export default {
 
           for (let i = 0; i < documents.length; i++) {
             const farmaco = {
-              farmaco: documents[i].farmaco,
-              orario: documents[i].orario,
+              farmaco: decrypt(documents[i].farmaco),
+              orario: decrypt(documents[i].orario),
               dosaggio: documents[i].dosaggio,
             };
-            this.terapia.push(decryptObject(farmaco));
+            this.terapia.push(farmaco);
           }
         });
     },
