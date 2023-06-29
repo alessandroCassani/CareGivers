@@ -41,9 +41,7 @@ export default {
       this.client.on("message", (topic, message) => {
         if (topic === sessionStorage.getItem("email_paziente") + "/pv") {
           console.log("dentro callback pvs");
-          console.log(message.toString());
-          const data = JSON.parse(message.toString());
-          console.log(data);
+          const data = JSON.parse(decrypt(message.toString()));
           const pv = {
             HR: data.HR,
             SpO2: data.SpO2,
@@ -60,7 +58,6 @@ export default {
       this.$store.dispatch("updateSelectedItem", this.client);
     } else {
       this.getAlerts(sessionStorage.getItem("email"));
-      console.log(localStorage);
       this.createChart();
       this.fetchData("HR")
         .then(() => this.fetchData("SpO2"))
@@ -90,7 +87,6 @@ export default {
 
   methods: {
     extractObjectFromStorage() {
-      console.log("DENTRO");
       let fc = JSON.parse(sessionStorage.getItem("fcValue"));
       let spO2 = JSON.parse(sessionStorage.getItem("spO2Value"));
       let sys = JSON.parse(sessionStorage.getItem("sysValue"));
@@ -155,10 +151,8 @@ export default {
       await axios
         .get("http://localhost:5005/getData", { params: data })
         .then((res) => {
-          console.log(res.data);
           if (res.status === 200) {
             const newData = res.data;
-            console.log(newData);
             this.updateChartData(newData);
             if (!this.isDataFetched) {
               this.createChart(); // Create the chart after the data has been fetched
@@ -167,7 +161,7 @@ export default {
               this.updateChart();
             }
             const topic = sessionStorage.getItem("email") + "/pv";
-            this.client.publish(topic, JSON.stringify(newData));
+            this.client.publish(topic, encrypt(JSON.stringify(newData)));
           }
         });
     },
@@ -208,9 +202,7 @@ export default {
           alert("ALERT FREQUENZA CARDIACA");
         }
 
-        console.log(newData.fc);
         sessionStorage.setItem("fcValue", newData.HR);
-        console.log(sessionStorage);
 
         const newLabelsFC = [...this.fc.data.labels, timeLabel];
         const newDataPointsFC = [...this.fc.data.datasets[0].data, newData.HR];

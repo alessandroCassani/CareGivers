@@ -44,7 +44,7 @@
 
 <script>
 import axios from "axios";
-import { encrypt, decrypt } from "./cipher";
+import { encrypt } from "./cipher";
 
 export default {
   name: "alert",
@@ -107,7 +107,7 @@ export default {
             res.data.systolic +
             " diastolic = " +
             res.data.diastolic;
-          this.client.publish(topic, stringMQTT);
+          this.client.publish(topic, encrypt(stringMQTT));
           ("alert inviato");
         }
       });

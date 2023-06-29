@@ -178,7 +178,6 @@ export default {
         const dateObj = new Date();
         dateObj.setHours(hours);
         dateObj.setMinutes(minutes);
-        console.log("DATA OGGETTO FARMACO " + dateObj.getTime());
 
         let currentTime = new Date();
         //console.log(currentTime.getTime() + " CURRENTIME");
@@ -384,8 +383,8 @@ export default {
           this.client.on("message", (topic, message) => {
             if (topic === topicUrgentAlert) {
               console.log("alert urgente");
-              const payload = JSON.parse(decrypt(message.toString()));
-              alert("ATTENZIONE: " + payload);
+              const payload = message.toString();
+              alert("ATTENZIONE: " + decrypt(payload));
             }
           });
           this.$store.dispatch("updateSelectedItem", this.client);
