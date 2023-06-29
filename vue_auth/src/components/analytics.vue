@@ -40,7 +40,6 @@ export default {
       this.client.subscribe(this.topicPV);
       this.client.on("message", (topic, message) => {
         if (topic === sessionStorage.getItem("email_paziente") + "/pv") {
-          console.log("dentro callback pvs");
           const data = JSON.parse(decrypt(message.toString()));
           const pv = {
             HR: data.HR,
