@@ -130,7 +130,7 @@ const database = () => {
      })
 
      collection.insertOne(parameter)
-     res.status(200)
+     res.status(200).json({message: 'parametri inseriti'})
     } catch (error) {
       console.log(error)
     }
