@@ -33,9 +33,17 @@
         <option value="diastolic">diastolic</option>
       </select>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="button" value="CALCOLA" @click="getMedia()" />
+      <input
+        type="button"
+        value="CALCOLA"
+        :class="{ 'button-hover': hoverButton }"
+        style="border-radius: 5px; border-color: grey"
+        @mouseover="hoverButton = true"
+        @mouseleave="hoverButton = false"
+        @click="getMedia()"
+      />
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <div style="margin-top: 40px">
+      <div style="margin-top: 40px; font-size: large">
         {{ avg }}
       </div>
     </div>
@@ -158,6 +166,10 @@ export default {
 
 .layout {
   text-align: center;
+}
+
+.button-hover {
+  background-color: grey;
 }
 
 .analitiche {

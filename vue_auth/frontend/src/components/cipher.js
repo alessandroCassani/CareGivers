@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 export function encrypt(plaintext) {
+  console.log(process.env.VUE_APP_SECRET_KEY)
   const cipher = crypto.createCipher('aes-256-cbc', 'ciao');
   let encrypted = cipher.update(plaintext, 'utf8', 'hex');
   encrypted += cipher.final('hex');
