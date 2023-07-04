@@ -69,7 +69,7 @@ export default {
         this.fetchData("bp");
 
         this.extractObjectFromStorage();
-      }, 10000);
+      }, 20000);
     }
   },
 
@@ -98,7 +98,8 @@ export default {
         diastolic: dias.toString(),
         collection: sessionStorage.getItem("email") + "/vitalparameters",
       };
-      // console.log(object);
+      //console.log(object);
+      //console.log(this.count++);
 
       axios.post("http://localhost:5005/insertPv", object).then((res) => {
         if (res.status === 200) {

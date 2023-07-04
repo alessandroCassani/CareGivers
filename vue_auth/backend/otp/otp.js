@@ -6,9 +6,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
-const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js');
-const { otp } = require('./src/models/otp.js');
-const { caregivers_patient } = require('./src/models/caregivers_associated_patients.js');
+const { patient_caregivers } = require('../../frontend/src/models/patient_associated_caregivers.js');
+const { otp } = require('../../frontend/src/models/otp.js');
+const { caregivers_patient } = require('../../frontend/src/models/caregivers_associated_patients.js');
 const router = require('express').Router();
 
 

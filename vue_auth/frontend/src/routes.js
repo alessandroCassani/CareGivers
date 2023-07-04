@@ -5,7 +5,7 @@ import Sign_Up from './components/Sign_up.vue';
 import referenti from './components/referenti.vue';
 import memos from './components/memos.vue';
 import alert from './components/alert.vue';
-import analytics from './components/analytics'
+import analytics from './components/analytics.vue'
 
 const routes = [{
     path: '/login', component: Log_in, name:"login",},

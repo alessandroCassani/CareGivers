@@ -4,9 +4,9 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { user } = require('./src/models/user.js')
+const { user } = require('../../frontend/src/models/user.js')
 const bcrypt = require('bcrypt');
-const { patient_caregivers } = require('./src/models/patient_associated_caregivers.js')
+const { patient_caregivers } = require('../../frontend/src/models/patient_associated_caregivers.js')
 mongoose.set('strictQuery', false);
 const jwt = require('jsonwebtoken')
 

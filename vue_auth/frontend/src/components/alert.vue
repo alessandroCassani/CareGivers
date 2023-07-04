@@ -33,9 +33,17 @@
         <option value="diastolic">diastolic</option>
       </select>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="button" value="CALCOLA" @click="getMedia()" />
+      <input
+        type="button"
+        value="CALCOLA"
+        :class="{ 'button-hover': hoverButton }"
+        style="border-radius: 5px; border-color: grey"
+        @mouseover="hoverButton = true"
+        @mouseleave="hoverButton = false"
+        @click="getMedia()"
+      />
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <div style="margin-top: 40px">
+      <div style="margin-top: 40px; font-size: large">
         {{ avg }}
       </div>
     </div>
@@ -90,13 +98,6 @@ export default {
 
       axios.post("http://localhost:5005/getLastValue", data).then((res) => {
         if (res.status === 200) {
-          //const result = {
-          //fc: res.data.fc,
-          //spO2: res.data.spO2,
-          //systolic: res.data.systolic,
-          //diastolic: res.data.diastolic,
-          //issue: userInput,
-          //};
           const stringMQTT =
             userInput +
             " FC = " +
@@ -144,7 +145,7 @@ export default {
           if (res.status === 200) {
             const stringa =
               "La media dei valori rilevati per il periodo selezionato è di " +
-              res.data[0].averageField;
+              parseInt(res.data[0].averageField);
             this.avg = stringa;
           }
         });
@@ -165,6 +166,10 @@ export default {
 
 .layout {
   text-align: center;
+}
+
+.button-hover {
+  background-color: grey;
 }
 
 .analitiche {
