@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "frontend": "cd frontend && vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "auth": "nodemon auth",
+    "auth": " cd backend/auth && nodemon auth",
     "otp": "nodemon otp",
     "scheduling": "nodemon scheduling",
     "mqtt": "nodemon mqttService",
