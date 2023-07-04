@@ -7,8 +7,8 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const router = require('express').Router();
-const {alerts} = require('./src/models/alerts.js')
-const {parameters} = require('./src/models/parameters.js')
+const {alerts} = require('../../frontend/src/models/alerts.js')
+const {parameters} = require('../../frontend/src/models/parameters.js')
 const moment = require('moment')
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });

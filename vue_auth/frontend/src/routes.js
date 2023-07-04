@@ -1,11 +1,11 @@
 
 import {createRouter,createWebHistory} from 'vue-router';
-import Log_in from './components/Log_in.vue';
-import Sign_Up from './components/Sign_up.vue';
-import referenti from './components/referenti.vue';
-import memos from './components/memos.vue';
-import alert from './components/alert.vue';
-import analytics from './components/analytics'
+import Log_in from '../frontend/src/components/Log_in.vue';
+import Sign_Up from '../frontend/src/components/Sign_up.vue';
+import referenti from '../frontend/src/components/referenti.vue';
+import memos from '../frontend/src/components/memos.vue';
+import alert from '../frontend/src/components/alert.vue';
+import analytics from '../frontend/src/components/analytics'
 
 const routes = [{
     path: '/login', component: Log_in, name:"login",},

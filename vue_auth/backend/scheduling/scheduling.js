@@ -4,8 +4,8 @@ const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { Memo } = require('./src/models/schedule.js')
-const { terapia } = require('./src/models/therapy.js')
+const { Memo } = require('../../frontend/src/models/schedule.js')
+const { terapia } = require('../../frontend/src/models/therapy.js')
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const router = require('express').Router();
