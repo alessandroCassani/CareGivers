@@ -6,11 +6,11 @@
     "frontend": "cd frontend && vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "auth": " cd backend/auth && nodemon auth",
-    "otp": "nodemon otp",
-    "scheduling": "nodemon scheduling",
-    "mqtt": "nodemon mqttService",
-    "charts": "nodemon charts"
+    "auth": "cd backend/auth && nodemon auth",
+    "otp": "cd backend/otp && nodemon otp",
+    "scheduling": "cd backend/scheduling && nodemon scheduling",
+    "mqtt": "cd backend/mqtt && nodemon mqttService",
+    "charts": "cd backend/charts && nodemon charts"
   },
   "dependencies": {
     "@bachdgvn/vue-otp-input": "^1.0.8",
