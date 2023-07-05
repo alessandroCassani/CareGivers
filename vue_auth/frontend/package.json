@@ -1,0 +1,11 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Frontend package which contains the components to build up the UI and links to server functionalities",
+  "main": "main.js",
+  "scripts": {
+    "serve": "vue-cli-service serve"
+  },
+  "author": "Alessandro Cassani",
+  "license": "ISC"
+}

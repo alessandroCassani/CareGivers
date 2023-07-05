@@ -1,0 +1,11 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "auth microservice which contains the server logic for the auth features",
+  "main": "auth.js",
+  "scripts": {
+    "auth": "nodemon auth"
+  },
+  "author": "Alessandro Cassani",
+  "license": "ISC"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "otp",
+  "version": "1.0.0",
+  "description": "Microservice which contains the server logic for the insertion and checking of otp number generated to associate caregiver's account with patient's account",
+  "main": "otp.js",
+  "scripts": {
+    "otp": "nodemon otp"
+  },
+  "author": "Alessandro Cassani",
+  "license": "ISC"
+}

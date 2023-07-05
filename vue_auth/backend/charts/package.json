@@ -1,0 +1,11 @@
+{
+  "name": "charts",
+  "version": "1.0.0",
+  "description": "Microservice which contains the server logic for the visualization of charts and statistics",
+  "main": "charts.js",
+  "scripts": {
+    "charts": "nodemon charts"
+  },
+  "author": "Alessandro Cassani",
+  "license": "ISC"
+}
