@@ -7,5 +7,14 @@
     "charts": "nodemon charts"
   },
   "author": "Alessandro Cassani",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "chart.js": "^4.3.0",
+    "cors": "^2.8.5",
+    "moment": "^2.29.4",
+    "mongodb": "^5.6.0",
+    "mongoose": "^7.3.1"
+  }
 }
