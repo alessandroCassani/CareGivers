@@ -1,0 +1,11 @@
+{
+  "name": "scheduling",
+  "version": "1.0.0",
+  "description": "Microservice which contains the server logic for the insertion of memos and alerts",
+  "main": "scheduling.js",
+  "scripts": {
+    "scheduling": "nodemon scheduling"
+  },
+  "author": "Alessandro Cassani",
+  "license": "ISC"
+}

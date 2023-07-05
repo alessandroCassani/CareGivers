@@ -1,0 +1,11 @@
+{
+  "name": "mqtt",
+  "version": "1.0.0",
+  "description": "Microservice whick contains the MQTT broker",
+  "main": "mqttService.js",
+  "scripts": {
+    "mqtt": "nodemon mqttService"
+  },
+  "author": "Alesdsandro Cassani",
+  "license": "ISC"
+}
