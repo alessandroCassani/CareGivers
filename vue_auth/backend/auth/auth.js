@@ -15,10 +15,6 @@ const app = express()
 const port = process.env.port || 5000;
 
 const database =  () => {
-  const connectionParams = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
   try {
      mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
     console.log('DB connected')
@@ -64,17 +60,19 @@ app.post('/signup', express.json(), async (req, res) => {
 
 
 app.post('/login', (req,res) =>{
-  database();
+ database();
   var jwt = require('jsonwebtoken')
   console.log('dentro login server')
   console.log(req.body)
    
-   user.findOne({email:req.body.email}, (err,User) => {
-    if(err) return res.status(500).json({
+    user.findOne({email:req.body.email}, (err,User) => {
+    if(err){
+      console.log(err)
+       return res.status(500).json({
      title: 'server error', 
       error: err
     })
-
+  }
 
   if(!User){
     return res.status(400).json({

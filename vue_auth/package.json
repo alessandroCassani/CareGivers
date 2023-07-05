@@ -14,7 +14,11 @@
     "backend": "concurrently \"cd backend/auth && nodemon auth.js\" \"cd backend/otp && nodemon otp.js\" \"cd backend/scheduling && nodemon scheduling.js\" \"cd backend/mqtt && nodemon mqttService.js\" \"cd backend/charts && nodemon charts.js\""
   },
   "dependencies": {
-    "@vue/cli-service": "^5.0.8"
+    "@vue/cli-service": "^5.0.8",
+    "concurrently": "^8.2.0",
+    "install": "^0.13.0",
+    "npm": "^9.7.2",
+    "vue": "^3.2.36"
   },
   "eslintConfig": {
     "root": true,
