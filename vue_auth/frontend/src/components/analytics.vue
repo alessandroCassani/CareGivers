@@ -7,6 +7,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/multi-word-component-names */
 import Chart from "chart.js";
 import fc from "./fcLineChart";
 import spO2 from "./spO2LineChart";

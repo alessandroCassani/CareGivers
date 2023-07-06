@@ -58,9 +58,9 @@
 </template>
 
 <script>
+/* eslint-disable vue/multi-word-component-names */
 import axios from "axios";
 import { encrypt } from "./cipher";
-
 export default {
   name: "referenti",
 
