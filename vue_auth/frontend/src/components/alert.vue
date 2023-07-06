@@ -66,6 +66,7 @@ export default {
       parametro: null,
       avg: "Inserisci le informazioni per calcolare la media dei parametri vitali relativa ai valori selezionati",
       buttonHover: false,
+      ruolo: sessionStorage.getItem("ruolo"),
     };
   },
   created() {
