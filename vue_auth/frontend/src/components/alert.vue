@@ -2,7 +2,7 @@
   <div class="layout">
     <button
       id="alert"
-      v-if="isPatient"
+      v-if="isPatient()"
       style="
         background-color: #9e331d;
         border-radius: 5px;
