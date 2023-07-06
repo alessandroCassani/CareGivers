@@ -1,12 +1,8 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = 'mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/?retryWrites=true&w=majority';
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { user } = require('../../frontend/src/models/user.js')
 const bcrypt = require('bcrypt');
-const { patient_caregivers } = require('../../frontend/src/models/patient_associated_caregivers.js')
 mongoose.set('strictQuery', false);
 const jwt = require('jsonwebtoken')
 
@@ -18,10 +14,6 @@ const database = async () => {
   try {
      await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
     console.log('DB connected')
-
-    mongoose.connection.on('error', (error) => {
-      console.error('MongoDB connection error:', error);
-    });
   } catch (error) {
     console.log(error)
   }
@@ -31,12 +23,13 @@ app.use(express.json());
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
-
+database()
 
 
 //routes
 app.post('/signup', express.json(), async (req, res) => {
   console.log('dentro signup server')
+  const { user } = require('../../frontend/src/models/user.js')
     const newUser = new user({
         nome: req.body.nome,
         cognome: req.body.cognome,
@@ -45,7 +38,6 @@ app.post('/signup', express.json(), async (req, res) => {
         password: bcrypt.hashSync(req.body.password,10),                               
         ruolo: req.body.ruolo
     })
-    database()
     try{
     const utente = await newUser.save()
     console.log(utente)
@@ -63,13 +55,11 @@ app.post('/signup', express.json(), async (req, res) => {
 
 
 
-app.post('/login',  (req,res) =>{
-  database();
-  var jwt = require('jsonwebtoken')
+app.post('/login',  async(req,res) =>{
   console.log('dentro login server')
   console.log(req.body)
-   
-    user.findOne({email:req.body.email}, (err,User) => {
+  const { user } = require('../../frontend/src/models/user.js')
+  const User = await user.findOne({ email: req.body.email }).maxTimeMS(30000);;
     if(err) {
       console.log(err)
       return res.status(500).json({
@@ -101,7 +91,7 @@ app.post('/login',  (req,res) =>{
     ruolo: User.ruolo
   })
 });
-});
+
 
 
 app.listen(port,(err) => {
