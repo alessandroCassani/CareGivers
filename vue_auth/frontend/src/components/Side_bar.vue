@@ -1,7 +1,7 @@
 <script>
 import { collapsed, toggleSidebar, sidebarWidth } from "./state";
 import SidebarLink from "./SidebarLink.vue";
-import mqtt from "mqtt";
+import mqtt from "mqtt/dist/mqtt";
 import { ref } from "vue";
 
 export default {

@@ -3,6 +3,9 @@ import App from './App.vue';
 import router from './routes';
 import { createStore } from 'vuex';
 import CanvasJSChart from '@canvasjs/vue-charts';
+import { Buffer } from 'buffer';
+global.Buffer = Buffer
+
 
 let initialState = {
   selectedItem: null,
