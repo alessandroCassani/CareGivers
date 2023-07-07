@@ -81,6 +81,7 @@ export default {
     }
   },
   beforeUnmount() {
+    conesole.log();
     window.removeEventListener("beforeunload", this.handleBeforeUnload);
   },
 
