@@ -399,13 +399,20 @@ export default {
           email: sessionStorage.getItem("email"),
         };
         console.log(sessionStorage.getItem("email") + " email caregiver");
-        axios
-          .post("http://localhost:5002/getEmailPatient", data)
-          .then((res) => {
-            console.log(res.data.patient + " email paziente associato");
-            sessionStorage.setItem("email_paziente", res.data.patient);
-            resolve();
-          });
+        try {
+          axios
+            .post("http://localhost:5002/getEmailPatient", data)
+            .then((res) => {
+              if (res.status === 200) {
+                console.log(res.data.patient + " email paziente associato");
+                sessionStorage.setItem("email_paziente", res.data.patient);
+                resolve();
+              }
+            });
+        } catch (err) {
+          console.log(err);
+          alert("nessun paziente associato");
+        }
       });
     },
 

@@ -13,7 +13,6 @@ const port = process.env.port || 5000;
 
 const database = async () => {
   try {
-    
     await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority');
     console.log('DB connected');
   } catch (error) {
@@ -65,7 +64,6 @@ app.post('/login',  async(req,res) =>{
   const { user } = require('./user.js')
   console.log('dentro login server')
   console.log(req.body)
- 
   try {
     const User = await user.findOne({ email: req.body.email });
     // Rest of the code
@@ -103,9 +101,7 @@ app.post('/login',  async(req,res) =>{
       error: error
     });
   } 
-
 });
-
 
 
 app.listen(port,(err) => {
