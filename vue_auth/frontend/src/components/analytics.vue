@@ -123,7 +123,7 @@ export default {
         email: indirizzo,
       };
       axios.post("http://localhost:5005/getAlerts", data).then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res.data.fc!= null && res.data.spO2!=null && res.data.systolic != null && res.data.diastolic != null) {
           localStorage.setItem("fcth", decrypt(res.data.fc));
           localStorage.setItem("spO2th", decrypt(res.data.spO2));
           localStorage.setItem("systh", decrypt(res.data.systolic));
