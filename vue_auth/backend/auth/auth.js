@@ -5,31 +5,36 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 mongoose.set('strictQuery', false);
 const jwt = require('jsonwebtoken')
-
+//const { user } = require('./user.js')
 
 const app = express()
+app.use(cors());
 const port = process.env.port || 5000;
 
 const database = async () => {
   try {
-     await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority')
-    console.log('DB connected')
+    
+    await mongoose.connect('mongodb+srv://user:user@caregivers.rgfjqts.mongodb.net/Users?retryWrites=true&w=majority');
+    console.log('DB connected');
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 app.use(express.json());
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+express.json()
 database()
 
 
+
 //routes
-app.post('/signup', express.json(), async (req, res) => {
+app.post('/signup', async (req, res) => {
   console.log('dentro signup server')
-  const { user } = require('../../frontend/src/models/user.js')
+  
+  const { user } = require('./user.js')
     const newUser = new user({
         nome: req.body.nome,
         cognome: req.body.cognome,
@@ -56,40 +61,49 @@ app.post('/signup', express.json(), async (req, res) => {
 
 
 app.post('/login',  async(req,res) =>{
+  
+  const { user } = require('./user.js')
   console.log('dentro login server')
   console.log(req.body)
-  const { user } = require('../../frontend/src/models/user.js')
-  const User = await user.findOne({ email: req.body.email }).maxTimeMS(30000);;
-    if(err) {
-      console.log(err)
-      return res.status(500).json({
-         title: 'server error', 
-         error: err
-    })}
+ 
+  try {
+    const User = await user.findOne({ email: req.body.email });
+    // Rest of the code
+    console.log(User)
+    if(!User){
+      return res.status(400).json({
+        title: 'user not found',
+       error: 'invalid credentials'
+     })
+    }
 
+    console.log(User.password) 
+    console.log(req.body.password)
 
-  if(!User){
-    return res.status(400).json({
-      title: 'user not found',
-     error: 'invalid credentials'
-   })
-  }
-
-  if(!bcrypt.compareSync(req.body.password,User.password)) {
-    return res.status(401).json({
-      title: 'login failed',
-      error: 'invalid credentials'
+    if(!bcrypt.compareSync(req.body.password,User.password)) {
+      return res.status(401).json({
+        title: 'login failed',
+        error: 'invalid credentials'
+      })
+    }
+    
+    //console.log('trovato')
+    let token = jwt.sign({userID: User._id},'secretKey');
+    return res.status(200).json({
+      message: 'login avvenuto correttamente',
+      token: token,
+      email: User.email,
+      ruolo: User.ruolo
     })
-  }
-  
-  //console.log('trovato')
-  let token = jwt.sign({userID: User._id},'secretKey');
-  return res.status(200).json({
-    message: 'login avvenuto correttamente',
-    token: token,
-    email: User.email,
-    ruolo: User.ruolo
-  })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      title: 'server error',
+      error: error
+    });
+  } 
+
 });
 
 
